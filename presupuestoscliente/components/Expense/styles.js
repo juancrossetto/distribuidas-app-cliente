@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingVertical: 20,
     paddingHorizontal: 10,
+    borderRadius: 5,
   },
   label: {
     fontWeight: 'bold',

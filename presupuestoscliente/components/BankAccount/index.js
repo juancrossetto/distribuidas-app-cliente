@@ -13,12 +13,12 @@ const BankAccount = ({item}) => {
         <Text style={styles.label}>Entidad Bancaria:</Text>
         <Text style={styles.text}>{item.entity}</Text>
       </View>
-      <View style={styles.textContainer}>
+      {/* <View style={styles.textContainer}>
         <Text style={styles.label}>Monto Invertido:</Text>
         <Text style={styles.text}>
           {item.amount} a {item.days} días
         </Text>
-      </View>
+      </View> */}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Nro de Tarjeta Asociada:</Text>
         <Text style={styles.text}>{item.card}</Text>
