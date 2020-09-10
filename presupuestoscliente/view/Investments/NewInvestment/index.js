@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   Container,
@@ -10,46 +10,49 @@ import {
   View,
   Spinner,
 } from 'native-base';
-import {TextInput, View as NativeView, Alert} from 'react-native';
+import {View as NativeView} from 'react-native';
 import globalStyles from '../../../styles/global';
 import {Picker} from '@react-native-community/picker';
 import shortid from 'shortid';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {InvestmentsTypes} from '../../../utils/enums';
+import styles from '../../../components/Investment';
+import {getCurrentDate} from '../../../utils';
+import useAlert from '../../../hooks/useAlert';
 
 const NewInvestmentPage = () => {
   const [amount, setAmount] = useState(0);
-  const [category, setCategory] = useState('');
+  const [type, setType] = useState('');
+  const [days, setDays] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mensaje, setMensaje] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
-  const showAlert = () => {
-    Alert.alert('Error', 'Todos los campos son obligatorios', [
-      {
-        text: 'OK',
-      },
-    ]);
-  };
 
   const handleSubmit = async () => {
-    if (amount <= 0 || category.trim() === '' || bankAccount.trim() === '') {
-      showAlert();
+    if (
+      amount <= 0 ||
+      days <= 0 ||
+      type.trim() === '' ||
+      bankAccount.trim() === ''
+    ) {
+      setMsg('Todos los campos son obligatorios');
       return;
     }
-    const investment = {amount, category, bankAccount};
+    const investment = {
+      amount,
+      type,
+      date: getCurrentDate(),
+      days,
+      bankAccount,
+    };
     investment.id = shortid.generate();
     const existedInvestments = await AsyncStorage.getItem('investments');
-    console.log('ingresos', existedInvestments);
     setLoading(true);
 
     setTimeout(() => {
-      //   AsyncStorage.setItem(
-      //     'investments',
-      //     JSON.stringify({...existedInvestments, investment}),
-      //   );
       AsyncStorage.setItem('investments', JSON.stringify(investment));
       setLoading(false);
       navigation.navigate('InvestmentsPage');
@@ -75,14 +78,21 @@ const NewInvestmentPage = () => {
                 height: 50,
                 backgroundColor: '#FFF',
               }}
-              selectedValue={category}
-              onValueChange={(val) => setCategory(val)}>
+              selectedValue={type}
+              onValueChange={(val) => setType(val)}>
               <Picker.Item label="-- Invertí en --" value="" />
-              {InvestmentsTypes.map((item, i) => (
+              {InvestmentsTypes.map((item) => (
                 <Picker.Item label={item.text} value={item.value} />
               ))}
             </Picker>
           </NativeView>
+          {type !== '' && (
+            <NativeView style={{marginTop: 10}}>
+              <Text style={{fontSize: 18, textAlign: 'center'}}>
+                Tasa de Interes Anual: 18 %
+              </Text>
+            </NativeView>
+          )}
           <NativeView>
             <Picker
               style={{
@@ -101,20 +111,29 @@ const NewInvestmentPage = () => {
               <Picker.Item label="2414205416" value="3" />
             </Picker>
           </NativeView>
+          <NativeView style={{marginTop: 22}}>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                keyboardType="numeric"
+                placeholder="Plazo de inversión (en dias habiles)"
+                onChangeText={(val) => setDays(val)}
+              />
+            </Item>
+          </NativeView>
         </Form>
         <Button
           style={[globalStyles.button, {marginTop: 30}]}
           square
           block
           onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Crear Ingreso</Text>
+          <Text style={globalStyles.buttonText}>Finalizar Inversión</Text>
         </Button>
         {loading && (
           <NativeView>
             <Spinner color="white" />
           </NativeView>
         )}
-        {mensaje && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

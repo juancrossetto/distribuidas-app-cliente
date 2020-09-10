@@ -6,16 +6,17 @@ import Investment from '../../components/Investment';
 import {getCurrentDate} from '../../utils';
 import {useNavigation} from '@react-navigation/native';
 import AnimatedButton from '../../components/AnimatedButton';
+import useAlert from '../../hooks/useAlert';
 
 const InvestmentsPage = () => {
-  const [message, setMessage] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
   const navigation = useNavigation();
   const [investmentsList, setInvestmentsList] = useState([]);
 
   useEffect(() => {
     setInvestmentsList([
       {
-        investmentType: 'Plazo Fijo',
+        type: 'Plazo Fijo',
         bankAccount: '1234567891',
         days: 60,
         amount: 1000,
@@ -46,7 +47,7 @@ const InvestmentsPage = () => {
           )}
         </ScrollView>
         <AnimatedButton text="Agregar" onPress={handleAdd} />
-        {message && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

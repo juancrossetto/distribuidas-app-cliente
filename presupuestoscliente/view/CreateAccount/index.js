@@ -1,17 +1,9 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {
-  Container,
-  Button,
-  Text,
-  H1,
-  Input,
-  Form,
-  Item,
-  Toast,
-} from 'native-base';
+import {Container, Button, Text, H1, Input, Form, Item} from 'native-base';
 import globalStyles from '../../styles/global';
 import {useNavigation} from '@react-navigation/native';
+import useAlert from '../../hooks/useAlert';
 
 // Apollo
 // import {gql, useMutation} from '@apollo/client';
@@ -27,7 +19,7 @@ const CreateAccountPage = () => {
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [mensaje, setMensaje] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
   // React Navigation
   const navigation = useNavigation();
 
@@ -39,12 +31,12 @@ const CreateAccountPage = () => {
     //validar
     if (nombre === '' || email === '' || password === '') {
       // Mostrar un error
-      setMensaje('Todos los campos son obligatorios');
+      setMsg('Todos los campos son obligatorios');
       return;
     }
     //password al menos 6 caracteres
     if (password.length < 6) {
-      setMensaje('El password debe ser de al menos 6 caracteres');
+      setMsg('El password debe ser de al menos 6 caracteres');
       return;
     }
     //guardar el usuario
@@ -58,19 +50,10 @@ const CreateAccountPage = () => {
       //       },
       //     },
       //   });
-      //   setMensaje(data.crearUsuario);
       navigation.navigate('Login');
     } catch (error) {
-      setMensaje(error.message.replace('GraphQL error:', ''));
+      setMsg(error.message.replace('GraphQL error:', ''));
     }
-  };
-
-  const showAlert = () => {
-    Toast.show({
-      text: mensaje,
-      buttonText: 'OK',
-      duration: 5000,
-    });
   };
 
   return (
@@ -106,7 +89,7 @@ const CreateAccountPage = () => {
           onPress={() => handleSubmit()}>
           <Text style={globalStyles.buttonText}>Crear Cuenta</Text>
         </Button>
-        {mensaje && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

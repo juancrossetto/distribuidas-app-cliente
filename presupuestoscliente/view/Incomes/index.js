@@ -6,20 +6,14 @@ import {useNavigation} from '@react-navigation/native';
 import Income from '../../components/Income';
 import {getCurrentDate} from '../../utils';
 import AnimatedButton from '../../components/AnimatedButton';
+import useAlert from '../../hooks/useAlert';
 
 const IncomesPage = ({}) => {
-  const [message, setMessage] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
   const [incomesList, setIncomesList] = useState([]);
 
   const navigation = useNavigation();
 
-  const showAlert = () => {
-    Toast.show({
-      text: message,
-      buttonText: 'OK',
-      duration: 5000,
-    });
-  };
   useEffect(() => {
     setIncomesList([
       {
@@ -73,7 +67,7 @@ const IncomesPage = ({}) => {
           )}
         </ScrollView>
         <AnimatedButton text="Agregar" onPress={handleAdd} />
-        {message && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

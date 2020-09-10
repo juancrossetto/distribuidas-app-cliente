@@ -55,16 +55,16 @@ const IncomesStack = ({navigation}) => {
         name="IncomesPage"
         component={IncomesPage}
         options={{
-          title: 'Administra tus Ingresos', //Set Header Title
+          title: 'Administra tus Ingresos',
           headerLeft: () => (
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: '#f4511e', //Set Header color
+            backgroundColor: '#f4511e',
           },
-          headerTintColor: '#fff', //Set Header text color
+          headerTintColor: '#fff',
           headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
+            fontWeight: 'bold',
           },
         }}
       />
@@ -73,7 +73,18 @@ const IncomesStack = ({navigation}) => {
         component={NewIncomePage}
         options={{
           title: 'Nuevo Ingreso',
-          headerShown: false,
+          headerRight: () => (
+            <IncomesPage />
+            // <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerShown: true,
         }}
       />
     </Stack.Navigator>
@@ -82,25 +93,22 @@ const IncomesStack = ({navigation}) => {
 
 function expensesStack({navigation}) {
   return (
-    <Stack.Navigator
-      initialRouteName="ExpensesPage"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
+    <Stack.Navigator initialRouteName="ExpensesPage">
       <Stack.Screen
         name="ExpensesPage"
         component={ExpensesPage}
         options={{
           title: 'Administra tus Egresos',
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
         }}
       />
       <Stack.Screen
@@ -108,7 +116,15 @@ function expensesStack({navigation}) {
         component={NewExpensePage}
         options={{
           title: 'Nuevo Egreso',
-          headerShown: false,
+          headerRight: () => <ExpensesPage />,
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerShown: true,
         }}
       />
     </Stack.Navigator>
@@ -117,25 +133,22 @@ function expensesStack({navigation}) {
 
 function investmentsStack({navigation}) {
   return (
-    <Stack.Navigator
-      initialRouteName="InvestmentsPage"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
+    <Stack.Navigator initialRouteName="InvestmentsPage">
       <Stack.Screen
         name="InvestmentsPage"
         component={InvestmentsPage}
         options={{
           title: 'Administra tus Inversiones',
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
         }}
       />
       <Stack.Screen
@@ -143,7 +156,15 @@ function investmentsStack({navigation}) {
         component={NewInvestmentPage}
         options={{
           title: 'Invertí',
-          headerShown: false,
+          headerRight: () => <InvestmentsPage />,
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

@@ -28,8 +28,8 @@ export const ExpenseCategory = [
 ];
 
 export const InvestmentsTypes = [
-  {value: 'PFF', text: 'Plazo Fijo'},
-  {value: 'TIT', text: 'Titulos Valores'},
-  {value: 'ACC', text: 'Acciones'},
-  {value: 'FON', text: 'Fondos'},
+  {value: 'PFF', text: 'Plazo Fijo', interestRate: '18%'},
+  {value: 'TIT', text: 'Titulos Valores', interestRate: '30%'},
+  {value: 'ACC', text: 'Acciones', interestRate: '21%'},
+  {value: 'FON', text: 'Fondos', interestRate: '15%'},
 ];

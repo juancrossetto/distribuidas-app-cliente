@@ -13,7 +13,7 @@ import {
   Body,
   ListItem,
 } from 'native-base';
-import {TextInput, View as NativeView, Alert} from 'react-native';
+import {View as NativeView} from 'react-native';
 import globalStyles from '../../../styles/global';
 import {Picker} from '@react-native-community/picker';
 import shortid from 'shortid';
@@ -25,11 +25,13 @@ import {
   ExpenseTypes,
   ExpenseCategory,
 } from '../../../utils/enums';
+import useAlert from '../../../hooks/useAlert';
 
 // import {ImageUploader} from 'react-images-upload';
 
 const NewExpensePage = ({expenses}) => {
   const [image, setImage] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
   const [amount, setAmount] = useState(0);
   const [paymentType, setPaymentType] = useState('');
   const [expenseType, setExpenseType] = useState('');
@@ -42,33 +44,25 @@ const NewExpensePage = ({expenses}) => {
   //   const [voucher, setVoucher] = useState('');
 
   const [loading, setLoading] = useState(false);
-  const [mensaje, setMensaje] = useState(null);
 
   const navigation = useNavigation();
-  const showAlert = (message, type = 'Error') => {
-    Alert.alert(type, message, [
-      {
-        text: 'OK',
-      },
-    ]);
-  };
-  console.log('expenses', expenses);
+
   const handleSubmit = async () => {
     if (amount <= 0 || paymentType === '' || expenseType === '') {
-      showAlert('Todos los campos son obligatorios');
+      setMsg('Todos los campos son obligatorios');
       return;
     }
     if (expenseType === 'PER' && category === '') {
-      showAlert('Por favor seleccione un categoria de egreso');
+      setMsg('Por favor seleccione un categoria de egreso');
       return;
     }
     if (expenseType === 'EXT' && detail === '') {
-      showAlert('Por favor seleccione un detalle de egreso');
+      setMsg('Por favor seleccione un detalle de egreso');
       return;
     }
     if (paymentType === 'TAR' && withFees) {
       if (fees < 1 || fees > 12) {
-        showAlert('La cantidad de cuotas ingresada no es válida');
+        setMsg('La cantidad de cuotas ingresada no es válida');
         return;
       }
     }
@@ -226,14 +220,14 @@ const NewExpensePage = ({expenses}) => {
           square
           block
           onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Crear Ingreso</Text>
+          <Text style={globalStyles.buttonText}>Guardar Egreso</Text>
         </Button>
         {loading && (
           <NativeView>
             <Spinner color="white" />
           </NativeView>
         )}
-        {mensaje && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

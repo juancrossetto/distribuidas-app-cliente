@@ -17,31 +17,23 @@ import shortid from 'shortid';
 import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {IncomeCategories} from '../../../utils/enums';
+import useAlert from '../../../hooks/useAlert';
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState('');
   const [bankAccount, setBankAccount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mensaje, setMensaje] = useState(null);
   const navigation = useNavigation();
-  const showAlert = () => {
-    Alert.alert('Error', 'Todos los campos son obligatorios', [
-      {
-        text: 'OK',
-      },
-    ]);
-  };
-
+  const [CustomAlert, setMsg] = useAlert();
   const handleSubmit = async () => {
     if (amount <= 0 || category.trim() === '' || bankAccount.trim() === '') {
-      showAlert();
+      setMsg('Todos los campos son obligatorios');
       return;
     }
     const income = {amount, category, bankAccount};
     income.id = shortid.generate();
     const existedIncomes = await AsyncStorage.getItem('incomes');
-    console.log('ingresos', existedIncomes);
     setLoading(true);
 
     //llamar API insertar ingreso en BD
@@ -110,14 +102,14 @@ const NewIncomePage = () => {
           square
           block
           onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Crear Ingreso</Text>
+          <Text style={globalStyles.buttonText}>Guardar Ingreso</Text>
         </Button>
         {loading && (
           <NativeView>
             <Spinner color="white" />
           </NativeView>
         )}
-        {mensaje && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

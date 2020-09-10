@@ -7,9 +7,10 @@ import {useNavigation} from '@react-navigation/native';
 import Expense from '../../components/Expense';
 import {getCurrentDate} from '../../utils';
 import AnimatedButton from '../../components/AnimatedButton';
+import useAlert from '../../hooks/useAlert';
 
 const ExpensesPage = () => {
-  const [message, setMessage] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
   const [expensesList, setExpensesList] = useState([]);
 
   useEffect(() => {
@@ -74,14 +75,6 @@ const ExpensesPage = () => {
   }, []);
   const navigation = useNavigation();
 
-  const showAlert = () => {
-    Toast.show({
-      text: message,
-      buttonText: 'OK',
-      duration: 5000,
-    });
-  };
-
   const handleAdd = () => {
     navigation.navigate('NewExpensePage', {expenses: expensesList});
   };
@@ -102,7 +95,7 @@ const ExpensesPage = () => {
           )}
         </ScrollView>
         <AnimatedButton text="Agregar" onPress={handleAdd} />
-        {message && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );

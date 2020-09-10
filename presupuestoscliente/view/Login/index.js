@@ -1,17 +1,10 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import {
-  Container,
-  Button,
-  Text,
-  H1,
-  Input,
-  Form,
-  Item,
-  Toast,
-} from 'native-base';
+import {Container, Button, Text, H1, Input, Form, Item} from 'native-base';
 import globalStyles from '../../styles/global';
 import {useNavigation} from '@react-navigation/native';
+import useAlert from '../../hooks/useAlert';
+
 // import AsyncStorage from '@react-native-community/async-storage';
 
 // Apollo
@@ -29,7 +22,7 @@ const LoginPage = () => {
   // State del formulario
   const [email, setEmail] = useState('juan@gmail.com');
   const [password, setPassword] = useState('123456');
-  const [message, setMessage] = useState(null);
+  const [CustomAlert, setMsg] = useAlert();
 
   // React Navigation
   const navigation = useNavigation();
@@ -42,7 +35,7 @@ const LoginPage = () => {
     //validar
     if (email === '' || password === '') {
       // Mostrar un error
-      setMessage('Todos los campos son obligatorios');
+      setMsg('Todos los campos son obligatorios');
       return;
     }
 
@@ -61,19 +54,12 @@ const LoginPage = () => {
       //await AsyncStorage.setItem('token', token);
       // Redireccionar a Proyectos
       navigation.navigate('Home');
-      // setMessage(data.autenticarUsuario);
+      // setMsg(data.autenticarUsuario);
     } catch (error) {
-      setMessage(error.message.replace('GraphQL error:', ''));
+      setMsg(error.message.replace('GraphQL error:', ''));
     }
   };
 
-  const showAlert = () => {
-    Toast.show({
-      text: message,
-      buttonText: 'OK',
-      duration: 5000,
-    });
-  };
   return (
     <Container style={[globalStyles.container, {backgroundColor: '#e84347'}]}>
       <View style={globalStyles.content}>
@@ -106,7 +92,7 @@ const LoginPage = () => {
           style={globalStyles.link}>
           Crear Cuenta
         </Text>
-        {message && showAlert()}
+        <CustomAlert />
       </View>
     </Container>
   );
