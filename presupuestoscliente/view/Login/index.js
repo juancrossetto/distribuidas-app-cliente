@@ -25,7 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 //   }
 // `;
 
-const Login = () => {
+const LoginPage = () => {
   // State del formulario
   const [email, setEmail] = useState('juan@gmail.com');
   const [password, setPassword] = useState('123456');
@@ -112,4 +112,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginPage;

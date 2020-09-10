@@ -22,7 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 //   }
 // `;
 
-const CreateAccount = () => {
+const CreateAccountPage = () => {
   // State del formulario
   const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
@@ -112,4 +112,4 @@ const CreateAccount = () => {
   );
 };
 
-export default CreateAccount;
+export default CreateAccountPage;

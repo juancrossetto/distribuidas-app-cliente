@@ -1,0 +1,242 @@
+import React, {useState} from 'react';
+import {
+  Text,
+  Container,
+  Button,
+  H1,
+  Form,
+  Item,
+  Input,
+  View,
+  Spinner,
+  CheckBox,
+  Body,
+  ListItem,
+} from 'native-base';
+import {TextInput, View as NativeView, Alert} from 'react-native';
+import globalStyles from '../../../styles/global';
+import {Picker} from '@react-native-community/picker';
+import shortid from 'shortid';
+import AsyncStorage from '@react-native-community/async-storage';
+import {useNavigation} from '@react-navigation/native';
+import useCounterButtons from '../../../hooks/useCounterButtons';
+import {
+  PaymentMethods,
+  ExpenseTypes,
+  ExpenseCategory,
+} from '../../../utils/enums';
+
+// import {ImageUploader} from 'react-images-upload';
+
+const NewExpensePage = ({expenses}) => {
+  const [image, setImage] = useState(null);
+  const [amount, setAmount] = useState(0);
+  const [paymentType, setPaymentType] = useState('');
+  const [expenseType, setExpenseType] = useState('');
+  const [detail, setDetail] = useState('');
+  const [category, setCategory] = useState('');
+  const [withFees, setWithFees] = useState(false);
+  const [fees, setFees] = useState(0);
+
+  //   const [fees, CounterButtons] = useCounterButtons(1, 1, 12);
+  //   const [voucher, setVoucher] = useState('');
+
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState(null);
+
+  const navigation = useNavigation();
+  const showAlert = (message, type = 'Error') => {
+    Alert.alert(type, message, [
+      {
+        text: 'OK',
+      },
+    ]);
+  };
+  console.log('expenses', expenses);
+  const handleSubmit = async () => {
+    if (amount <= 0 || paymentType === '' || expenseType === '') {
+      showAlert('Todos los campos son obligatorios');
+      return;
+    }
+    if (expenseType === 'PER' && category === '') {
+      showAlert('Por favor seleccione un categoria de egreso');
+      return;
+    }
+    if (expenseType === 'EXT' && detail === '') {
+      showAlert('Por favor seleccione un detalle de egreso');
+      return;
+    }
+    if (paymentType === 'TAR' && withFees) {
+      if (fees < 1 || fees > 12) {
+        showAlert('La cantidad de cuotas ingresada no es válida');
+        return;
+      }
+    }
+    const expense = {amount, paymentType, expenseType, detail, category, fees};
+    expense.id = shortid.generate();
+    const existedExpenses = await AsyncStorage.getItem('expenses');
+    console.log('egreso', existedExpenses);
+    setLoading(true);
+
+    //llamar API insertar egreso en BD
+    setTimeout(() => {
+      AsyncStorage.setItem('expenses', JSON.stringify(expense));
+      setLoading(false);
+
+      console.log('egreso 2', existedExpenses);
+      navigation.navigate('ExpensesPage');
+    }, 2000);
+  };
+
+  //   const onDrop = (picture) => {
+  //     setVoucher(picture);
+  //     console.log(picture);
+  //   };
+  return (
+    <Container style={([globalStyles.container], {backgroundColor: '#E84347'})}>
+      <View style={globalStyles.content}>
+        <H1 style={globalStyles.subtitle}>Nuevo Egreso</H1>
+        <Form>
+          <NativeView>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                keyboardType="numeric"
+                placeholder="$ Monto"
+                onChangeText={(val) => setAmount(val)}
+              />
+            </Item>
+          </NativeView>
+          <NativeView>
+            <Picker
+              style={{
+                height: 50,
+                backgroundColor: '#FFF',
+              }}
+              selectedValue={paymentType}
+              onValueChange={(val) => setPaymentType(val)}>
+              <Picker.Item label="-- Seleccione un Medio de Pago --" value="" />
+              {PaymentMethods.map((item) => (
+                <Picker.Item label={item.text} value={item.value} />
+              ))}
+            </Picker>
+          </NativeView>
+          <NativeView>
+            <Picker
+              style={{
+                height: 50,
+                backgroundColor: '#FFF',
+                marginTop: 22,
+              }}
+              selectedValue={expenseType}
+              onValueChange={(val) => setExpenseType(val)}>
+              <Picker.Item
+                label="-- Seleccione un tipo de Egreso --"
+                value=""
+              />
+              {ExpenseTypes.map((item) => (
+                <Picker.Item label={item.text} value={item.value} />
+              ))}
+            </Picker>
+          </NativeView>
+          {expenseType === 'PER' ? (
+            <NativeView>
+              <Picker
+                style={{
+                  height: 50,
+                  marginTop: 22,
+                  backgroundColor: '#FFF',
+                }}
+                selectedValue={category}
+                onValueChange={(val) => setCategory(val)}>
+                <Picker.Item label="-- Seleccione una Categoría --" value="" />
+                {ExpenseCategory.map((item) => (
+                  <Picker.Item label={item.text} value={item.value} />
+                ))}
+              </Picker>
+            </NativeView>
+          ) : expenseType === 'EXT' ? (
+            [
+              <NativeView
+                style={{
+                  marginTop: 22,
+                }}
+                key="0">
+                <Item inlineLabel last style={globalStyles.input}>
+                  <Input
+                    placeholder="Detalle extraordinario"
+                    onChangeText={(val) => setDetail(val)}
+                  />
+                </Item>
+              </NativeView>,
+            ]
+          ) : null}
+
+          <NativeView>
+            {paymentType.trim() === 'TAR' && (
+              <ListItem>
+                <CheckBox
+                  checked={withFees}
+                  color="black"
+                  onPress={() => setWithFees(!withFees)}
+                />
+                <Body>
+                  <Text>En cuotas</Text>
+                </Body>
+              </ListItem>
+            )}
+            {withFees && paymentType.trim() === 'TAR' && (
+              <Picker
+                style={{
+                  height: 50,
+                  backgroundColor: '#FFF',
+                }}
+                selectedValue={fees}
+                onValueChange={(val) => setFees(val)}>
+                <Picker.Item
+                  label="-- Seleccione cantidad de Cuotas --"
+                  value="0"
+                />
+                <Picker.Item label="1" value="1" />
+                <Picker.Item label="2" value="2" />
+                <Picker.Item label="3" value="3" />
+                <Picker.Item label="4" value="4" />
+                <Picker.Item label="5" value="5" />
+                <Picker.Item label="6" value="6" />
+                <Picker.Item label="7" value="7" />
+                <Picker.Item label="8" value="8" />
+                <Picker.Item label="9" value="9" />
+                <Picker.Item label="10" value="10" />
+                <Picker.Item label="11" value="11" />
+                <Picker.Item label="12" value="12" />
+              </Picker>
+            )}
+          </NativeView>
+          {/* <NativeView>
+            <ImageUploader
+              withIcon={true}
+              buttonText="Choose images"
+              onChange={onDrop}
+              imgExtension={['.jpg', '.gif', '.png', '.gif']}
+              maxFileSize={5242880}
+            />
+          </NativeView> */}
+        </Form>
+        <Button
+          style={[globalStyles.button, {marginTop: 70}]}
+          square
+          block
+          onPress={() => handleSubmit()}>
+          <Text style={globalStyles.buttonText}>Crear Ingreso</Text>
+        </Button>
+        {loading && (
+          <NativeView>
+            <Spinner color="white" />
+          </NativeView>
+        )}
+        {mensaje && showAlert()}
+      </View>
+    </Container>
+  );
+};
+
+export default NewExpensePage;

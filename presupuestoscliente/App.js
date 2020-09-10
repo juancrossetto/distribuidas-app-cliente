@@ -3,22 +3,41 @@ import React from 'react';
 import {Root} from 'native-base';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Login from './view/Login';
-import CreateAccount from './view/CreateAccount';
-import Home from './view/Home';
-import SideBar from './components/SideBar';
+import CreateAccountPage from './view/CreateAccount';
+import HomePage from './view/Home';
+import LoginPage from './view/Login';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  const ingresos = [
+    {amount: 1, category: 'Periodicos', bankAccount: '1234567891'},
+  ];
+  AsyncStorage.setItem('incomes', JSON.stringify(ingresos));
+
+  const egresos = [
+    {
+      amount: 1,
+      paymentType: 'TAR',
+      expenseType: 'PER',
+      detail: '',
+      category: '5',
+      id: 'BMUgTPyBn',
+    },
+  ];
+
+  AsyncStorage.setItem('expenses', JSON.stringify(egresos));
+
+  console.disableYellowBox = true; // Para deshabilitar los warnings
   return (
     <>
       <Root>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="Login">
+          <Stack.Navigator initialRouteName="Home">
             <Stack.Screen
               name="Login"
-              component={Login}
+              component={LoginPage}
               options={{
                 title: 'Iniciar Sesión',
                 headerShown: false,
@@ -26,7 +45,7 @@ const App = () => {
             />
             <Stack.Screen
               name="CreateAccount"
-              component={CreateAccount}
+              component={CreateAccountPage}
               options={{
                 title: 'Crear Cuenta',
                 headerStyle: {
@@ -40,7 +59,7 @@ const App = () => {
             />
             <Stack.Screen
               name="Home"
-              component={Home}
+              component={HomePage}
               options={{
                 title: 'Página Principal',
                 headerShown: false,

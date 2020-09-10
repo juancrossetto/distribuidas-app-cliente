@@ -2,14 +2,20 @@ import 'react-native-gesture-handler';
 
 import * as React from 'react';
 import {Button, View, Text, TouchableOpacity, Image} from 'react-native';
-
 import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Incomes from '../Incomes';
-import Expenses from '../Expenses';
-import Dashboard from '../Dashboard';
+import IncomesPage from '../Incomes';
+import ExpensesPage from '../Expenses';
+import DashboardPage from '../Dashboard';
+import BankAccountsPage from '../BankAccounts';
+import InvestmentsPage from '../Investments';
+import BugdetsPage from '../Budgets';
+import LoansPage from '../Loans';
+import NewIncomePage from '../Incomes/NewIncome';
+import NewExpensePage from '../Expenses/NewExpense';
+import NewInvestmentPage from '../Investments/NewInvestment';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -42,12 +48,12 @@ const NavigationDrawerStructure = (props) => {
   );
 };
 
-function firstScreenStack({navigation}) {
+const IncomesStack = ({navigation}) => {
   return (
-    <Stack.Navigator initialRouteName="Incomes">
+    <Stack.Navigator initialRouteName="IncomesPage">
       <Stack.Screen
-        name="Incomes"
-        component={Incomes}
+        name="IncomesPage"
+        component={IncomesPage}
         options={{
           title: 'Administra tus Ingresos', //Set Header Title
           headerLeft: () => (
@@ -62,43 +68,168 @@ function firstScreenStack({navigation}) {
           },
         }}
       />
+      <Stack.Screen
+        name="NewIncomePage"
+        component={NewIncomePage}
+        options={{
+          title: 'Nuevo Ingreso',
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
-}
+};
 
-function secondScreenStack({navigation}) {
+function expensesStack({navigation}) {
   return (
     <Stack.Navigator
-      initialRouteName="SecondPage"
+      initialRouteName="ExpensesPage"
       screenOptions={{
         headerLeft: () => (
           <NavigationDrawerStructure navigationProps={navigation} />
         ),
         headerStyle: {
-          backgroundColor: '#f4511e', //Set Header color
+          backgroundColor: '#f4511e',
         },
-        headerTintColor: '#fff', //Set Header text color
+        headerTintColor: '#fff',
         headerTitleStyle: {
-          fontWeight: 'bold', //Set Header text style
+          fontWeight: 'bold',
         },
       }}>
       <Stack.Screen
-        name="Expenses"
-        component={Expenses}
+        name="ExpensesPage"
+        component={ExpensesPage}
         options={{
-          title: 'Administra tus Egresos', //Set Header Title
+          title: 'Administra tus Egresos',
         }}
       />
       <Stack.Screen
-        name="Dashboard"
-        component={Dashboard}
+        name="NewExpensePage"
+        component={NewExpensePage}
         options={{
-          title: 'Dashboard Page', //Set Header Title
+          title: 'Nuevo Egreso',
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
   );
 }
+
+function investmentsStack({navigation}) {
+  return (
+    <Stack.Navigator
+      initialRouteName="InvestmentsPage"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerStructure navigationProps={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="InvestmentsPage"
+        component={InvestmentsPage}
+        options={{
+          title: 'Administra tus Inversiones',
+        }}
+      />
+      <Stack.Screen
+        name="NewInvestmentPage"
+        component={NewInvestmentPage}
+        options={{
+          title: 'Invertí',
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+const bankAccountsStack = ({navigation}) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="BankAccounts"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerStructure navigationProps={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="BankAccounts"
+        component={BankAccountsPage}
+        options={{
+          title: 'Administra tu Cuenta Bancaria',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const budgetsStack = ({navigation}) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Budgets"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerStructure navigationProps={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="Budgets"
+        component={BugdetsPage}
+        options={{
+          title: 'Administra tu Presupuestos',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const loansStack = ({navigation}) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Loans"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerStructure navigationProps={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="Loans"
+        component={LoansPage}
+        options={{
+          title: 'Administra tu Préstamos',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 
 function getHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? 'Feed';
@@ -132,7 +263,7 @@ function DashboardTabsStack() {
       }}>
       <Tab.Screen
         name="Dashboard"
-        component={Dashboard}
+        component={DashboardPage}
         options={{
           tabBarLabel: 'Monto gastado',
           // tabBarIcon: ({ color, size }) => (
@@ -142,12 +273,9 @@ function DashboardTabsStack() {
       />
       <Tab.Screen
         name="Incomes"
-        component={Incomes}
+        component={IncomesPage}
         options={{
           tabBarLabel: 'Saldo de cuenta',
-          // tabBarIcon: ({ color, size }) => (
-          //   <MaterialCommunityIcons name="settings" color={color} size={size} />
-          // ),
         }}
       />
     </Tab.Navigator>
@@ -178,12 +306,12 @@ function DashboardsStack({navigation}) {
   );
 }
 
-function Home() {
+function HomePage() {
   return (
     // <NavigationContainer>
     <Drawer.Navigator
       drawerContentOptions={{
-        style: {backgroundColor: '#DFDBDB'},
+        style: {backgroundColor: '#DFDBDB'}, //gris, cambiar
         activeTintColor: '#e91e63',
         itemStyle: {marginVertical: 5},
       }}>
@@ -197,16 +325,36 @@ function Home() {
         options={{
           drawerLabel: 'Ingresos',
         }}
-        component={firstScreenStack}
+        component={IncomesStack}
       />
       <Drawer.Screen
         name="Egresos"
         options={{drawerLabel: 'Egresos'}}
-        component={secondScreenStack}
+        component={expensesStack}
+      />
+      <Drawer.Screen
+        name="BankAccounts"
+        options={{drawerLabel: 'Cuentas Bancarias'}}
+        component={bankAccountsStack}
+      />
+      <Drawer.Screen
+        name="Inversiones"
+        options={{drawerLabel: 'Inversiones'}}
+        component={investmentsStack}
+      />
+      <Drawer.Screen
+        name="Presupuestos"
+        options={{drawerLabel: 'Presupuestos'}}
+        component={budgetsStack}
+      />
+      <Drawer.Screen
+        name="Prestamos"
+        options={{drawerLabel: 'Préstamos'}}
+        component={loansStack}
       />
     </Drawer.Navigator>
     // </NavigationContainer>
   );
 }
 
-export default Home;
+export default HomePage;
