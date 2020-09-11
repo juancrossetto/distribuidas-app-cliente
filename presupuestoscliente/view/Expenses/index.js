@@ -97,8 +97,6 @@ const ExpensesPage = () => {
             />
           )}
         </ScrollView>
-        {/* <AnimatedButton text="Agregar" onPress={handleAdd} /> */}
-
         <CustomAlert />
       </View>
       <View

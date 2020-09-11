@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Text,
   Container,
-  Button,
   H1,
   Form,
   Item,
@@ -21,6 +19,7 @@ import {BankEntities} from '../../../utils/enums';
 // import styles from '../../../components/Investment';
 import {getCurrentDate} from '../../../utils';
 import useAlert from '../../../hooks/useAlert';
+import AnimatedButton from '../../../components/AnimatedButton';
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -68,7 +67,7 @@ const NewBankAccountPage = () => {
             <Item inlineLabel last style={globalStyles.input}>
               <Input
                 keyboardType="numeric"
-                placeholder="$ CBU/CBU"
+                placeholder="CBU/CBU"
                 onChangeText={(val) => setCBU(val)}
               />
             </Item>
@@ -100,14 +99,19 @@ const NewBankAccountPage = () => {
               />
             </Item>
           </NativeView>
+          <NativeView>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                placeholder="Alias"
+                onChangeText={(val) => setAlias(val)}
+              />
+            </Item>
+          </NativeView>
         </Form>
-        <Button
-          style={[globalStyles.button, {marginTop: 30}]}
-          square
-          block
-          onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Finalizar Inversión</Text>
-        </Button>
+        <AnimatedButton
+          text="Finalizar Inversión"
+          onPress={() => handleSubmit()}
+        />
         {loading && (
           <NativeView>
             <Spinner color="white" />

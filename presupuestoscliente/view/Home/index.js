@@ -17,6 +17,9 @@ import NewIncomePage from '../Incomes/NewIncome';
 import NewExpensePage from '../Expenses/NewExpense';
 import NewInvestmentPage from '../Investments/NewInvestment';
 import NewBankAccountPage from '../BankAccounts/NewBankAccountPage';
+import CardsPage from '../Cards';
+// import {MaterialCommunityIcons} from '@expo/vector-icons';
+import {Icon} from 'native-base';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -176,23 +179,34 @@ const bankAccountsStack = ({navigation}) => {
   return (
     <Stack.Navigator
       initialRouteName="BankAccounts"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: '#f4511e',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}>
+      // screenOptions={{
+      //    headerLeft: () => (
+      //      <NavigationDrawerStructure navigationProps={navigation} />
+      //    ),
+      //   headerStyle: {
+      //     backgroundColor: '#f4511e',
+      //   },
+      //   headerTintColor: '#fff',
+      //   headerTitleStyle: {
+      //     fontWeight: 'bold',
+      //   },
+      // }}
+    >
       <Stack.Screen
-        name="BankAccounts"
+        name="BankAccountsPage"
         component={BankAccountsPage}
         options={{
-          title: 'Administra tu Cuenta Bancaria',
+          title: 'Administra tus Cuentas Bancarias',
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
         }}
       />
       <Stack.Screen
@@ -200,7 +214,18 @@ const bankAccountsStack = ({navigation}) => {
         component={NewBankAccountPage}
         options={{
           title: 'Asocie su Cuenta Bancaria',
-          headerRight: () => <BankAccountsPage />,
+          headerRight: () => (
+            <BankAccountsPage />
+            // <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#f4511e',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerShown: true,
         }}
       />
     </Stack.Navigator>
@@ -227,7 +252,7 @@ const budgetsStack = ({navigation}) => {
         name="Budgets"
         component={BugdetsPage}
         options={{
-          title: 'Administra tu Presupuestos',
+          title: 'Administra tus Presupuestos',
         }}
       />
     </Stack.Navigator>
@@ -254,7 +279,34 @@ const loansStack = ({navigation}) => {
         name="Loans"
         component={LoansPage}
         options={{
-          title: 'Administra tu Préstamos',
+          title: 'Administra tus Préstamos',
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const cardsStack = ({navigation}) => {
+  return (
+    <Stack.Navigator
+      initialRouteName="CardsPage"
+      screenOptions={{
+        headerLeft: () => (
+          <NavigationDrawerStructure navigationProps={navigation} />
+        ),
+        headerStyle: {
+          backgroundColor: '#f4511e',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }}>
+      <Stack.Screen
+        name="CardsPage"
+        component={CardsPage}
+        options={{
+          title: 'Administra tus Tarjetas',
         }}
       />
     </Stack.Navigator>
@@ -278,6 +330,7 @@ function DashboardTabsStack() {
     <Tab.Navigator
       initialRouteName="HomeScreen"
       tabBarOptions={{
+        showIcon: true,
         activeTintColor: '#FFFFFF',
         inactiveTintColor: '#F8F8F8',
         style: {
@@ -296,8 +349,14 @@ function DashboardTabsStack() {
         component={DashboardPage}
         options={{
           tabBarLabel: 'Monto gastado',
-          // tabBarIcon: ({ color, size }) => (
+          tabBarIcon: () => (
+            <Icon size={10} name={'stats-chart-outline'} color={'grey'} />
+          ),
+
+          //({color, size}) => (
           //   <MaterialCommunityIcons name="home" color={color} size={size} />
+
+          //    <Icon active name="cash-outline" />
           // ),
         }}
       />
@@ -306,6 +365,9 @@ function DashboardTabsStack() {
         component={IncomesPage}
         options={{
           tabBarLabel: 'Saldo de cuenta',
+          tabBarIcon: () => (
+            <Icon size={10} name={'pie-chart-outline'} color={'grey'} />
+          ),
         }}
       />
     </Tab.Navigator>
@@ -324,11 +386,11 @@ function DashboardsStack({navigation}) {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: '#f4511e', //Set Header color
+            backgroundColor: '#f4511e',
           },
-          headerTintColor: '#fff', //Set Header text color
+          headerTintColor: '#fff',
           headerTitleStyle: {
-            fontWeight: 'bold', //Set Header text style
+            fontWeight: 'bold',
           },
         })}
       />
@@ -347,40 +409,67 @@ function HomePage() {
       }}>
       <Drawer.Screen
         name="Dashboards"
-        options={{drawerLabel: 'Dashboards'}}
+        options={{
+          drawerLabel: 'Dashboards',
+          drawerIcon: () => <Icon name={'bar-chart-outline'} />,
+        }}
         component={DashboardsStack}
       />
       <Drawer.Screen
         name="Ingresos"
         options={{
           drawerLabel: 'Ingresos',
+          drawerIcon: () => <Icon name={'thumbs-up-outline'} />,
         }}
         component={IncomesStack}
       />
       <Drawer.Screen
         name="Egresos"
-        options={{drawerLabel: 'Egresos'}}
+        options={{
+          drawerLabel: 'Egresos',
+          drawerIcon: () => <Icon name={'thumbs-down-outline'} />,
+        }}
         component={expensesStack}
       />
       <Drawer.Screen
         name="BankAccounts"
-        options={{drawerLabel: 'Cuentas Bancarias'}}
+        options={{
+          drawerLabel: 'Cuentas Bancarias',
+          drawerIcon: () => <Icon name={'home-outline'} />,
+        }}
         component={bankAccountsStack}
       />
       <Drawer.Screen
         name="Inversiones"
-        options={{drawerLabel: 'Inversiones'}}
+        options={{
+          drawerLabel: 'Inversiones',
+          drawerIcon: () => <Icon name={'happy-outline'} />,
+        }}
         component={investmentsStack}
       />
       <Drawer.Screen
         name="Presupuestos"
-        options={{drawerLabel: 'Presupuestos'}}
+        options={{
+          drawerLabel: 'Presupuestos',
+          drawerIcon: () => <Icon name={'newspaper-outline'} />,
+        }}
         component={budgetsStack}
       />
       <Drawer.Screen
         name="Prestamos"
-        options={{drawerLabel: 'Préstamos'}}
+        options={{
+          drawerLabel: 'Préstamos',
+          drawerIcon: () => <Icon name={'send-outline'} />,
+        }}
         component={loansStack}
+      />
+      <Drawer.Screen
+        name="Tarjetas"
+        options={{
+          drawerLabel: 'Tarjetas',
+          drawerIcon: () => <Icon name={'card-outline'} />,
+        }}
+        component={cardsStack}
       />
     </Drawer.Navigator>
     // </NavigationContainer>

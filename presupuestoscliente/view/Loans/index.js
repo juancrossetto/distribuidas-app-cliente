@@ -1,14 +1,23 @@
 import React from 'react';
-import {View} from 'react-native';
-import {Container, H1} from 'native-base';
+import {Container, Tab, Tabs, ScrollableTab, H1, View} from 'native-base';
 import globalStyles from '../../styles/global';
+import LoansDetailPage from './LoanDetail';
 
 const LoansPage = () => {
   return (
-    <Container style={[globalStyles.container, {backgroundColor: '#e84347'}]}>
-      <View style={globalStyles.content}>
-        <H1 style={globalStyles.title}>Préstamos</H1>
-      </View>
+    <Container>
+      <Tabs
+        tabBarUnderlineStyle={{
+          backgroundColor: '#f4511e',
+        }}
+        renderTabBar={() => <ScrollableTab />}>
+        <Tab heading="Realizados">
+          <LoansDetailPage type={'Realizados'} />
+        </Tab>
+        <Tab heading="Tomados">
+          <LoansDetailPage type={'Tomados'} />
+        </Tab>
+      </Tabs>
     </Container>
   );
 };

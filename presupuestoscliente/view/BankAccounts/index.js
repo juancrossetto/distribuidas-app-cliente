@@ -37,7 +37,7 @@ const BankAccountsPage = () => {
         card: '4111 1111 1111 1111',
         alias: 'Mi cuenta en pesos',
         date: getCurrentDate(),
-        id: 'ZMUgTPyBp',
+        id: 'ZMUgTPyBp1',
       },
     ]);
   }, []);
