@@ -28,6 +28,7 @@ import {
   MaterialIcons,
   Fontisto,
 } from "@expo/vector-icons";
+import { Icon } from "native-base";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -372,7 +373,7 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Saldo de cuenta",
           tabBarIcon: () => (
-            <AntDesign name="barschart" size={30} color={"#000"} />
+            <Icon size={10} name={"pie-chart-outline"} color={"grey"} />
           ),
         }}
       />

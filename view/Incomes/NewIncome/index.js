@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
-// import { Picker as NewPicker } from "@react-native-community/picker";
 import shortid from "shortid";
-import AsyncStorage from "@react-native-community/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { IncomeCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
@@ -25,16 +23,12 @@ const NewIncomePage = () => {
     }
     const income = { amount, category, bankAccount };
     income.id = shortid.generate();
-    const existedIncomes = await AsyncStorage.getItem("incomes");
     setLoading(true);
 
     //llamar API insertar ingreso en BD
     //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
     setTimeout(() => {
-      // AsyncStorage.setItem("incomes", JSON.stringify(income));
       setLoading(false);
-
-      // console.log("ingresos 2", existedIncomes);
       navigation.navigate("IncomesPage");
     }, 2000);
   };

@@ -3,7 +3,6 @@ import { View, FlatList, ScrollView } from "react-native";
 import { Container, H1, Fab, Icon } from "native-base";
 import globalStyles from "../../../styles/global";
 import { useNavigation } from "@react-navigation/native";
-// import AsyncStorage from '@react-native-community/async-storage';
 import { getCurrentDate } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import Loan from "../../../components/Loan";
@@ -14,22 +13,20 @@ const LoansDetailPage = ({ type }) => {
   const [loansList, setLoansList] = useState([]);
 
   useEffect(() => {
-    setLoansList(
-      [
-        {
-          amount: 10.0,
-          loanType: "REA",
-          date: getCurrentDate(),
-          id: "BMUgTPyBr",
-        },
-        {
-          amount: 1500,
-          loanType: "TOM",
-          date: getCurrentDate(),
-          id: "BMUgTPyBr2",
-        },
-      ] /*AsyncStorage.getItem('expenses')*/
-    );
+    setLoansList([
+      {
+        amount: 10.0,
+        loanType: "REA",
+        date: getCurrentDate(),
+        id: "BMUgTPyBr",
+      },
+      {
+        amount: 1500,
+        loanType: "TOM",
+        date: getCurrentDate(),
+        id: "BMUgTPyBr2",
+      },
+    ]);
   }, []);
   const navigation = useNavigation();
 

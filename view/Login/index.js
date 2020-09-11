@@ -1,27 +1,14 @@
-import React, {useState} from 'react';
-import {View} from 'react-native';
-import {Container, Button, Text, H1, Input, Form, Item} from 'native-base';
-import globalStyles from '../../styles/global';
-import {useNavigation} from '@react-navigation/native';
-import useAlert from '../../hooks/useAlert';
-
-// import AsyncStorage from '@react-native-community/async-storage';
-
-// Apollo
-// import {gql, useMutation} from '@apollo/client';
-
-// const AUTENTICAR_USUARIO = gql`
-//   mutation autenticarUsuario($input: AutenticarInput) {
-//     autenticarUsuario(input: $input) {
-//       token
-//     }
-//   }
-// `;
+import React, { useState } from "react";
+import { View } from "react-native";
+import { Container, Button, Text, H1, Input, Form, Item } from "native-base";
+import globalStyles from "../../styles/global";
+import { useNavigation } from "@react-navigation/native";
+import useAlert from "../../hooks/useAlert";
 
 const LoginPage = () => {
   // State del formulario
-  const [email, setEmail] = useState('juan@gmail.com');
-  const [password, setPassword] = useState('123456');
+  const [email, setEmail] = useState("juan@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [CustomAlert, setMsg] = useAlert();
 
   // React Navigation
@@ -33,9 +20,9 @@ const LoginPage = () => {
   // Cuando el usuario presiona en iniciar sesión.
   const handleSubmit = async () => {
     //validar
-    if (email === '' || password === '') {
+    if (email === "" || password === "") {
       // Mostrar un error
-      setMsg('Todos los campos son obligatorios');
+      setMsg("Todos los campos son obligatorios");
       return;
     }
 
@@ -51,17 +38,16 @@ const LoginPage = () => {
       //   });
       //   const {token} = data.autenticarUsuario;
       // Colocar token en storage
-      //await AsyncStorage.setItem('token', token);
       // Redireccionar a Proyectos
-      navigation.navigate('Home');
+      navigation.navigate("Home");
       // setMsg(data.autenticarUsuario);
     } catch (error) {
-      setMsg(error.message.replace('GraphQL error:', ''));
+      setMsg(error.message.replace("GraphQL error:", ""));
     }
   };
 
   return (
-    <Container style={[globalStyles.container, {backgroundColor: '#e84347'}]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>PresupApp</H1>
 
@@ -84,12 +70,14 @@ const LoginPage = () => {
           square
           block
           style={globalStyles.button}
-          onPress={() => handleSubmit()}>
+          onPress={() => handleSubmit()}
+        >
           <Text style={globalStyles.buttonText}>Iniciar Sesión</Text>
         </Button>
         <Text
-          onPress={() => navigation.navigate('CreateAccount')}
-          style={globalStyles.link}>
+          onPress={() => navigation.navigate("CreateAccount")}
+          style={globalStyles.link}
+        >
           Crear Cuenta
         </Text>
         <CustomAlert />

@@ -3,7 +3,6 @@ import { View, FlatList, ScrollView } from "react-native";
 import { Container, H1, Fab, Icon } from "native-base";
 import globalStyles from "../../styles/global";
 import { useNavigation } from "@react-navigation/native";
-// import AsyncStorage from '@react-native-community/async-storage';
 import Expense from "../../components/Expense";
 import { getCurrentDate } from "../../utils";
 import AnimatedButton from "../../components/AnimatedButton";
@@ -17,64 +16,62 @@ const ExpensesPage = () => {
   // const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    setExpensesList(
-      [
-        {
-          amount: 10.0,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBp",
-        },
-        {
-          amount: 1500,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBr",
-        },
-        {
-          amount: 10.05,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBn",
-        },
-        {
-          amount: 400,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBs",
-        },
-        {
-          amount: 10.0,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBm",
-        },
-        {
-          amount: 1500,
-          paymentType: "TAR",
-          expenseType: "PER",
-          detail: "",
-          category: "5",
-          date: getCurrentDate(),
-          id: "BMUgTPyBj",
-        },
-      ] /*AsyncStorage.getItem('expenses')*/
-    );
+    setExpensesList([
+      {
+        amount: 10.0,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBp",
+      },
+      {
+        amount: 1500,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBr",
+      },
+      {
+        amount: 10.05,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBn",
+      },
+      {
+        amount: 400,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBs",
+      },
+      {
+        amount: 10.0,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBm",
+      },
+      {
+        amount: 1500,
+        paymentType: "TAR",
+        expenseType: "PER",
+        detail: "",
+        category: "5",
+        date: getCurrentDate(),
+        id: "BMUgTPyBj",
+      },
+    ]);
   }, []);
   const navigation = useNavigation();
 

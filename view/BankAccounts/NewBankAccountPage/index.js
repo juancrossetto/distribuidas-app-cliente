@@ -13,7 +13,6 @@ import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
-import AsyncStorage from "@react-native-community/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
 // import styles from '../../../components/Investment';
@@ -49,11 +48,9 @@ const NewBankAccountPage = () => {
       date: getCurrentDate(),
     };
     bankAccount.id = shortid.generate();
-    const existedBankAccounts = await AsyncStorage.getItem("bankAccounts");
     setLoading(true);
 
     setTimeout(() => {
-      AsyncStorage.setItem("bankAccounts", JSON.stringify(bankAccount));
       setLoading(false);
       navigation.navigate("BankAccountsPage");
     }, 2000);

@@ -17,7 +17,6 @@ import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
-import AsyncStorage from "@react-native-community/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import useCounterButtons from "../../../hooks/useCounterButtons";
 import {
@@ -76,16 +75,12 @@ const NewExpensePage = ({ expenses }) => {
       fees,
     };
     expense.id = shortid.generate();
-    const existedExpenses = await AsyncStorage.getItem("expenses");
-    console.log("egreso", existedExpenses);
     setLoading(true);
 
     //llamar API insertar egreso en BD
     setTimeout(() => {
-      AsyncStorage.setItem("expenses", JSON.stringify(expense));
       setLoading(false);
 
-      console.log("egreso 2", existedExpenses);
       navigation.navigate("ExpensesPage");
     }, 2000);
   };

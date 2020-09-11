@@ -6,28 +6,28 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CreateAccountPage from "./view/CreateAccount";
 import HomePage from "./view/Home";
 import LoginPage from "./view/Login";
-import AsyncStorage from "@react-native-community/async-storage";
+// import AsyncStorage from "@react-native-community/async-storage";
 
 const Stack = createStackNavigator();
 
 const App = () => {
-  const ingresos = [
-    { amount: 1, category: "Periodicos", bankAccount: "1234567891" },
-  ];
-  AsyncStorage.setItem("incomes", JSON.stringify(ingresos));
+  // const ingresos = [
+  //   { amount: 1, category: "Periodicos", bankAccount: "1234567891" },
+  // ];
+  // AsyncStorage.setItem("incomes", JSON.stringify(ingresos));
 
-  const egresos = [
-    {
-      amount: 1,
-      paymentType: "TAR",
-      expenseType: "PER",
-      detail: "",
-      category: "5",
-      id: "BMUgTPyBn",
-    },
-  ];
+  // const egresos = [
+  //   {
+  //     amount: 1,
+  //     paymentType: "TAR",
+  //     expenseType: "PER",
+  //     detail: "",
+  //     category: "5",
+  //     id: "BMUgTPyBn",
+  //   },
+  // ];
 
-  AsyncStorage.setItem("expenses", JSON.stringify(egresos));
+  // AsyncStorage.setItem("expenses", JSON.stringify(egresos));
 
   console.disableYellowBox = true; // Para deshabilitar los warnings
   return (

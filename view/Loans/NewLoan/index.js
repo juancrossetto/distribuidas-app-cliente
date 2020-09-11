@@ -15,7 +15,6 @@ import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
-import AsyncStorage from "@react-native-community/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { getCurrentDate } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
@@ -49,11 +48,9 @@ const NewLoanPage = () => {
       bankAccount,
     };
     investment.id = shortid.generate();
-    const existedInvestments = await AsyncStorage.getItem("investments");
     setLoading(true);
 
     setTimeout(() => {
-      AsyncStorage.setItem("investments", JSON.stringify(investment));
       setLoading(false);
       navigation.navigate("LoansPage");
     }, 2000);
