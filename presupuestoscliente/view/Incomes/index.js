@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, ScrollView, FlatList} from 'react-native';
-import {Container, H1} from 'native-base';
+import {Container, H1, Fab, Icon} from 'native-base';
 import globalStyles from '../../styles/global';
 import {useNavigation} from '@react-navigation/native';
 import Income from '../../components/Income';
@@ -52,7 +52,7 @@ const IncomesPage = ({}) => {
   };
   return (
     <Container style={[globalStyles.container, {backgroundColor: '#e84347'}]}>
-      <View style={[globalStyles.content, {marginTop: 30}]}>
+      <View style={[globalStyles.content, {marginTop: 30, flex: 8}]}>
         <H1 style={globalStyles.title}>Ingresos</H1>
         <ScrollView style={{flex: 1}}>
           {incomesList.length <= 0 ? (
@@ -66,8 +66,19 @@ const IncomesPage = ({}) => {
             />
           )}
         </ScrollView>
-        <AnimatedButton text="Agregar" onPress={handleAdd} />
+        {/* <AnimatedButton text="Agregar" onPress={handleAdd} /> */}
         <CustomAlert />
+      </View>
+      <View style={{flex: 1}}>
+        <Fab
+          active={true}
+          direction="up"
+          containerStyle={{}}
+          style={{backgroundColor: '#f4511e'}}
+          position="bottomLeft"
+          onPress={() => handleAdd()}>
+          <Icon name="add-circle-outline" />
+        </Fab>
       </View>
     </Container>
   );

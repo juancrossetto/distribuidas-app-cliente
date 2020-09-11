@@ -4,10 +4,11 @@ const styles = StyleSheet.create({
   btnAdd: {
     marginTop: 10,
     marginBottom: 20,
-    backgroundColor: '#FFF',
+    backgroundColor: '#f4511e',
+    color: '#FFF',
     borderRadius: 10,
     borderColor: '#eee',
-    borderWidth: 3,
+    borderWidth: 2,
     padding: 10,
     justifyContent: 'center',
   },

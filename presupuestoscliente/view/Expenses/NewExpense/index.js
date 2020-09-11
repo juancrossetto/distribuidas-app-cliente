@@ -12,6 +12,7 @@ import {
   CheckBox,
   Body,
   ListItem,
+  Icon,
 } from 'native-base';
 import {View as NativeView} from 'react-native';
 import globalStyles from '../../../styles/global';
@@ -26,6 +27,7 @@ import {
   ExpenseCategory,
 } from '../../../utils/enums';
 import useAlert from '../../../hooks/useAlert';
+import AnimatedButton from '../../../components/AnimatedButton';
 
 // import {ImageUploader} from 'react-images-upload';
 
@@ -93,6 +95,7 @@ const NewExpensePage = ({expenses}) => {
         <Form>
           <NativeView>
             <Item inlineLabel last style={globalStyles.input}>
+              <Icon active name="cash-outline" />
               <Input
                 keyboardType="numeric"
                 placeholder="$ Monto"
@@ -215,20 +218,14 @@ const NewExpensePage = ({expenses}) => {
             />
           </NativeView> */}
         </Form>
-        <Button
-          style={[globalStyles.button, {marginTop: 70}]}
-          square
-          block
-          onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Guardar Egreso</Text>
-        </Button>
+        <AnimatedButton text="Guardar Egreso" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
             <Spinner color="white" />
           </NativeView>
         )}
-        <CustomAlert />
       </View>
+      <CustomAlert />
     </Container>
   );
 };

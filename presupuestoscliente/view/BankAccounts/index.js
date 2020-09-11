@@ -7,7 +7,17 @@ import {
   FlatList,
 } from 'react-native';
 import globalStyles from '../../styles/global';
-import {Container, H1, Header, Content, Badge, Text, Icon} from 'native-base';
+import {
+  Container,
+  H1,
+  Header,
+  Content,
+  Badge,
+  Text,
+  Icon,
+  Fab,
+  Button,
+} from 'native-base';
 import useAlert from '../../hooks/useAlert';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../../components/AnimatedButton/styles';
@@ -18,7 +28,7 @@ const BankAccountsPage = () => {
   const [CustomAlert, setMsg] = useAlert();
   const navigation = useNavigation();
   const [bankAccountsList, setBankAccountsList] = useState([]);
-
+  const [active, setActive] = useState(false);
   useEffect(() => {
     setBankAccountsList([
       {
@@ -33,7 +43,7 @@ const BankAccountsPage = () => {
   }, []);
 
   const handleAdd = () => {
-    navigation.navigate('NewBankAccountsPage');
+    navigation.navigate('NewBankAccountPage');
   };
   return (
     <Container style={[globalStyles.container, {backgroundColor: '#e84347'}]}>
@@ -51,12 +61,16 @@ const BankAccountsPage = () => {
             />
           )}
         </ScrollView>
-        {/* <AnimatedButton text="Agregar" onPress={handleAdd} /> */}
-        <TouchableWithoutFeedback onPress={() => handleAdd()}>
-          <Animated.View style={[styles.btnAdd]}>
-            <Text style={styles.textAdd}>sarasa</Text>
-          </Animated.View>
-        </TouchableWithoutFeedback>
+        <View style={{flex: 1}}>
+          <Fab
+            active={true}
+            direction="up"
+            style={{backgroundColor: '#f4511e'}}
+            position="bottomLeft"
+            onPress={() => handleAdd()}>
+            <Icon name="add-circle-outline" />
+          </Fab>
+        </View>
         <CustomAlert />
       </View>
     </Container>

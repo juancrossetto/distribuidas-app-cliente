@@ -16,6 +16,7 @@ import LoansPage from '../Loans';
 import NewIncomePage from '../Incomes/NewIncome';
 import NewExpensePage from '../Expenses/NewExpense';
 import NewInvestmentPage from '../Investments/NewInvestment';
+import NewBankAccountPage from '../BankAccounts/NewBankAccountPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -192,6 +193,14 @@ const bankAccountsStack = ({navigation}) => {
         component={BankAccountsPage}
         options={{
           title: 'Administra tu Cuenta Bancaria',
+        }}
+      />
+      <Stack.Screen
+        name="NewBankAccountPage"
+        component={NewBankAccountPage}
+        options={{
+          title: 'Asocie su Cuenta Bancaria',
+          headerRight: () => <BankAccountsPage />,
         }}
       />
     </Stack.Navigator>

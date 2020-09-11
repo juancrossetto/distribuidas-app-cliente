@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
 import {
-  Text,
   Container,
-  Button,
   H1,
   Form,
   Item,
   Input,
   View,
   Spinner,
+  Icon,
 } from 'native-base';
-import {View as NativeView, Alert} from 'react-native';
+import {View as NativeView} from 'react-native';
 import globalStyles from '../../../styles/global';
 import {Picker} from '@react-native-community/picker';
 import shortid from 'shortid';
@@ -18,6 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import {IncomeCategories} from '../../../utils/enums';
 import useAlert from '../../../hooks/useAlert';
+import AnimatedButton from '../../../components/AnimatedButton';
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -57,6 +57,7 @@ const NewIncomePage = () => {
         <Form>
           <NativeView>
             <Item inlineLabel last style={globalStyles.input}>
+              <Icon active name="cash-outline" />
               <Input
                 keyboardType="numeric"
                 placeholder="$ Monto"
@@ -97,13 +98,7 @@ const NewIncomePage = () => {
             </Picker>
           </NativeView>
         </Form>
-        <Button
-          style={[globalStyles.button, {marginTop: 30}]}
-          square
-          block
-          onPress={() => handleSubmit()}>
-          <Text style={globalStyles.buttonText}>Guardar Ingreso</Text>
-        </Button>
+        <AnimatedButton text="Guardar Ingreso" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
             <Spinner color="white" />

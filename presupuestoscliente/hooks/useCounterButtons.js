@@ -55,7 +55,7 @@ const useCounterButtons = (initialState, minCount, maxCount) => {
             props
             dark
             style={{height: 80, justifyContent: 'center'}}
-            onPress={() => console.log('sarasa')}>
+            onPress={() => console.log('test')}>
             <Icon style={{fontSize: 40}} name="remove" />
           </Button>
         </Col>

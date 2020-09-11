@@ -33,3 +33,17 @@ export const InvestmentsTypes = [
   {value: 'ACC', text: 'Acciones', interestRate: '21%'},
   {value: 'FON', text: 'Fondos', interestRate: '15%'},
 ];
+
+export const BankEntities = [
+  {value: 'SANT', text: 'Santander'},
+  {value: 'BBVA', text: 'BBVA Frances'},
+  {value: 'HSBC', text: 'HSBC'},
+  {value: 'ICBC', text: 'ICBC'},
+  {value: 'GALI', text: 'Galicia'},
+  {value: 'SUPE', text: 'Supervielle'},
+  {value: 'COMA', text: 'COMAFI'},
+  {value: 'CCOO', text: 'CREDICOOP'},
+  {value: 'PROV', text: 'Provincia'},
+  {value: 'NACI', text: 'Nación'},
+  {value: 'BRUB', text: 'BRUBANK'},
+];
