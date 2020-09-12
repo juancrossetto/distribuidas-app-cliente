@@ -5,7 +5,6 @@ import { ToastAndroid, Platform } from "react-native";
 // import Snackbar from "react-native-snackbar";
 const useAlert = () => {
   const [msg, setMsg] = useState("");
-  console.log(Platform.OS);
   useEffect(() => {
     if (msg !== "") {
       setMsg("");

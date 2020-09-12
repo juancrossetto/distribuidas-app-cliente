@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Container,
-  H1,
-  Form,
-  Item,
-  Input,
-  View,
-  Spinner,
-  Icon,
-} from "native-base";
+import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
@@ -19,6 +10,7 @@ import { BankEntities } from "../../../utils/enums";
 import { getCurrentDate } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
+import { AntDesign } from "@expo/vector-icons";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -91,7 +83,7 @@ const NewBankAccountPage = () => {
           </NativeView>
           <NativeView style={{ marginTop: 22 }}>
             <Item inlineLabel last style={globalStyles.input}>
-              <Icon active name="card-outline" />
+              <AntDesign name="creditcard" size={20} color="blue" />
               <Input
                 keyboardType="numeric"
                 placeholder="Tarjeta de Débito"

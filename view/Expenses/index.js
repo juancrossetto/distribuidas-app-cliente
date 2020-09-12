@@ -110,7 +110,6 @@ const ExpensesPage = () => {
           position="bottomLeft"
           onPress={() => handleAdd()}
         >
-          {/* <Icon name="add-circle-outline" /> */}
           <Ionicons name="md-add" />
         </Fab>
       </View>

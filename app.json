@@ -9,6 +9,9 @@
       "**/*",
       "./node_modules/@expo/vector-icons/*",
       "./node_modules/@expo/vector-icons/AntDesign"
-    ]
+    ],
+    "android": {
+      "package": "com.juancrossetto.distribuidasClient"
+    }
   }
 }

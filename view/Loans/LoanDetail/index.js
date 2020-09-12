@@ -32,7 +32,7 @@ const LoansDetailPage = ({ type }) => {
 
   const handleAdd = () => {
     // setIsActive(!isActive);
-    navigation.navigate("NewLoanPage", { loans: loansList });
+    navigation.navigate("NewLoanPage", { type: type });
   };
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
@@ -65,7 +65,6 @@ const LoansDetailPage = ({ type }) => {
           position="bottomLeft"
           onPress={() => handleAdd()}
         >
-          {/* <Icon name="add-circle-outline" /> */}
           <Ionicons name="md-add" />
         </Fab>
       </View>

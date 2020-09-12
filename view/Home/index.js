@@ -12,12 +12,14 @@ import DashboardPage from "../Dashboard";
 import BankAccountsPage from "../BankAccounts";
 import InvestmentsPage from "../Investments";
 import BugdetsPage from "../Budgets";
-import LoansPage from "../Loans";
 import NewIncomePage from "../Incomes/NewIncome";
 import NewExpensePage from "../Expenses/NewExpense";
 import NewInvestmentPage from "../Investments/NewInvestment";
-import NewBankAccountPage from "../BankAccounts/NewBankAccountPage";
-import CardsPage from "../Cards";
+import NewBankAccountPage from "../BankAccounts/NewBankAccount";
+import CreditCardsPage from "../CreditCards";
+import LoansPage from "../Loans";
+import NewLoanPage from "../Loans/NewLoan";
+import NewCreditCardPage from "../CreditCards/NewCreditCard";
 // import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {
   Ionicons,
@@ -28,7 +30,6 @@ import {
   MaterialIcons,
   Fontisto,
 } from "@expo/vector-icons";
-import { Icon } from "native-base";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -186,21 +187,7 @@ function investmentsStack({ navigation }) {
 
 const bankAccountsStack = ({ navigation }) => {
   return (
-    <Stack.Navigator
-      initialRouteName="BankAccounts"
-      // screenOptions={{
-      //    headerLeft: () => (
-      //      <NavigationDrawerStructure navigationProps={navigation} />
-      //    ),
-      //   headerStyle: {
-      //     backgroundColor: '#f4511e',
-      //   },
-      //   headerTintColor: '#fff',
-      //   headerTitleStyle: {
-      //     fontWeight: 'bold',
-      //   },
-      // }}
-    >
+    <Stack.Navigator initialRouteName="BankAccountsPage">
       <Stack.Screen
         name="BankAccountsPage"
         component={BankAccountsPage}
@@ -223,10 +210,64 @@ const bankAccountsStack = ({ navigation }) => {
         component={NewBankAccountPage}
         options={{
           title: "Asocie su Cuenta Bancaria",
-          headerRight: () => (
-            <BankAccountsPage />
-            // <NavigationDrawerStructure navigationProps={navigation} />
+          headerRight: () => <BankAccountsPage />,
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerShown: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const loansStack = ({ navigation }) => {
+  return (
+    <Stack.Navigator initialRouteName="LoansPage">
+      <Stack.Screen
+        name="LoansPage"
+        component={LoansPage}
+        options={{
+          title: "Administra tus Préstamos",
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
           ),
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      {/* <Stack.Screen
+        name="LoansDetailPage"
+        component={LoansDetailPage}
+        options={{
+          title: "Detalle Préstamo",
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      /> */}
+      <Stack.Screen
+        name="NewLoanPage"
+        component={NewLoanPage}
+        options={{
+          title: "Carga tu préstamo",
+          // headerRight: () => <LoansPage />,
           headerStyle: {
             backgroundColor: "#f4511e",
           },
@@ -269,56 +310,40 @@ const budgetsStack = ({ navigation }) => {
   );
 };
 
-const loansStack = ({ navigation }) => {
-  return (
-    <Stack.Navigator
-      initialRouteName="Loans"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: "#f4511e",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
-      <Stack.Screen
-        name="Loans"
-        component={LoansPage}
-        options={{
-          title: "Administra tus Préstamos",
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
-
 const cardsStack = ({ navigation }) => {
   return (
-    <Stack.Navigator
-      initialRouteName="CardsPage"
-      screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
-        headerStyle: {
-          backgroundColor: "#f4511e",
-        },
-        headerTintColor: "#fff",
-        headerTitleStyle: {
-          fontWeight: "bold",
-        },
-      }}
-    >
+    <Stack.Navigator initialRouteName="CreditCardsPage">
       <Stack.Screen
-        name="CardsPage"
-        component={CardsPage}
+        name="CreditCardsPage"
+        component={CreditCardsPage}
         options={{
           title: "Administra tus Tarjetas",
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+      <Stack.Screen
+        name="NewCreditCardPage"
+        component={NewCreditCardPage}
+        options={{
+          title: "Asociando tu Tarjeta",
+          headerRight: () => <CreditCardsPage />,
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerShown: true,
         }}
       />
     </Stack.Navigator>
@@ -373,7 +398,7 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Saldo de cuenta",
           tabBarIcon: () => (
-            <Icon size={10} name={"pie-chart-outline"} color={"grey"} />
+            <AntDesign name="linechart" size={24} color={"#000"} />
           ),
         }}
       />

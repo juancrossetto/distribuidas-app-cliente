@@ -6,7 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CreateAccountPage from "./view/CreateAccount";
 import HomePage from "./view/Home";
 import LoginPage from "./view/Login";
-// import AsyncStorage from "@react-native-community/async-storage";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +30,7 @@ const App = () => {
 
   console.disableYellowBox = true; // Para deshabilitar los warnings
   return (
+    // <ApplicationProvider {...eva} theme={eva.light}>
     <>
       <Root>
         <NavigationContainer>
@@ -65,66 +65,11 @@ const App = () => {
                 headerShown: false,
               }}
             />
-            {/*   <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{
-                title: 'Home',
-                headerStyle: {
-                  backgroundColor: '#28303B',
-                },
-                headerTintColor: '#FFF',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-           <Stack.Screen
-              name="SideBar"
-              component={SideBar}
-              options={{
-                title: 'SideBar',
-                headerStyle: {
-                  backgroundColor: '#28303B',
-                },
-                headerTintColor: '#FFF',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-            <Stack.Screen
-              name="NuevoProyecto"
-              component={NuevoProyecto}
-              options={{
-                title: 'Nuevo Proyecto',
-                headerStyle: {
-                  backgroundColor: '#28303B',
-                },
-                headerTintColor: '#FFF',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-              }}
-            />
-            <Stack.Screen
-              name="Proyecto"
-              component={Proyecto}
-              options={({route}) => ({
-                title: route.params.nombre,
-                headerStyle: {
-                  backgroundColor: '#28303B',
-                },
-                headerTintColor: '#FFF',
-                headerTitleStyle: {
-                  fontWeight: 'bold',
-                },
-              })}
-            /> */}
           </Stack.Navigator>
         </NavigationContainer>
       </Root>
     </>
+    // </ApplicationProvider>
   );
 };
 

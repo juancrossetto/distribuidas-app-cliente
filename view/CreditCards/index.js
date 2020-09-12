@@ -22,42 +22,42 @@ import useAlert from "../../hooks/useAlert";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../../components/AnimatedButton/styles";
 import { getCurrentDate } from "../../utils";
-import BankAccount from "../../components/BankAccount";
+import CreditCard from "../../components/CreditCard";
 import { Ionicons } from "@expo/vector-icons";
 
-const BankAccountsPage = () => {
+const CreditCardsPage = () => {
   const [CustomAlert, setMsg] = useAlert();
   const navigation = useNavigation();
-  const [bankAccountsList, setBankAccountsList] = useState([]);
+  const [cardsList, setCardsList] = useState([]);
   const [active, setActive] = useState(false);
   useEffect(() => {
-    setBankAccountsList([
+    setCardsList([
       {
-        cbu: "01700992 20000067797370",
+        number: "4599",
         entity: "Santander",
-        card: "4111 1111 1111 1111",
-        alias: "Mi cuenta en pesos",
-        date: getCurrentDate(),
+        dueMonth: "12",
+        dueYear: "2015",
+        dueDate: "",
         id: "ZMUgTPyBp1",
       },
     ]);
   }, []);
 
   const handleAdd = () => {
-    navigation.navigate("NewBankAccountPage");
+    navigation.navigate("NewCreditCardPage");
   };
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={[globalStyles.content, { marginTop: 30 }]}>
-        <H1 style={globalStyles.title}>Cuenta Bancaria</H1>
+        <H1 style={globalStyles.title}>Tarjetas de Crédito</H1>
         <ScrollView style={{ flex: 1 }}>
-          {bankAccountsList.length <= 0 ? (
-            <H1 style={globalStyles.subtitle}>No posees una cuenta asociada</H1>
+          {cardsList.length <= 0 ? (
+            <H1 style={globalStyles.subtitle}>No posees Tarjetas asociadas</H1>
           ) : (
             <FlatList
               style={{ flex: 1 }}
-              data={bankAccountsList}
-              renderItem={({ item }) => <BankAccount item={item} />}
+              data={cardsList}
+              renderItem={({ item }) => <CreditCard item={item} />}
               keyExtractor={(inc) => inc.id}
             />
           )}
@@ -79,4 +79,4 @@ const BankAccountsPage = () => {
   );
 };
 
-export default BankAccountsPage;
+export default CreditCardsPage;
