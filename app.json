@@ -1,0 +1,17 @@
+{
+  "name": "distribuidasClient",
+  "displayName": "distribuidasClient",
+  "expo": {
+    "name": "distribuidasClient",
+    "slug": "distribuidasClient",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*",
+      "./node_modules/@expo/vector-icons/*",
+      "./node_modules/@expo/vector-icons/AntDesign"
+    ],
+    "android": {
+      "package": "com.juancrossetto.distribuidasClient"
+    }
+  }
+}
