@@ -20,6 +20,8 @@ import CreditCardsPage from "../CreditCards";
 import LoansPage from "../Loans";
 import NewLoanPage from "../Loans/NewLoan";
 import NewCreditCardPage from "../CreditCards/NewCreditCard";
+import NewBudgetPage from "../Budgets/NewBudget";
+import BudgetsPage from "../Budgets";
 // import {MaterialCommunityIcons} from '@expo/vector-icons';
 import {
   Ionicons,
@@ -285,11 +287,8 @@ const loansStack = ({ navigation }) => {
 const budgetsStack = ({ navigation }) => {
   return (
     <Stack.Navigator
-      initialRouteName="Budgets"
+      initialRouteName="BugdetsPage"
       screenOptions={{
-        headerLeft: () => (
-          <NavigationDrawerStructure navigationProps={navigation} />
-        ),
         headerStyle: {
           backgroundColor: "#f4511e",
         },
@@ -300,10 +299,24 @@ const budgetsStack = ({ navigation }) => {
       }}
     >
       <Stack.Screen
-        name="Budgets"
+        name="BugdetsPage"
         component={BugdetsPage}
         options={{
           title: "Administra tus Presupuestos",
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="NewBudgetPage"
+        component={NewBudgetPage}
+        options={{
+          title: "Carga tu Presupuesto",
+          headerRight: () => <BugdetsPage />,
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
         }}
       />
     </Stack.Navigator>

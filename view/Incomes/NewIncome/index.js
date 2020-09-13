@@ -78,9 +78,9 @@ const NewIncomePage = () => {
                 label="-- Seleccione una Cuenta Bancaria --"
                 value=""
               />
-              <Picker.Item label="1234567891" value="1" />
-              <Picker.Item label="3456789011" value="2" />
-              <Picker.Item label="2414205416" value="3" />
+              <Picker.Item label="1234567891" value="1234567891" />
+              <Picker.Item label="3456789011" value="3456789011" />
+              <Picker.Item label="2414205416" value="2414205416" />
             </Picker>
           </NativeView>
         </Form>

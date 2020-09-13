@@ -25,7 +25,7 @@ const NewBudgetPage = () => {
     budget.id = shortid.generate();
     setLoading(true);
 
-    //llamar API insertar ingreso en BD
+    //llamar API insertar prestamo en BD
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("BudgetsPage");
@@ -36,7 +36,7 @@ const NewBudgetPage = () => {
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
     >
       <View style={globalStyles.content}>
-        <H1 style={globalStyles.subtitle}>Nuevo Ingreso</H1>
+        <H1 style={globalStyles.subtitle}>Nuevo Presupuesto</H1>
         <Form>
           <NativeView>
             <Item inlineLabel last style={globalStyles.input}>
@@ -47,21 +47,6 @@ const NewBudgetPage = () => {
                 onChangeText={(val) => setAmount(val)}
               />
             </Item>
-          </NativeView>
-          <NativeView>
-            <Picker
-              style={{
-                height: 50,
-                backgroundColor: "#FFF",
-              }}
-              selectedValue={category}
-              onValueChange={(val) => setCategory(val)}
-            >
-              <Picker.Item label="-- Seleccione una categoría --" value="" />
-              {BudgetCategories.map((item, i) => (
-                <Picker.Item label={item.text} value={item.value} />
-              ))}
-            </Picker>
           </NativeView>
           <NativeView>
             <Picker
@@ -83,7 +68,10 @@ const NewBudgetPage = () => {
             </Picker>
           </NativeView>
         </Form>
-        <AnimatedButton text="Guardar Ingreso" onPress={() => handleSubmit()} />
+        <AnimatedButton
+          text="Guardar Presupuesto"
+          onPress={() => handleSubmit()}
+        />
         {loading && (
           <NativeView>
             <Spinner color="white" />

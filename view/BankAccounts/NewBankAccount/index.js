@@ -2,21 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
-// import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
-// import styles from '../../../components/Investment';
 import { getCurrentDate } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
   const [debitCard, setDebitCard] = useState("");
   const [entity, setEntity] = useState("");
   const [alias, setAlias] = useState("");
+  const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [CustomAlert, setMsg] = useAlert();
 
@@ -27,6 +26,7 @@ const NewBankAccountPage = () => {
       cbu <= 0 ||
       entity.trim() === "" ||
       debitCard <= 0 ||
+      balance <= 0 ||
       alias.trim() === ""
     ) {
       setMsg("Todos los campos son obligatorios");
@@ -37,6 +37,7 @@ const NewBankAccountPage = () => {
       entity,
       debitCard,
       alias,
+      balance,
       date: getCurrentDate(),
     };
     bankAccount.id = shortid.generate();
@@ -96,6 +97,16 @@ const NewBankAccountPage = () => {
               <Input
                 placeholder="Alias"
                 onChangeText={(val) => setAlias(val)}
+              />
+            </Item>
+          </NativeView>
+          <NativeView>
+            <Item inlineLabel last style={globalStyles.input}>
+              <MaterialCommunityIcons name="cash-usd" size={24} color="green" />
+              <Input
+                keyboardType="numeric"
+                placeholder="Saldo"
+                onChangeText={(val) => setBalance(val)}
               />
             </Item>
           </NativeView>

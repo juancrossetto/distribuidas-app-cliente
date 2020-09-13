@@ -1,23 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  TouchableWithoutFeedback,
-  Animated,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { View, ScrollView, FlatList } from "react-native";
 import globalStyles from "../../styles/global";
-import {
-  Container,
-  H1,
-  Header,
-  Content,
-  Badge,
-  Text,
-  Icon,
-  Fab,
-  Button,
-} from "native-base";
+import { Container, H1, Fab } from "native-base";
 import useAlert from "../../hooks/useAlert";
 import { useNavigation } from "@react-navigation/native";
 import styles from "../../components/AnimatedButton/styles";
@@ -36,9 +20,37 @@ const CreditCardsPage = () => {
         number: "4599",
         entity: "Santander",
         dueMonth: "12",
-        dueYear: "2015",
-        dueDate: "",
+        dueYear: "2020",
+        closeDateSummary: "12/10/2020",
+        dueDateSummary: "15/10/2020",
         id: "ZMUgTPyBp1",
+      },
+      {
+        number: "3401",
+        entity: "Brubank",
+        dueMonth: "01",
+        dueYear: "2025",
+        closeDateSummary: "05/11/2020",
+        dueDateSummary: "19/11/2020",
+        id: "ZMUgTPyBp2",
+      },
+      {
+        number: "0427",
+        entity: "COMAFI",
+        dueMonth: "07",
+        dueYear: "2023",
+        closeDateSummary: "06/11/2020",
+        dueDateSummary: "10/11/2020",
+        id: "ZMUgTPyBp3",
+      },
+      {
+        number: "0427",
+        entity: "Galicia",
+        dueMonth: "12",
+        dueYear: "2022",
+        closeDateSummary: "12/09/2020",
+        dueDateSummary: "15/09/2020",
+        id: "ZMUgTPyBp4",
       },
     ]);
   }, []);
@@ -48,7 +60,7 @@ const CreditCardsPage = () => {
   };
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
-      <View style={[globalStyles.content, { marginTop: 30 }]}>
+      <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
         <H1 style={globalStyles.title}>Tarjetas de Crédito</H1>
         <ScrollView style={{ flex: 1 }}>
           {cardsList.length <= 0 ? (
@@ -62,19 +74,19 @@ const CreditCardsPage = () => {
             />
           )}
         </ScrollView>
-        <View style={{ flex: 1 }}>
-          <Fab
-            active={true}
-            direction="up"
-            style={{ backgroundColor: "#f4511e" }}
-            position="bottomLeft"
-            onPress={() => handleAdd()}
-          >
-            <Ionicons name="md-add" />
-          </Fab>
-        </View>
-        <CustomAlert />
       </View>
+      <View style={{ flex: 1 }}>
+        <Fab
+          active={true}
+          direction="up"
+          style={{ backgroundColor: "#f4511e" }}
+          position="bottomLeft"
+          onPress={() => handleAdd()}
+        >
+          <Ionicons name="md-add" />
+        </Fab>
+      </View>
+      <CustomAlert />
     </Container>
   );
 };

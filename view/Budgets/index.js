@@ -54,10 +54,12 @@ const BudgetsPage = ({}) => {
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
-        <H1 style={globalStyles.title}>Ingresos</H1>
+        <H1 style={globalStyles.title}>Presupuestos</H1>
         <ScrollView style={{ flex: 1 }}>
           {budgetsList.length <= 0 ? (
-            <H1 style={globalStyles.subtitle}>No tenes Ingresos cargados</H1>
+            <H1 style={globalStyles.subtitle}>
+              No tenes Presupuestos cargados
+            </H1>
           ) : (
             <FlatList
               style={{ flex: 1 }}

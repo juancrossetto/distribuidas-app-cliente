@@ -6,10 +6,18 @@ export const IncomeCategories = [
 ];
 
 export const PaymentMethods = [
-  { value: "CON", text: "Contado" },
-  { value: "TAR", text: "Tarjeta" },
+  { value: "EFE", text: "Efectivo" },
+  { value: "TRD", text: "Tarjeta de Débito" },
+  { value: "TRC", text: "Tarjeta de Credito" },
+  { value: "BAN", text: "Débito Automático en Cuenta" },
+  { value: "TRA", text: "Transferencia" },
+  { value: "MER", text: "Mercado Pago" },
 ];
 
+export const LoanTypes = [
+  { value: "TOM", text: "Tomado" },
+  { value: "REA", text: "Realizado" },
+];
 export const ExpenseTypes = [
   { value: "PER", text: "Periódico Mensual" },
   { value: "ADP", text: "Extraordinario" },
@@ -35,17 +43,17 @@ export const InvestmentsTypes = [
 ];
 
 export const BankEntities = [
-  { value: "SANT", text: "Santander" },
-  { value: "BBVA", text: "BBVA Frances" },
-  { value: "HSBC", text: "HSBC" },
-  { value: "ICBC", text: "ICBC" },
-  { value: "GALI", text: "Galicia" },
-  { value: "SUPE", text: "Supervielle" },
-  { value: "COMA", text: "COMAFI" },
-  { value: "CCOO", text: "CREDICOOP" },
-  { value: "PROV", text: "Provincia" },
+  { value: "SANT", text: "Santander", color: "#c50e1d" },
+  { value: "BBVA", text: "BBVA Frances", color: "#2b6fa6" },
+  { value: "HSBC", text: "HSBC", color: "#bcbec7" },
+  { value: "ICBC", text: "ICBC", color: "#d1cdc5" },
+  { value: "GALI", text: "Galicia", color: "#ef7e02" },
+  { value: "SUPE", text: "Supervielle", color: "#95173a" },
+  { value: "COMA", text: "COMAFI", color: "#769746" },
+  { value: "CCOO", text: "CREDICOOP", color: "#2b6fa6" },
+  { value: "PROV", text: "Provincia", color: "#62b33c" },
   { value: "NACI", text: "Nación", color: "#0046a9" },
-  { value: "BRUB", text: "BRUBANK", color: "#5e48d2" },
+  { value: "BRUB", text: "Brubank", color: "#5e48d2" },
 ];
 
 export const Months = [

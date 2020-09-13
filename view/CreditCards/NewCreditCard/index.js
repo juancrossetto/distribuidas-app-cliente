@@ -18,27 +18,29 @@ const NewCreditCardPage = () => {
   const [entity, setEntity] = useState("");
   const [cbu, setCBU] = useState("");
   const [alias, setAlias] = useState("");
-  const [closeDate, setCloseDate] = useState(null);
-  const [dueDate, setDueDate] = useState(null);
+  const [closeDateSummary, setCloseDateSummary] = useState(null);
+  const [dueDateSummary, setDueDateSummary] = useState(null);
 
   const [CustomAlert, setMsg] = useAlert();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const [isDueDatePickerVisible, setDueDatePickerVisibility] = useState(false);
+  const [isDueDatePickerVisible, setIsDueDatePickerVisibility] = useState(
+    false
+  );
   const [isClosedDatePickerVisible, setIsClosedDatePickerVisibility] = useState(
     false
   );
 
   const confirmDueDate = (date) => {
     const options = { year: "numeric", month: "long", day: "2-digit" };
-    setDueDate(date.toLocaleDateString("es-ES", options));
-    setDueDatePickerVisibility(false);
+    setDueDateSummary(date.toLocaleDateString("es-ES", options));
+    setIsDueDatePickerVisibility(false);
   };
 
   const confirmClosedDate = (date) => {
     const options = { year: "numeric", month: "long", day: "2-digit" };
-    setCloseDate(date.toLocaleDateString("es-ES", options));
-    setClosedDatePickerVisibility(false);
+    setCloseDateSummary(date.toLocaleDateString("es-ES", options));
+    setIsClosedDatePickerVisibility(false);
   };
 
   const handleSubmit = async () => {
@@ -47,12 +49,22 @@ const NewCreditCardPage = () => {
       cbu <= 0 ||
       entity.trim() === "" ||
       alias.trim() === "" ||
-      dueDate === null ||
+      dueMonth === null ||
       dueYear === null ||
-      closeDate === null ||
-      dueDate === null
+      closeDateSummary === null ||
+      dueDateSummary === null
     ) {
       setMsg("Todos los campos son obligatorios");
+      return;
+    }
+
+    if (number.length !== 4) {
+      setMsg("Tarjeta no válida");
+      return;
+    }
+
+    if (cbu.length !== 22) {
+      setMsg("CBU/CVU no válido");
       return;
     }
     const creditCard = {
@@ -60,10 +72,10 @@ const NewCreditCardPage = () => {
       cbu,
       entity,
       alias,
-      dueDate,
+      dueMonth,
       dueYear,
-      closeDate,
-      dueDate,
+      closeDateSummary,
+      dueDateSummary,
       date: getCurrentDate(),
     };
     creditCard.id = shortid.generate();
@@ -103,6 +115,7 @@ const NewCreditCardPage = () => {
           <NativeView style={{ marginTop: 22 }}>
             <Item inlineLabel last style={globalStyles.input}>
               <Input
+                maxLength={22}
                 keyboardType="numeric"
                 placeholder="CBU/CBU"
                 onChangeText={(val) => setCBU(val)}
@@ -159,6 +172,7 @@ const NewCreditCardPage = () => {
             <Item inlineLabel last style={globalStyles.input}>
               <AntDesign name="creditcard" size={20} color="blue" />
               <Input
+                maxLength={4}
                 keyboardType="numeric"
                 placeholder="Últimos 4 digitos Tarjeta de Crédito"
                 onChangeText={(val) => setNumber(val)}
@@ -167,7 +181,11 @@ const NewCreditCardPage = () => {
           </NativeView>
           <NativeView>
             <Button
-              title={!closeDate ? "Seleccionar Fecha de Cierre" : closeDate}
+              title={
+                !closeDateSummary
+                  ? "Seleccionar Fecha de Cierre"
+                  : closeDateSummary
+              }
               onPress={() => setIsClosedDatePickerVisibility(true)}
               color="#E1E1E1"
             />
@@ -175,7 +193,7 @@ const NewCreditCardPage = () => {
               isVisible={isClosedDatePickerVisible}
               mode="date"
               onConfirm={confirmClosedDate}
-              onCancel={() => setClosedDatePickerVisibility(false)}
+              onCancel={() => setIsClosedDatePickerVisibility(false)}
               locale="es_ES"
               headerTextIOS="Elige la fecha de Cierre"
               cancelTextIOS="Cancelar"
@@ -184,15 +202,19 @@ const NewCreditCardPage = () => {
           </NativeView>
           <NativeView style={{ marginTop: 20 }}>
             <Button
-              title={!dueDate ? "Selecconar Fecha de Vencimiento" : dueDate}
-              onPress={() => setDueDatePickerVisibility(true)}
+              title={
+                !dueDateSummary
+                  ? "Selecconar Fecha de Vencimiento"
+                  : dueDateSummary
+              }
+              onPress={() => setIsDueDatePickerVisibility(true)}
               color="#E1E1E1"
             />
             <DateTimePickerModal
               isVisible={isDueDatePickerVisible}
               mode="date"
               onConfirm={confirmDueDate}
-              onCancel={() => setDueDatePickerVisibility(false)}
+              onCancel={() => setIsDueDatePickerVisibility(false)}
               locale="es_ES"
               headerTextIOS="Elige la fecha de Vencimiento"
               cancelTextIOS="Cancelar"

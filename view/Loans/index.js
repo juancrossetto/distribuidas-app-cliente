@@ -13,10 +13,10 @@ const LoansPage = () => {
         renderTabBar={() => <ScrollableTab />}
       >
         <Tab heading="Realizados">
-          <LoansDetailPage type={"Realizados"} />
+          <LoansDetailPage type={"REA"} />
         </Tab>
         <Tab heading="Tomados">
-          <LoansDetailPage type={"Tomados"} />
+          <LoansDetailPage type={"TOM"} />
         </Tab>
       </Tabs>
     </Container>

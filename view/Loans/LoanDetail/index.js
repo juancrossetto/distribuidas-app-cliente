@@ -7,40 +7,47 @@ import { getCurrentDate } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import Loan from "../../../components/Loan";
 import { Ionicons } from "@expo/vector-icons";
+import { PaymentMethods } from "../../../utils/enums";
 
 const LoansDetailPage = ({ type }) => {
   const [CustomAlert, setMsg] = useAlert();
   const [loansList, setLoansList] = useState([]);
-
+  const loans = [
+    {
+      amount: 10.0,
+      loanType: "REA",
+      paymentMethod: "BAN",
+      bankAccount: "1234567891",
+      date: getCurrentDate(),
+      id: "BMUgTPyBr",
+    },
+    {
+      amount: 1500,
+      loanType: "TOM",
+      paymentMethod: "EFE",
+      date: getCurrentDate(),
+      id: "BMUgTPyBr2",
+    },
+  ];
   useEffect(() => {
-    setLoansList([
-      {
-        amount: 10.0,
-        loanType: "REA",
-        date: getCurrentDate(),
-        id: "BMUgTPyBr",
-      },
-      {
-        amount: 1500,
-        loanType: "TOM",
-        date: getCurrentDate(),
-        id: "BMUgTPyBr2",
-      },
-    ]);
+    setLoansList(loans.filter((l) => l.loanType === type));
   }, []);
   const navigation = useNavigation();
 
   const handleAdd = () => {
-    // setIsActive(!isActive);
     navigation.navigate("NewLoanPage", { type: type });
   };
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
-        <H1 style={globalStyles.title}>Prestamos {type}</H1>
+        <H1 style={globalStyles.title}>
+          Prestamos {type === "TOM" ? "Tomados" : "Realizados"}
+        </H1>
         <ScrollView style={{ flex: 1 }}>
           {loansList.length <= 0 ? (
-            <H1 style={globalStyles.subtitle}>No tenes prestamos {type}</H1>
+            <H1 style={globalStyles.subtitle}>
+              No tenes prestamos {type === "TOM" ? "Tomados" : "Realizados"}
+            </H1>
           ) : (
             <FlatList
               style={{ flex: 1 }}

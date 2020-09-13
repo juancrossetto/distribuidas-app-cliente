@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  TouchableWithoutFeedback,
-  Animated,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { View, ScrollView, FlatList } from "react-native";
 import globalStyles from "../../styles/global";
-import {
-  Container,
-  H1,
-  Header,
-  Content,
-  Badge,
-  Text,
-  Icon,
-  Fab,
-  Button,
-} from "native-base";
+import { Container, H1, Fab } from "native-base";
 import useAlert from "../../hooks/useAlert";
 import { useNavigation } from "@react-navigation/native";
-import styles from "../../components/AnimatedButton/styles";
 import { getCurrentDate } from "../../utils";
 import BankAccount from "../../components/BankAccount";
 import { Ionicons } from "@expo/vector-icons";
@@ -34,6 +17,7 @@ const BankAccountsPage = () => {
     setBankAccountsList([
       {
         cbu: "01700992 20000067797370",
+        balance: 15000,
         entity: "Santander",
         card: "4111 1111 1111 1111",
         alias: "Mi cuenta en pesos",
