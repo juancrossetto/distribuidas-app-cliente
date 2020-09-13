@@ -8,7 +8,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import IncomesPage from "../Incomes";
 import ExpensesPage from "../Expenses";
-import DashboardPage from "../Dashboard";
+import AmountSpentPage from "../Dashboards/AmountSpent";
+import BankAccountBalancePage from "../Dashboards/BankAccountBalance";
 import BankAccountsPage from "../BankAccounts";
 import InvestmentsPage from "../Investments";
 import BugdetsPage from "../Budgets";
@@ -21,10 +22,9 @@ import LoansPage from "../Loans";
 import NewLoanPage from "../Loans/NewLoan";
 import NewCreditCardPage from "../CreditCards/NewCreditCard";
 import NewBudgetPage from "../Budgets/NewBudget";
-import BudgetsPage from "../Budgets";
-// import {MaterialCommunityIcons} from '@expo/vector-icons';
+import WeekDuesPage from "../Dashboards/WeekDues";
 import {
-  Ionicons,
+  EvilIcons,
   FontAwesome,
   FontAwesome5,
   Entypo,
@@ -367,7 +367,7 @@ function getHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
 
   switch (routeName) {
-    case "HomeScreen":
+    case "HomePage":
       return "Home";
     case "ExploreScreen":
       return "Explore";
@@ -378,7 +378,7 @@ function getHeaderTitle(route) {
 function DashboardTabsStack() {
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="AmountSpentPage"
       tabBarOptions={{
         showIcon: true,
         activeTintColor: "#FFFFFF",
@@ -396,8 +396,8 @@ function DashboardTabsStack() {
       }}
     >
       <Tab.Screen
-        name="Dashboard"
-        component={DashboardPage}
+        name="AmountSpentPage"
+        component={AmountSpentPage}
         options={{
           tabBarLabel: "Monto gastado",
           tabBarIcon: () => (
@@ -406,13 +406,21 @@ function DashboardTabsStack() {
         }}
       />
       <Tab.Screen
-        name="Incomes"
-        component={IncomesPage}
+        name="BankAccountBalancePage"
+        component={BankAccountBalancePage}
         options={{
           tabBarLabel: "Saldo de cuenta",
           tabBarIcon: () => (
             <AntDesign name="linechart" size={24} color={"#000"} />
           ),
+        }}
+      />
+      <Tab.Screen
+        name="WeekDuesPage"
+        component={WeekDuesPage}
+        options={{
+          tabBarLabel: "Vencimientos de la Semana",
+          tabBarIcon: () => <EvilIcons name="chart" size={24} color={"#000"} />,
         }}
       />
     </Tab.Navigator>
@@ -421,9 +429,9 @@ function DashboardTabsStack() {
 
 function DashboardsStack({ navigation }) {
   return (
-    <Stack.Navigator initialRouteName="HomeScreen">
+    <Stack.Navigator initialRouteName="HomePage">
       <Stack.Screen
-        name="Dashboards"
+        name="Inicio"
         component={DashboardTabsStack}
         options={({ route }) => ({
           headerTitle: getHeaderTitle(route),
@@ -454,9 +462,9 @@ function HomePage() {
       }}
     >
       <Drawer.Screen
-        name="Dashboards"
+        name="Inicio"
         options={{
-          drawerLabel: "Dashboards",
+          drawerLabel: "Inicio",
           drawerIcon: () => (
             <AntDesign name={"areachart"} size={25} color={"#e84347"} />
           ),
