@@ -41,7 +41,8 @@
     "react-native-unimodules": "~0.10.1",
     "react-native-vector-icons": "^7.0.0",
     "react-native-web": "~0.11.7",
-    "shortid": "^2.2.15"
+    "shortid": "^2.2.15",
+    "expo-sqlite": "~8.2.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

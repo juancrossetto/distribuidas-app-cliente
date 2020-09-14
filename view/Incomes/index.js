@@ -1,52 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, FlatList } from "react-native";
-import { Container, H1, Fab, Icon } from "native-base";
+import { Container, H1, Fab, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
 import { useNavigation } from "@react-navigation/native";
 import Income from "../../components/Income";
 import { getCurrentDate } from "../../utils";
-import AnimatedButton from "../../components/AnimatedButton";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
+import { saveItem, getItem, INCOMES } from "../../utils/storage";
 
 const IncomesPage = ({}) => {
   const [CustomAlert, setMsg] = useAlert();
   const [incomesList, setIncomesList] = useState([]);
 
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
+  const getIncomes = async () => {
+    try {
+      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
+      // saveItem(SAVE_INCOMES, res);
+      // incomesList = res;
+      throw ex;
+    } catch (error) {
+      const incomes = await getItem(INCOMES);
+      setIncomesList(incomes);
+    }
+  };
   useEffect(() => {
-    setIncomesList([
-      {
-        amount: 100,
-        category: "PER",
-        bankAccount: "1234567891",
-        date: getCurrentDate(),
-        id: "ZMUgTPyBp",
-      },
-      {
-        amount: 2500,
-        category: "EXT",
-        bankAccount: "2414205416",
-        date: getCurrentDate(),
-        id: "ZMUgTPyBf",
-      },
-      {
-        amount: 100,
-        category: "PER",
-        bankAccount: "1234567891",
-        date: getCurrentDate(),
-        id: "ZMUgTPyBp2",
-      },
-      {
-        amount: 2500,
-        category: "EXT",
-        bankAccount: "2414205416",
-        date: getCurrentDate(),
-        id: "ZMUgTPyBb",
-      },
-    ]);
-  }, []);
+    setLoading(true);
+    getIncomes();
+
+    setLoading(false);
+  });
 
   const handleAdd = () => {
     navigation.navigate("NewIncomePage");
@@ -67,7 +53,6 @@ const IncomesPage = ({}) => {
             />
           )}
         </ScrollView>
-        {/* <AnimatedButton text="Agregar" onPress={handleAdd} /> */}
         <CustomAlert />
       </View>
       <View style={{ flex: 1 }}>
@@ -82,6 +67,11 @@ const IncomesPage = ({}) => {
           <Ionicons name="md-add" />
         </Fab>
       </View>
+      {loading && (
+        <View>
+          <Spinner color="white" />
+        </View>
+      )}
     </Container>
   );
 };

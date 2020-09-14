@@ -8,6 +8,7 @@ import { IncomeCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { addItemToList, INCOMES } from "../../../utils/storage";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -23,6 +24,7 @@ const NewIncomePage = () => {
     }
     const income = { amount, category, bankAccount };
     income.id = shortid.generate();
+    await addItemToList(INCOMES, income);
     setLoading(true);
 
     //llamar API insertar ingreso en BD
