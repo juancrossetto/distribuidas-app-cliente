@@ -10,6 +10,7 @@ import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { CREDITCARDS, addItemToList } from "../../../utils/storage";
 
 const NewCreditCardPage = () => {
   const [number, setNumber] = useState(0);
@@ -67,6 +68,8 @@ const NewCreditCardPage = () => {
       setMsg("CBU/CVU no válido");
       return;
     }
+
+    const date = getCurrentDate();
     const creditCard = {
       number,
       cbu,
@@ -76,16 +79,16 @@ const NewCreditCardPage = () => {
       dueYear,
       closeDateSummary,
       dueDateSummary,
-      date: getCurrentDate(),
+      date,
     };
     creditCard.id = shortid.generate();
-    console.log(creditCard);
     setLoading(true);
 
+    await addItemToList(CREDITCARDS, creditCard);
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("CreditCardsPage");
-    }, 2000);
+    }, 1500);
   };
   return (
     <Container
@@ -108,7 +111,7 @@ const NewCreditCardPage = () => {
                 value=""
               />
               {BankEntities.map((item, i) => (
-                <Picker.Item label={item.text} value={item.value} />
+                <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
             </Picker>
           </NativeView>
@@ -139,7 +142,7 @@ const NewCreditCardPage = () => {
               >
                 <Picker.Item label="-- Mes de Vencimiento --" value="" />
                 {Months.map((item, i) => (
-                  <Picker.Item label={item.text} value={item.value} />
+                  <Picker.Item label={item.text} value={item.value} key={i} />
                 ))}
               </Picker>
             </NativeView>

@@ -8,6 +8,8 @@ import { BudgetCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { getCurrentDate } from "../../../utils";
+import { addItemToList, BUDGETS } from "../../../utils/storage";
 
 const NewBudgetPage = () => {
   const [amount, setAmount] = useState(0);
@@ -17,14 +19,20 @@ const NewBudgetPage = () => {
   const navigation = useNavigation();
   const [CustomAlert, setMsg] = useAlert();
   const handleSubmit = async () => {
-    if (amount <= 0 || category.trim() === "" || bankAccount.trim() === "") {
+    if (amount <= 0) {
+      setMsg("El monto debe ser superior a 0");
+      return;
+    }
+    if (category.trim() === "" || bankAccount.trim() === "") {
       setMsg("Todos los campos son obligatorios");
       return;
     }
     const budget = { amount, category, bankAccount };
     budget.id = shortid.generate();
+    budget.date = getCurrentDate();
     setLoading(true);
 
+    await addItemToList(BUDGETS, budget);
     //llamar API insertar prestamo en BD
     setTimeout(() => {
       setLoading(false);
@@ -52,6 +60,21 @@ const NewBudgetPage = () => {
             <Picker
               style={{
                 height: 50,
+                backgroundColor: "#FFF",
+              }}
+              selectedValue={category}
+              onValueChange={(val) => setCategory(val)}
+            >
+              <Picker.Item label="-- Seleccione un Rubro --" value="" />
+              {BudgetCategories.map((item, i) => (
+                <Picker.Item label={item.text} value={item.value} key={i} />
+              ))}
+            </Picker>
+          </NativeView>
+          <NativeView>
+            <Picker
+              style={{
+                height: 50,
                 marginTop: 22,
                 backgroundColor: "#FFF",
               }}
@@ -62,9 +85,9 @@ const NewBudgetPage = () => {
                 label="-- Seleccione una Cuenta Bancaria --"
                 value=""
               />
-              <Picker.Item label="1234567891" value="1" />
-              <Picker.Item label="3456789011" value="2" />
-              <Picker.Item label="2414205416" value="3" />
+              <Picker.Item label="1234567891" value="1234567891" />
+              <Picker.Item label="3456789011" value="3456789011" />
+              <Picker.Item label="2414205416" value="2414205416" />
             </Picker>
           </NativeView>
         </Form>

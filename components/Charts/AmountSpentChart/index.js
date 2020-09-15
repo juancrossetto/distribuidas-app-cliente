@@ -40,6 +40,7 @@ const AmountSpentChart = ({ data }) => {
       style={{ height: 400 }}
       data={pieData}
       spacing={0}
+      key={0}
       valueAccessor={({ item }) => item.value}
       // outerRadius={"150%"}
     >

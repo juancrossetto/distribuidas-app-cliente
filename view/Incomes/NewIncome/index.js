@@ -8,7 +8,8 @@ import { IncomeCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addItemToList, INCOMES } from "../../../utils/storage";
+import { saveItem, addItemToList, INCOMES } from "../../../utils/storage";
+import { getCurrentDate } from "../../../utils";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -22,7 +23,8 @@ const NewIncomePage = () => {
       setMsg("Todos los campos son obligatorios");
       return;
     }
-    const income = { amount, category, bankAccount };
+    const date = getCurrentDate();
+    const income = { amount, category, bankAccount, date };
     income.id = shortid.generate();
     await addItemToList(INCOMES, income);
     setLoading(true);
@@ -32,7 +34,7 @@ const NewIncomePage = () => {
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("IncomesPage");
-    }, 2000);
+    }, 1500);
   };
   return (
     <Container
@@ -62,7 +64,7 @@ const NewIncomePage = () => {
             >
               <Picker.Item label="-- Seleccione una categoría --" value="" />
               {IncomeCategories.map((item, i) => (
-                <Picker.Item label={item.text} value={item.value} />
+                <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
             </Picker>
           </NativeView>

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Text,
   Container,
-  Button,
   H1,
   Form,
   Item,
@@ -15,22 +14,22 @@ import {
 } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
-// import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
-import useCounterButtons from "../../../hooks/useCounterButtons";
 import {
   PaymentMethods,
   ExpenseTypes,
-  ExpenseCategory,
+  ExpenseCategories,
 } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { addItemToList, EXPENSES } from "../../../utils/storage";
+import { getCurrentDate } from "../../../utils";
 // import {ImageUploader} from 'react-images-upload';
 
-const NewExpensePage = ({ expenses }) => {
-  const [image, setImage] = useState(null);
+const NewExpensePage = () => {
+  // const [image, setImage] = useState(null);
   const [CustomAlert, setMsg] = useAlert();
   const [amount, setAmount] = useState(0);
   const [paymentType, setPaymentType] = useState("");
@@ -60,12 +59,13 @@ const NewExpensePage = ({ expenses }) => {
       setMsg("Por favor seleccione un detalle de egreso");
       return;
     }
-    if (paymentType === "TAR" && withFees) {
+    if (paymentType === "TRC" && withFees) {
       if (fees < 1 || fees > 12) {
         setMsg("La cantidad de cuotas ingresada no es válida");
         return;
       }
     }
+    const date = getCurrentDate();
     const expense = {
       amount,
       paymentType,
@@ -73,22 +73,19 @@ const NewExpensePage = ({ expenses }) => {
       detail,
       category,
       fees,
+      date,
     };
     expense.id = shortid.generate();
     setLoading(true);
-
+    await addItemToList(EXPENSES, expense);
     //llamar API insertar egreso en BD
     setTimeout(() => {
       setLoading(false);
 
       navigation.navigate("ExpensesPage");
-    }, 2000);
+    }, 1500);
   };
 
-  //   const onDrop = (picture) => {
-  //     setVoucher(picture);
-  //     console.log(picture);
-  //   };
   return (
     <Container
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
@@ -116,8 +113,8 @@ const NewExpensePage = ({ expenses }) => {
               onValueChange={(val) => setPaymentType(val)}
             >
               <Picker.Item label="-- Seleccione un Medio de Pago --" value="" />
-              {PaymentMethods.map((item) => (
-                <Picker.Item label={item.text} value={item.value} />
+              {PaymentMethods.map((item, i) => (
+                <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
             </Picker>
           </NativeView>
@@ -135,8 +132,8 @@ const NewExpensePage = ({ expenses }) => {
                 label="-- Seleccione un tipo de Egreso --"
                 value=""
               />
-              {ExpenseTypes.map((item) => (
-                <Picker.Item label={item.text} value={item.value} />
+              {ExpenseTypes.map((item, i) => (
+                <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
             </Picker>
           </NativeView>
@@ -152,8 +149,8 @@ const NewExpensePage = ({ expenses }) => {
                 onValueChange={(val) => setCategory(val)}
               >
                 <Picker.Item label="-- Seleccione una Categoría --" value="" />
-                {ExpenseCategory.map((item) => (
-                  <Picker.Item label={item.text} value={item.value} />
+                {ExpenseCategories.map((item, i) => (
+                  <Picker.Item label={item.text} value={item.value} key={i} />
                 ))}
               </Picker>
             </NativeView>
@@ -176,7 +173,7 @@ const NewExpensePage = ({ expenses }) => {
           ) : null}
 
           <NativeView>
-            {paymentType.trim() === "TAR" && (
+            {paymentType.trim() === "TRC" && (
               <ListItem>
                 <CheckBox
                   checked={withFees}
@@ -188,7 +185,7 @@ const NewExpensePage = ({ expenses }) => {
                 </Body>
               </ListItem>
             )}
-            {withFees && paymentType.trim() === "TAR" && (
+            {withFees && paymentType.trim() === "TRC" && (
               <Picker
                 style={{
                   height: 50,

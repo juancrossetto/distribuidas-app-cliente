@@ -12,7 +12,7 @@ import AmountSpentPage from "../Dashboards/AmountSpent";
 import BankAccountBalancePage from "../Dashboards/BankAccountBalance";
 import BankAccountsPage from "../BankAccounts";
 import InvestmentsPage from "../Investments";
-import BugdetsPage from "../Budgets";
+import BudgetsPage from "../Budgets";
 import NewIncomePage from "../Incomes/NewIncome";
 import NewExpensePage from "../Expenses/NewExpense";
 import NewInvestmentPage from "../Investments/NewInvestment";
@@ -89,10 +89,10 @@ const IncomesStack = ({ navigation }) => {
         component={NewIncomePage}
         options={{
           title: "Nuevo Ingreso",
-          headerRight: () => (
-            <IncomesPage />
-            // <NavigationDrawerStructure navigationProps={navigation} />
-          ),
+          // headerRight: () => (
+          //   <IncomesPage />
+          //   // <NavigationDrawerStructure navigationProps={navigation} />
+          // ),
           headerStyle: {
             backgroundColor: "#f4511e",
           },
@@ -287,7 +287,7 @@ const loansStack = ({ navigation }) => {
 const budgetsStack = ({ navigation }) => {
   return (
     <Stack.Navigator
-      initialRouteName="BugdetsPage"
+      initialRouteName="BudgetsPage"
       screenOptions={{
         headerStyle: {
           backgroundColor: "#f4511e",
@@ -299,8 +299,8 @@ const budgetsStack = ({ navigation }) => {
       }}
     >
       <Stack.Screen
-        name="BugdetsPage"
-        component={BugdetsPage}
+        name="BudgetsPage"
+        component={BudgetsPage}
         options={{
           title: "Administra tus Presupuestos",
           headerLeft: () => (
@@ -313,7 +313,7 @@ const budgetsStack = ({ navigation }) => {
         component={NewBudgetPage}
         options={{
           title: "Carga tu Presupuesto",
-          headerRight: () => <BugdetsPage />,
+          headerRight: () => <BudgetsPage />,
           headerStyle: {
             backgroundColor: "#f4511e",
           },

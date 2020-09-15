@@ -8,7 +8,7 @@ export const IncomeCategories = [
 export const PaymentMethods = [
   { value: "EFE", text: "Efectivo" },
   { value: "TRD", text: "Tarjeta de Débito" },
-  { value: "TRC", text: "Tarjeta de Credito" },
+  { value: "TRC", text: "Tarjeta de Crédito" },
   { value: "BAN", text: "Débito Automático en Cuenta" },
   { value: "TRA", text: "Transferencia" },
   { value: "MER", text: "Mercado Pago" },
@@ -23,16 +23,16 @@ export const ExpenseTypes = [
   { value: "ADP", text: "Extraordinario" },
 ];
 
-export const ExpenseCategory = [
-  { value: "01", text: "Agua" },
-  { value: "02", text: "Luz" },
-  { value: "03", text: "Gas" },
-  { value: "04", text: "Télefono" },
-  { value: "05", text: "Facultad" },
-  { value: "06", text: "Alquiler" },
-  { value: "07", text: "Expensas" },
-  { value: "08", text: "Cable/Internet" },
-  { value: "09", text: "ABL" },
+export const ExpenseCategories = [
+  { value: "AGU", text: "Agua" },
+  { value: "LUZ", text: "Luz" },
+  { value: "GAS", text: "Gas" },
+  { value: "TEL", text: "Télefono" },
+  { value: "FAC", text: "Facultad" },
+  { value: "ALQ", text: "Alquiler" },
+  { value: "EXP", text: "Expensas" },
+  { value: "CAB", text: "Cable/Internet" },
+  { value: "ABL", text: "ABL" },
 ];
 
 export const InvestmentsTypes = [
@@ -69,4 +69,13 @@ export const Months = [
   { value: "10", text: "Octubre" },
   { value: "11", text: "Noviembre" },
   { value: "12", text: "Diciembre" },
+];
+
+export const BudgetCategories = [
+  { value: "CUI", text: "Cuidado Personal" },
+  { value: "CON", text: "Construcción" },
+  { value: "EMP", text: "Emprendimiento" },
+  { value: "TRA", text: "Transporte" },
+  { value: "OCI", text: "Ocio" },
+  { value: "OTR", text: "Otros" },
 ];

@@ -4,7 +4,8 @@ import { BankEntities } from "../../utils/enums";
 import styles from "../Expense/styles";
 
 const CreditCard = ({ item }) => {
-  const entitySelected = BankEntities.filter((b) => b.text === item.entity)[0];
+  const entitySelected = BankEntities.filter((b) => b.value === item.entity)[0];
+
   const cardStyles = {
     marginBottom: 5,
     backgroundColor: entitySelected.color,

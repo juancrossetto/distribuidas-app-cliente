@@ -21,6 +21,7 @@ import { getCurrentDate } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../../components/AnimatedButton";
+import { INVESTMENTS, addItemToList } from "../../../../utils/storage";
 
 const NewTimeDepositPage = () => {
   const [amount, setAmount] = useState(0);
@@ -40,15 +41,17 @@ const NewTimeDepositPage = () => {
       amount,
       date: getCurrentDate(),
       days,
+      interestRate: 18,
       bankAccount,
     };
     investment.id = shortid.generate();
     setLoading(true);
+    await addItemToList(INVESTMENTS, investment);
 
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("InvestmentsPage");
-    }, 2000);
+    }, 1500);
   };
   return (
     <Container

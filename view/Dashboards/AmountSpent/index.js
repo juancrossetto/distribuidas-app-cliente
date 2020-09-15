@@ -39,15 +39,15 @@ const AmountSpentPage = () => {
           borderRadius: 5,
         }}
       >
-        {expenses.map((exp) => (
-          <Text>
+        {expenses.map((exp, i) => (
+          <Text key={i}>
             <View
               style={{
                 width: 15,
                 height: 10,
                 backgroundColor: exp.color,
               }}
-            ></View>{" "}
+            ></View>
             {exp.paymentMethod}: ${exp.amount}
           </Text>
         ))}

@@ -3,7 +3,6 @@ import * as SQLite from "expo-sqlite";
 const db = SQLite.openDatabase("db.testDb");
 
 export const InitDB = () => {
-  console.log("asd db");
   db.transaction((tx) => {
     tx.executeSql(
       // "create table if not exists Incomes (id integer primary key not null, done int, value text);"

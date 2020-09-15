@@ -1,14 +1,19 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect } from "react";
 import { Root } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import CreateAccountPage from "./view/CreateAccount";
 import HomePage from "./view/Home";
 import LoginPage from "./view/Login";
-import { saveItem, INCOMES } from "./utils/storage";
+import {
+  saveItem,
+  INCOMES,
+  EXPENSES,
+  getAllStorage,
+  clearAll,
+} from "./utils/storage";
 import { getCurrentDate } from "./utils";
-
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -20,33 +25,45 @@ const App = () => {
   //     date: getCurrentDate(),
   //     id: "ZMUgTPyBp",
   //   },
-  //   {
-  //     amount: 2500,
-  //     category: "EXT",
-  //     bankAccount: "2414205416",
-  //     date: getCurrentDate(),
-  //     id: "ZMUgTPyBf",
-  //   },
-  //   {
-  //     amount: 100,
-  //     category: "PER",
-  //     bankAccount: "1234567891",
-  //     date: getCurrentDate(),
-  //     id: "ZMUgTPyBp2",
-  //   },
-  //   {
-  //     amount: 2500,
-  //     category: "EXT",
-  //     bankAccount: "2414205416",
-  //     date: getCurrentDate(),
-  //     id: "ZMUgTPyBb",
-  //   },
   // ];
   // saveItem(INCOMES, JSON.stringify(ingresos));
 
-  // AsyncStorage.setItem("incomes", JSON.stringify(ingresos));
+  // const egresos = [
+  //   {
+  //     amount: 10.0,
+  //     paymentType: "TRC",
+  //     expenseType: "PER",
+  //     detail: "",
+  //     category: "5",
+  //     date: getCurrentDate(),
+  //     id: "BMUgTPyBp",
+  //   },
+  //   {
+  //     amount: 1500,
+  //     paymentType: "TRC",
+  //     expenseType: "PER",
+  //     detail: "",
+  //     category: "5",
+  //     date: getCurrentDate(),
+  //     id: "BMUgTPyBr",
+  //   },
+  //   {
+  //     amount: 10.05,
+  //     paymentType: "TRC",
+  //     expenseType: "PER",
+  //     detail: "",
+  //     category: "5",
+  //     date: getCurrentDate(),
+  //     id: "BMUgTPyBn",
+  //   },
+  // ];
 
-  //console.disableYellowBox = true; // Para deshabilitar los warnings
+  useEffect(() => {
+    // clearAll();
+  }, []);
+  // saveItem(EXPENSES, JSON.stringify(egresos));
+
+  console.disableYellowBox = true; // Para deshabilitar los warnings
   return (
     <>
       <Root>

@@ -14,12 +14,12 @@ const BankAccount = ({ item }) => {
         <Text style={styles.text}>{item.entity}</Text>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.label}>Nro de Tarjeta Asociada:</Text>
-        <Text style={styles.text}>{item.card}</Text>
+        <Text style={styles.label}>Últimos 4 digitos Tarjeta débito:</Text>
+        <Text style={styles.text}>{item.debitCard}</Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Alias:</Text>
-        <Text style={styles.text}>{item.alias} %</Text>
+        <Text style={styles.text}>{item.alias}</Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Saldo:</Text>

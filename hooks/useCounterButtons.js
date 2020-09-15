@@ -19,7 +19,6 @@ const useCounterButtons = (initialState, minCount, maxCount) => {
     if (count < maxCount) {
       const nuevaCount = parseInt(count + 1);
       setCount(nuevaCount);
-      console.log("nuevaCount", nuevaCount);
     }
   };
 

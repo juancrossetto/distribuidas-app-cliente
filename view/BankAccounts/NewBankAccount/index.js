@@ -9,6 +9,7 @@ import { getCurrentDate } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { addItemToList, BANKACCOUNTS } from "../../../utils/storage";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -32,6 +33,16 @@ const NewBankAccountPage = () => {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+
+    if (cbu.length !== 22) {
+      setMsg("El CBU/CVU debe tener 22 dígitos");
+      return;
+    }
+
+    if (debitCard.length !== 4) {
+      setMsg("La tarjeta debe tener 4 dígitos");
+      return;
+    }
     const bankAccount = {
       cbu,
       entity,
@@ -42,11 +53,11 @@ const NewBankAccountPage = () => {
     };
     bankAccount.id = shortid.generate();
     setLoading(true);
-
+    await addItemToList(BANKACCOUNTS, bankAccount);
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("BankAccountsPage");
-    }, 2000);
+    }, 1500);
   };
   return (
     <Container
@@ -58,6 +69,7 @@ const NewBankAccountPage = () => {
           <NativeView>
             <Item inlineLabel last style={globalStyles.input}>
               <Input
+                maxLength={22}
                 keyboardType="numeric"
                 placeholder="CBU/CBU"
                 onChangeText={(val) => setCBU(val)}
@@ -78,7 +90,7 @@ const NewBankAccountPage = () => {
                 value=""
               />
               {BankEntities.map((item, i) => (
-                <Picker.Item label={item.text} value={item.value} />
+                <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
             </Picker>
           </NativeView>
@@ -86,6 +98,7 @@ const NewBankAccountPage = () => {
             <Item inlineLabel last style={globalStyles.input}>
               <AntDesign name="creditcard" size={20} color="blue" />
               <Input
+                maxLength={4}
                 keyboardType="numeric"
                 placeholder="Tarjeta de Débito"
                 onChangeText={(val) => setDebitCard(val)}

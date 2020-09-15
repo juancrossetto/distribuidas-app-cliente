@@ -10,6 +10,7 @@ import useAlert from "../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { LoanTypes } from "../../../utils/enums";
+import { LOANS, addItemToList } from "../../../utils/storage";
 
 const NewLoanPage = ({ route }) => {
   const type = route.params.type;
@@ -41,7 +42,7 @@ const NewLoanPage = ({ route }) => {
     };
     loan.id = shortid.generate();
     setLoading(true);
-    console.log(loan);
+    await addItemToList(LOANS, loan);
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("LoansPage");
