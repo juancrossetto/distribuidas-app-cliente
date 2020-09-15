@@ -79,3 +79,20 @@ export const BudgetCategories = [
   { value: "OCI", text: "Ocio" },
   { value: "OTR", text: "Otros" },
 ];
+
+export const Titles = [
+  { value: "LDC", text: "Letras de cambio", rate: 20 },
+  { value: "CHE", text: "Cheque", rate: 21 },
+  { value: "PAG", text: "Pagare", rate: 19 },
+  { value: "BON", text: "Bonos", rate: 15 },
+  { value: "LDT", text: "Letras del Tesoro", rate: 24 },
+];
+
+export const Actions = [
+  { value: "ACE", text: "Acerinox", actionValue: 6.82 },
+  { value: "BIN", text: "Bankinter", actionValue: 4.54 },
+  { value: "FER", text: "Ferrovial", actionValue: 21.97 },
+  { value: "REP", text: "Repsol", actionValue: 6.266 },
+  { value: "SIE", text: "Siemens Gamesa", actionValue: 22.18 },
+  { value: "VIS", text: "Viscofan", actionValue: 58.2 },
+];

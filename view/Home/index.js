@@ -23,6 +23,7 @@ import NewLoanPage from "../Loans/NewLoan";
 import NewCreditCardPage from "../CreditCards/NewCreditCard";
 import NewBudgetPage from "../Budgets/NewBudget";
 import WeekDuesPage from "../Dashboards/WeekDues";
+import DeflectionsPage from "../Dashboards/Deflection";
 import {
   EvilIcons,
   FontAwesome,
@@ -421,6 +422,16 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Vencimientos de la Semana",
           tabBarIcon: () => <EvilIcons name="chart" size={24} color={"#000"} />,
+        }}
+      />
+      <Tab.Screen
+        name="DeflectionsPage"
+        component={DeflectionsPage}
+        options={{
+          tabBarLabel: "Desvíos",
+          tabBarIcon: () => (
+            <FontAwesome5 name="chart-bar" size={24} color={"#000"} />
+          ),
         }}
       />
     </Tab.Navigator>

@@ -15,8 +15,6 @@ import globalStyles from "../../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
-import { InvestmentsTypes } from "../../../../utils/enums";
-import styles from "../../../../components/Investment";
 import { getCurrentDate } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -38,6 +36,7 @@ const NewTimeDepositPage = () => {
       return;
     }
     const investment = {
+      type: "Plazo Fijo",
       amount,
       date: getCurrentDate(),
       days,

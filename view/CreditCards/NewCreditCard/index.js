@@ -95,7 +95,7 @@ const NewCreditCardPage = () => {
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
     >
       <View style={globalStyles.content}>
-        <H1 style={globalStyles.title}>Asocia tu cuenta</H1>
+        <H1 style={globalStyles.title}>Asocia tu Tarjeta de Crédito</H1>
         <Form>
           <NativeView>
             <Picker
