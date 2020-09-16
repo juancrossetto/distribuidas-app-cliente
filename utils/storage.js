@@ -20,11 +20,20 @@ export const getItem = async (keyName) => {
 
 export const clearAll = async () => {
   try {
+    // return await AsyncStorage.removeItem(USERLOGGED);
     return await AsyncStorage.clear();
   } catch (error) {
     return false;
   }
 };
+// export const clearAll = async () => {
+//   try {
+//     const keys = await AsyncStorage.getAllKeys();
+//     await AsyncStorage.multiRemove(keys);
+//   } catch (error) {
+//     console.error("Error clearing app data.", error);
+//   }
+// };
 
 export const addItemToList = async (keyName, newItem) => {
   try {
@@ -50,10 +59,12 @@ export const getAllStorage = async () => {
 };
 
 // Constantes para Async Storage
+export const USERLOGGED = "@usserLogged";
 export const INCOMES = "@incomes";
 export const EXPENSES = "@expenses";
 export const INVESTMENTS = "@investments";
-export const BANKACCOUNTS = "@bankAccounts";
 export const CREDITCARDS = "@creditCards";
 export const LOANS = "@loans";
 export const BUDGETS = "@budgets";
+export const BANKACCOUNTS = "@bankAccounts";
+export const DEBICARDS = "@debitCards";

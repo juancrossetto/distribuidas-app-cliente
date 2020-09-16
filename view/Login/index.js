@@ -1,24 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
-import { Container, Button, Text, H1, Input, Form, Item } from "native-base";
+import { Container, Spinner, Text, H1, Input, Form, Item } from "native-base";
 import globalStyles from "../../styles/global";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import useAlert from "../../hooks/useAlert";
+import clientAxios from "../../config/axios";
+import AnimatedButton from "../../components/AnimatedButton";
+import { saveItem, getItem, USERLOGGED, clearAll } from "../../utils/storage";
 
 const LoginPage = () => {
   // State del formulario
-  const [email, setEmail] = useState("juan@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [CustomAlert, setMsg] = useAlert();
+  const [loading, setLoading] = useState(false);
 
-  // React Navigation
+  const isFocused = useIsFocused();
   const navigation = useNavigation();
 
-  // Mutation de apollo
-  //   const [autenticarUsuario] = useMutation(AUTENTICAR_USUARIO);
+  useEffect(() => {
+    isUserCatched();
+  }, [isFocused]);
 
+  const isUserCatched = async () => {
+    const user = await getItem(USERLOGGED);
+    if (user) {
+      navigation.navigate("Home");
+    }
+  };
+  const login = async () => {
+    try {
+      // const resp = await clientAxios.get(`/users/${email}`);
+      const resp = await clientAxios.post(`/auth/`, {
+        email,
+        password,
+      });
+      if (resp.data.user) {
+        await saveItem(USERLOGGED, {
+          id: resp.data.user._id,
+          email: resp.data.user.email,
+          name: resp.data.user.name,
+          password: resp.data.user.password,
+        });
+        navigation.navigate("Home");
+      } else {
+        setMsg("El usuario indicado no se encuentra registrado");
+      }
+    } catch (error) {
+      setMsg(error.response.data.msg);
+    }
+  };
   // Cuando el usuario presiona en iniciar sesión.
   const handleSubmit = async () => {
+    setLoading(true);
+
     //validar
     if (email === "" || password === "") {
       // Mostrar un error
@@ -28,29 +63,19 @@ const LoginPage = () => {
 
     try {
       // autenticar el usuario
-      //   const {data} = await autenticarUsuario({
-      //     variables: {
-      //       input: {
-      //         email,
-      //         password,
-      //       },
-      //     },
-      //   });
-      //   const {token} = data.autenticarUsuario;
-      // Colocar token en storage
-      // Redireccionar a Proyectos
-      navigation.navigate("Home");
-      // setMsg(data.autenticarUsuario);
+      login();
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     } catch (error) {
-      setMsg(error.message.replace("GraphQL error:", ""));
+      setMsg(error.message);
     }
   };
 
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={globalStyles.content}>
-        <H1 style={globalStyles.title}>PresupApp</H1>
-
+        <H1 style={globalStyles.title}>OrganizApp</H1>
         <Form>
           <Item inlineLabel last style={globalStyles.input}>
             <Input
@@ -66,14 +91,12 @@ const LoginPage = () => {
             />
           </Item>
         </Form>
-        <Button
-          square
-          block
-          style={globalStyles.button}
+        <AnimatedButton
+          text="Iniciar Sesión"
           onPress={() => handleSubmit()}
-        >
-          <Text style={globalStyles.buttonText}>Iniciar Sesión</Text>
-        </Button>
+          disabled={loading}
+        />
+        {loading && <Spinner color="white" />}
         <Text
           onPress={() => navigation.navigate("CreateAccount")}
           style={globalStyles.link}

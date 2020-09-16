@@ -1,37 +1,58 @@
-import React from "react";
-import { Grid, LineChart, XAxis, YAxis } from "react-native-svg-charts";
-import { View } from "react-native";
+import React, { useState } from "react";
+import { BarChart, Grid } from "react-native-svg-charts";
+import { Text } from "react-native-svg";
 
-const DeflectionChart = ({ movements }) => {
-  const axesSvg = { fontSize: 10, fill: "grey" };
-  const verticalContentInset = { top: 10, bottom: 10 };
-  const xAxisHeight = 10;
+const DeflectionChart = ({ realData, budgetedData }) => {
+  const budgeted = budgetedData.map((value) => ({
+    value,
+  }));
+  const real = realData.map((value) => ({
+    value,
+  }));
+
+  const barData = [
+    {
+      data: budgeted,
+      svg: {
+        fill: "rgb(134, 65, 244)",
+      },
+    },
+    {
+      data: real,
+    },
+  ];
+
+  const CUT_OFF = 50;
+  // const [data, setData] = useState([50, 10, 40, 95, 85]);
+
+  const LabelsReal = ({ x, y, bandwidth, data }) =>
+    data.map((value, index) => (
+      <Text
+        key={index}
+        x={value > CUT_OFF ? x(0) + 10 : x(value) + 10}
+        y={y(index) + bandwidth / 2}
+        fontSize={14}
+        fill={value > CUT_OFF ? "white" : "black"}
+        alignmentBaseline={"middle"}
+      >
+        {value}
+      </Text>
+    ));
   return (
-    <View style={{ height: 200, padding: 20, flexDirection: "row" }}>
-      <YAxis
-        data={movements}
-        style={{ marginBottom: xAxisHeight }}
-        contentInset={verticalContentInset}
-        svg={axesSvg}
-      />
-      <View style={{ flex: 1, marginLeft: 10 }}>
-        <LineChart
-          style={{ flex: 1 }}
-          data={movements}
-          contentInset={verticalContentInset}
-          svg={{ stroke: "rgb(134, 65, 244)" }}
-        >
-          <Grid />
-        </LineChart>
-        <XAxis
-          style={{ marginHorizontal: -10, height: xAxisHeight }}
-          data={movements}
-          formatLabel={(value, index) => index}
-          contentInset={{ left: 10, right: 10 }}
-          svg={axesSvg}
-        />
-      </View>
-    </View>
+    <BarChart
+      style={{ height: 200 }}
+      data={barData}
+      yAccessor={({ item }) => item.value}
+      svg={{
+        fill: "blue",
+      }}
+      contentInset={{ top: 30, bottom: 30 }}
+      // horizontal={true}
+      // {...props}
+    >
+      <Grid direction={Grid.Direction.VERTICAL} />
+      {/* <LabelsReal data={data} /> */}
+    </BarChart>
   );
 };
 

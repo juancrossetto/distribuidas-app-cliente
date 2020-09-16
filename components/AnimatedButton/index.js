@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {TouchableWithoutFeedback, Animated} from 'react-native';
-import {Text} from 'native-base';
-import styles from './styles';
+import React, { useState } from "react";
+import { TouchableWithoutFeedback, Animated } from "react-native";
+import { Text } from "native-base";
+import styles from "./styles";
 
-const AnimatedButton = ({text, onPress}) => {
+const AnimatedButton = ({ text, onPress, disabled = false }) => {
   const [buttonAnimation] = useState(new Animated.Value(1));
   const animationIn = () => {
     Animated.spring(buttonAnimation, {
@@ -22,14 +22,16 @@ const AnimatedButton = ({text, onPress}) => {
   };
 
   const animationStyle = {
-    transform: [{scale: buttonAnimation}],
+    transform: [{ scale: buttonAnimation }],
   };
   return (
     <TouchableWithoutFeedback
+      disabled={disabled}
       delayPressIn={1}
       onPressIn={() => animationIn()}
       onPressOut={() => animationOut()}
-      onPress={() => onPress()}>
+      onPress={() => onPress()}
+    >
       <Animated.View style={[styles.btnAdd, animationStyle]}>
         <Text style={styles.textAdd}>{text}</Text>
       </Animated.View>

@@ -24,6 +24,7 @@ import NewCreditCardPage from "../CreditCards/NewCreditCard";
 import NewBudgetPage from "../Budgets/NewBudget";
 import WeekDuesPage from "../Dashboards/WeekDues";
 import DeflectionsPage from "../Dashboards/Deflection";
+import CloseSessionPage from "../CloseSession";
 import {
   EvilIcons,
   FontAwesome,
@@ -32,6 +33,7 @@ import {
   AntDesign,
   MaterialIcons,
   Fontisto,
+  Ionicons,
 } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
@@ -364,6 +366,30 @@ const cardsStack = ({ navigation }) => {
   );
 };
 
+const closeSessionStack = ({ navigation }) => {
+  return (
+    <Stack.Navigator initialRouteName="CloseSessionPage">
+      <Stack.Screen
+        name="CloseSessionPage"
+        component={CloseSessionPage}
+        options={{
+          title: "",
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 function getHeaderTitle(route) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "Feed";
 
@@ -551,6 +577,17 @@ function HomePage() {
           ),
         }}
         component={cardsStack}
+      />
+      <Drawer.Screen
+        style={{ marginTop: 20 }}
+        name="Cerrar Sesión"
+        options={{
+          drawerLabel: "Cerrar Sesión",
+          drawerIcon: () => (
+            <Ionicons name="md-exit" size={25} color={"blue"} />
+          ),
+        }}
+        component={closeSessionStack}
       />
     </Drawer.Navigator>
     // </NavigationContainer>

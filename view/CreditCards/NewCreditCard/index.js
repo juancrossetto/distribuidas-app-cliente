@@ -5,7 +5,7 @@ import globalStyles from "../../../styles/global";
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities, Months } from "../../../utils/enums";
-import { getCurrentDate } from "../../../utils";
+import { getCurrentDate, getRandomCardNumber } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,7 +17,7 @@ const NewCreditCardPage = () => {
   const [dueMonth, setDueMonth] = useState(null);
   const [dueYear, setDueYear] = useState(null);
   const [entity, setEntity] = useState("");
-  const [cbu, setCBU] = useState("");
+  // const [cbu, setCBU] = useState("");
   const [alias, setAlias] = useState("");
   const [closeDateSummary, setCloseDateSummary] = useState(null);
   const [dueDateSummary, setDueDateSummary] = useState(null);
@@ -47,7 +47,7 @@ const NewCreditCardPage = () => {
   const handleSubmit = async () => {
     if (
       number <= 0 ||
-      cbu <= 0 ||
+      // cbu <= 0 ||
       entity.trim() === "" ||
       alias.trim() === "" ||
       dueMonth === null ||
@@ -64,15 +64,20 @@ const NewCreditCardPage = () => {
       return;
     }
 
-    if (cbu.length !== 22) {
-      setMsg("CBU/CVU no válido");
+    if (closeDateSummary > dueDateSummary) {
+      setMsg("La fecha de cierre no puede ser mayor a la de vencimiento");
       return;
     }
+
+    // if (cbu.length !== 22) {
+    //   setMsg("CBU/CVU no válido");
+    //   return;
+    // }
 
     const date = getCurrentDate();
     const creditCard = {
       number,
-      cbu,
+      // cbu,
       entity,
       alias,
       dueMonth,
@@ -115,7 +120,7 @@ const NewCreditCardPage = () => {
               ))}
             </Picker>
           </NativeView>
-          <NativeView style={{ marginTop: 22 }}>
+          {/* <NativeView style={{ marginTop: 22 }}>
             <Item inlineLabel last style={globalStyles.input}>
               <Input
                 maxLength={22}
@@ -124,12 +129,8 @@ const NewCreditCardPage = () => {
                 onChangeText={(val) => setCBU(val)}
               />
             </Item>
-          </NativeView>
-          <NativeView
-            style={{
-              flexDirection: "row",
-            }}
-          >
+          </NativeView>    */}
+          <NativeView style={{ marginTop: 22, flexDirection: "row" }}>
             <NativeView style={{ flex: 1 }}>
               <Picker
                 style={{

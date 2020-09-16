@@ -5,11 +5,15 @@ import globalStyles from "../../../styles/global";
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
-import { getCurrentDate } from "../../../utils";
+import { getCurrentDate, getRandomCardNumber } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { addItemToList, BANKACCOUNTS } from "../../../utils/storage";
+import {
+  addItemToList,
+  BANKACCOUNTS,
+  DEBITCARDS,
+} from "../../../utils/storage";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -39,10 +43,11 @@ const NewBankAccountPage = () => {
       return;
     }
 
-    if (debitCard.length !== 4) {
-      setMsg("La tarjeta debe tener 4 dígitos");
+    if (debitCard.length !== 16) {
+      setMsg("La tarjeta debe tener 16 dígitos");
       return;
     }
+    // const debitCardNumber = getRandomCardNumber(16);
     const bankAccount = {
       cbu,
       entity,
@@ -54,6 +59,11 @@ const NewBankAccountPage = () => {
     bankAccount.id = shortid.generate();
     setLoading(true);
     await addItemToList(BANKACCOUNTS, bankAccount);
+    // const newDebitCard = {
+    //   number: debitCard,
+    //   cbu,
+    // }
+    // await addItemToList(DEBITCARDS, bankAccount);
     setTimeout(() => {
       setLoading(false);
       navigation.navigate("BankAccountsPage");
@@ -98,7 +108,7 @@ const NewBankAccountPage = () => {
             <Item inlineLabel last style={globalStyles.input}>
               <AntDesign name="creditcard" size={20} color="blue" />
               <Input
-                maxLength={4}
+                maxLength={16}
                 keyboardType="numeric"
                 placeholder="Tarjeta de Débito"
                 onChangeText={(val) => setDebitCard(val)}
