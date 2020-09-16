@@ -9,7 +9,8 @@ import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { saveItem, addItemToList, INCOMES } from "../../../utils/storage";
-import { getCurrentDate } from "../../../utils";
+import { getCurrentDate, getEmailUserLogged } from "../../../utils";
+import clientAxios from "../../../config/axios";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -18,23 +19,51 @@ const NewIncomePage = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [CustomAlert, setMsg] = useAlert();
+
+  const createIncome = async (income) => {
+    try {
+      setLoading(true);
+      const resp = await clientAxios.post(`/incomes/`, income);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Ingreso cargado correctamente`);
+
+        //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
+
+        navigation.navigate("IncomesPage");
+      }
+    } catch (error) {
+      setMsg(error.response.data.errores[0].msg);
+      await addItemToList(INCOMES, income);
+      setMsg("Ingreso guardado en Memoria");
+    }
+  };
+
   const handleSubmit = async () => {
     if (amount <= 0 || category.trim() === "" || bankAccount.trim() === "") {
       setMsg("Todos los campos son obligatorios");
       return;
     }
     const date = getCurrentDate();
-    const income = { amount, category, bankAccount, date };
-    income.id = shortid.generate();
-    await addItemToList(INCOMES, income);
-    setLoading(true);
+    const email = await getEmailUserLogged();
+    const income = {
+      amount,
+      category,
+      bankAccount,
+      date,
+      email,
+    };
+    // income.id = shortid.generate();
+    createIncome(income);
+    // await addItemToList(INCOMES, income);
 
     //llamar API insertar ingreso en BD
     //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("IncomesPage");
-    }, 1500);
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   navigation.navigate("IncomesPage");
+    // }, 1500);
   };
   return (
     <Container

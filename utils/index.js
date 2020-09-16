@@ -1,3 +1,5 @@
+import { getItem, USERLOGGED } from "./storage";
+
 export const getCurrentDate = () => {
   let date = new Date();
   let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
@@ -31,4 +33,9 @@ export const getRandomCardNumber = (digits) => {
     randomstring += chars.substring(rnum, rnum + 1);
   }
   return validateFormatCard(randomstring);
+};
+
+export const getEmailUserLogged = async () => {
+  const user = await getItem(USERLOGGED);
+  return user.email;
 };

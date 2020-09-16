@@ -12,7 +12,7 @@ import {
   Body,
   ListItem,
 } from "native-base";
-import { View as NativeView, Picker } from "react-native";
+import { View as NativeView, Picker, SafeAreaView } from "react-native";
 import globalStyles from "../../../styles/global";
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +20,7 @@ import {
   PaymentMethods,
   ExpenseTypes,
   ExpenseCategories,
+  BudgetCategories,
 } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
@@ -27,6 +28,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { addItemToList, EXPENSES } from "../../../utils/storage";
 import { getCurrentDate } from "../../../utils";
 // import {ImageUploader} from 'react-images-upload';
+import ImageUploader from "../../../components/ImageUploader";
 
 const NewExpensePage = () => {
   // const [image, setImage] = useState(null);
@@ -36,21 +38,28 @@ const NewExpensePage = () => {
   const [expenseType, setExpenseType] = useState("");
   const [detail, setDetail] = useState("");
   const [category, setCategory] = useState("");
+  const [area, setArea] = useState("");
   const [withFees, setWithFees] = useState(false);
   const [fees, setFees] = useState(0);
 
   //   const [fees, CounterButtons] = useCounterButtons(1, 1, 12);
-  //   const [voucher, setVoucher] = useState('');
+  const [voucher, setVoucher] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
 
   const handleSubmit = async () => {
-    if (amount <= 0 || paymentType === "" || expenseType === "") {
+    if (
+      amount <= 0 ||
+      paymentType === "" ||
+      expenseType === "" ||
+      area === ""
+    ) {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+
     if (expenseType === "PER" && category === "") {
       setMsg("Por favor seleccione un categoria de egreso");
       return;
@@ -74,8 +83,10 @@ const NewExpensePage = () => {
       category,
       fees,
       date,
+      area,
+      voucher,
     };
-    expense.id = shortid.generate();
+    // expense.id = shortid.generate();
     setLoading(true);
     await addItemToList(EXPENSES, expense);
     //llamar API insertar egreso en BD
@@ -90,8 +101,9 @@ const NewExpensePage = () => {
     <Container
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
     >
-      <View style={globalStyles.content}>
+      <View style={[globalStyles.content, { marginTop: 10, flex: 5 }]}>
         <H1 style={globalStyles.subtitle}>Nuevo Egreso</H1>
+        {/* <SafeAreaView style={{ flex: 15 }}> */}
         <Form>
           <NativeView>
             <Item inlineLabel last style={globalStyles.input}>
@@ -188,7 +200,7 @@ const NewExpensePage = () => {
             {withFees && paymentType.trim() === "TRC" && (
               <Picker
                 style={{
-                  height: 50,
+                  height: 40,
                   backgroundColor: "#FFF",
                 }}
                 selectedValue={fees}
@@ -213,17 +225,39 @@ const NewExpensePage = () => {
               </Picker>
             )}
           </NativeView>
-          {/* <NativeView>
-            <ImageUploader
-              withIcon={true}
-              buttonText="Choose images"
-              onChange={onDrop}
-              imgExtension={['.jpg', '.gif', '.png', '.gif']}
-              maxFileSize={5242880}
-            />
-          </NativeView> */}
+          <NativeView>
+            <Picker
+              style={{ marginTop: 22, height: 50, backgroundColor: "#FFF" }}
+              selectedValue={area}
+              onValueChange={(val) => setArea(val)}
+            >
+              <Picker.Item label="-- Seleccione un Rubro --" value="" />
+              {BudgetCategories.map((item, i) => (
+                <Picker.Item label={item.text} value={item.value} key={i} />
+              ))}
+            </Picker>
+          </NativeView>
+          <NativeView
+            style={{
+              marginTop: 22,
+            }}
+          >
+            <ImageUploader image={voucher} setImage={setVoucher} />
+          </NativeView>
         </Form>
-        <AnimatedButton text="Guardar Egreso" onPress={() => handleSubmit()} />
+        {/* </SafeAreaView> */}
+        {/* </View> */}
+        {/* <View
+        style={{
+          flex: 1,
+        }}
+      > */}
+        <View style={{ marginTop: 20 }}>
+          <AnimatedButton
+            text="Guardar Egreso"
+            onPress={() => handleSubmit()}
+          />
+        </View>
         {loading && (
           <NativeView>
             <Spinner color="white" />

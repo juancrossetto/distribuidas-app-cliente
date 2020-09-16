@@ -20,7 +20,7 @@ export const LoanTypes = [
 ];
 export const ExpenseTypes = [
   { value: "PER", text: "Periódico Mensual" },
-  { value: "ADP", text: "Extraordinario" },
+  { value: "EXT", text: "Extraordinario" },
 ];
 
 export const ExpenseCategories = [

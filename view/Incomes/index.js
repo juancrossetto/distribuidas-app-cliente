@@ -7,6 +7,8 @@ import Income from "../../components/Income";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
 import { saveItem, getItem, INCOMES } from "../../utils/storage";
+import clientAxios from "../../config/axios";
+import { getEmailUserLogged } from "../../utils";
 
 const IncomesPage = (props) => {
   const isFocused = useIsFocused();
@@ -16,19 +18,25 @@ const IncomesPage = (props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   // const [isMounted, setIsMounted] = useState(true);
+
+  const getIncomes = async () => {
+    try {
+      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/incomes/${email}`);
+      if (resp.data.incomes) {
+        setIncomesList(resp.data.incomes);
+      } else {
+        setIncomesList(await getItem(INCOMES));
+      }
+    } catch (error) {
+      setIncomesList(await getItem(INCOMES));
+    }
+  };
+
   useEffect(() => {
     // setIsMounted(true);
     // console.log("isMounted", isMounted);
-    const getIncomes = async () => {
-      try {
-        //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-        // saveItem(INCOMES, res);
-        // setIncomesList(res);
-        throw ex;
-      } catch (error) {
-        setIncomesList(await getItem(INCOMES));
-      }
-    };
 
     // if (isMounted) {
     setLoading(true);
