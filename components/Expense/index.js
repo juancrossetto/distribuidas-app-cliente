@@ -62,12 +62,15 @@ const Expense = ({ item }) => {
             <Text style={styles.text}>{item.detail}</Text>
           </View>
         )}
-        <View style={styles.textContainer}>
-          <Text style={styles.label}>Rubro:</Text>
-          <Text style={styles.text}>
-            {BudgetCategories.filter((p) => p.value === item.area)[0].text}
-          </Text>
-        </View>
+        {item.area && (
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Rubro:</Text>
+            <Text style={styles.text}>
+              {BudgetCategories.filter((p) => p.value === item.area)[0].text}
+            </Text>
+          </View>
+        )}
+
         <View style={styles.textContainer}>
           <Text style={styles.label}>Fecha:</Text>
           <Text style={styles.text}>{item.date}</Text>

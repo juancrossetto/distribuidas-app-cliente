@@ -41,7 +41,7 @@ const ExpensesPage = (props) => {
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
         <H1 style={globalStyles.title}>Egresos</H1>
-        <SafeAreaView style={{ flex: 5 }}>
+        <SafeAreaView style={{ flex: 5 }} key={1}>
           {!expensesList || expensesList.length <= 0 ? (
             <H1 style={globalStyles.subtitle}>No tenes egresos cargados</H1>
           ) : (
