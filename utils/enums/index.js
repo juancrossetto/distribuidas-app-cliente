@@ -3,6 +3,7 @@ export const IncomeCategories = [
   { value: "ADP", text: "Alquileres de Propiedades" },
   { value: "SRD", text: "Sueldos en Relación de Dependencia" },
   { value: "FAA", text: "Facturación Autónomo" },
+  { value: "OTR", text: "Otros" },
 ];
 
 export const PaymentMethods = [

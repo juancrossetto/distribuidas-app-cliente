@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^5.9.0",
     "axios": "^0.20.0",
     "expo": "~38.0.9",
+    "expo-image-picker": "~8.3.0",
     "expo-splash-screen": "^0.5.0",
     "expo-sqlite": "~8.2.1",
     "expo-status-bar": "^1.0.0",
@@ -29,6 +30,7 @@
     "react-dom": "~16.11.0",
     "react-images-upload": "^1.2.8",
     "react-native": "~0.62.2",
+    "react-native-credit-card-input": "^0.4.1",
     "react-native-gesture-handler": "^1.6.1",
     "react-native-modal-datetime-picker": "^8.9.3",
     "react-native-reanimated": "^1.4.0",
@@ -43,8 +45,7 @@
     "react-native-unimodules": "~0.10.1",
     "react-native-vector-icons": "^7.0.0",
     "react-native-web": "~0.11.7",
-    "shortid": "^2.2.15",
-    "expo-image-picker": "~8.3.0"
+    "shortid": "^2.2.15"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

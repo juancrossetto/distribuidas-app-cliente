@@ -28,7 +28,11 @@ const AmountSpentPage = () => {
       <View style={[globalStyles.content, { flex: 10 }]}>
         <AmountSpentChart
           data={expenses}
-          style={{ flex: 10, borderColor: "red", borderWidth: 2 }}
+          style={{
+            flex: 10,
+            borderColor: "red",
+            borderWidth: 2,
+          }}
         />
       </View>
       <View
@@ -40,7 +44,12 @@ const AmountSpentPage = () => {
         }}
       >
         {expenses.map((exp, i) => (
-          <Text key={i}>
+          <Text
+            key={i}
+            style={{
+              color: "#fff",
+            }}
+          >
             <View
               style={{
                 width: 15,

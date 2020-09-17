@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { BankEntities } from "../../utils/enums";
 import styles from "../Expense/styles";
 
 const BankAccount = ({ item }) => {
@@ -7,11 +8,14 @@ const BankAccount = ({ item }) => {
     <View style={[styles.expense, { marginBottom: 5 }]}>
       <View style={styles.textContainer}>
         <Text style={styles.label}>CBU/CVU:</Text>
-        <Text style={styles.text}>$ {item.cbu}</Text>
+        <Text style={styles.text}>{item.cbu}</Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Entidad Bancaria:</Text>
-        <Text style={styles.text}>{item.entity}</Text>
+        <Text style={styles.text}>
+          {" "}
+          {BankEntities.filter((p) => p.value === item.entity)[0].text}
+        </Text>
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Últimos 4 digitos Tarjeta débito:</Text>

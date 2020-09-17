@@ -15,6 +15,7 @@ import clientAxios from "../../../config/axios";
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -37,14 +38,23 @@ const NewIncomePage = () => {
       setMsg(error.response.data.errores[0].msg);
       await addItemToList(INCOMES, income);
       setMsg("Ingreso guardado en Memoria");
+      setLoading(false);
     }
   };
 
   const handleSubmit = async () => {
-    if (amount <= 0 || category.trim() === "" || bankAccount.trim() === "") {
+    if (amount <= 0 || category.trim() === "") {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+
+    if (paymentMethod === "BAN" && bankAccount.trim() === "") {
+      setMsg(
+        "Por favor seleccione una cuenta bancaria donde realizar el depósito"
+      );
+      return;
+    }
+
     const date = getCurrentDate();
     const email = await getEmailUserLogged();
     const income = {
@@ -56,6 +66,7 @@ const NewIncomePage = () => {
     };
     // income.id = shortid.generate();
     createIncome(income);
+    setLoading(false);
     // await addItemToList(INCOMES, income);
 
     //llamar API insertar ingreso en BD
@@ -104,18 +115,35 @@ const NewIncomePage = () => {
                 marginTop: 22,
                 backgroundColor: "#FFF",
               }}
-              selectedValue={bankAccount}
-              onValueChange={(val) => setBankAccount(val)}
+              selectedValue={paymentMethod}
+              onValueChange={(val) => setPaymentMethod(val)}
             >
-              <Picker.Item
-                label="-- Seleccione una Cuenta Bancaria --"
-                value=""
-              />
-              <Picker.Item label="1234567891" value="1234567891" />
-              <Picker.Item label="3456789011" value="3456789011" />
-              <Picker.Item label="2414205416" value="2414205416" />
+              <Picker.Item label="-- Seleccione el Medio de Pago --" value="" />
+              <Picker.Item label={"Efectivo"} value={"EFE"} />
+              <Picker.Item label={"Deposito en cuenta"} value={"BAN"} />
             </Picker>
           </NativeView>
+          {paymentMethod === "BAN" && (
+            <NativeView>
+              <Picker
+                style={{
+                  height: 50,
+                  marginTop: 22,
+                  backgroundColor: "#FFF",
+                }}
+                selectedValue={bankAccount}
+                onValueChange={(val) => setBankAccount(val)}
+              >
+                <Picker.Item
+                  label="-- Seleccione una Cuenta Bancaria --"
+                  value=""
+                />
+                <Picker.Item label="1234567891" value="1234567891" />
+                <Picker.Item label="3456789011" value="3456789011" />
+                <Picker.Item label="2414205416" value="2414205416" />
+              </Picker>
+            </NativeView>
+          )}
         </Form>
         <AnimatedButton text="Guardar Ingreso" onPress={() => handleSubmit()} />
         {loading && (

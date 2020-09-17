@@ -28,7 +28,7 @@ const AmountSpentChart = ({ data }) => {
           alignmentBaseline={"middle"}
           fontSize={9}
           stroke={"black"}
-          strokeWidth={1}
+          strokeWidth={0}
         >
           ${value}
         </Text>

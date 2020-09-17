@@ -36,7 +36,6 @@ const DeflectionsPage = () => {
           </Picker>
         </View>
       </View>
-
       {month ? (
         <View style={[{ flex: 8 }]}>
           <DeflectionChart
