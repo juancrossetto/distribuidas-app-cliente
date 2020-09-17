@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { View } from "react-native";
 import { BarChart, Grid } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 
@@ -22,37 +23,56 @@ const DeflectionChart = ({ realData, budgetedData }) => {
     },
   ];
 
-  const CUT_OFF = 50;
+  // const CUT_OFF = 50;
   // const [data, setData] = useState([50, 10, 40, 95, 85]);
-
-  const LabelsReal = ({ x, y, bandwidth, data }) =>
+  const data = [10, 5, 25, 15, 20];
+  const CUT_OFF = 20;
+  const Labels = ({ x, y, bandwidth, data }) =>
     data.map((value, index) => (
       <Text
         key={index}
-        x={value > CUT_OFF ? x(0) + 10 : x(value) + 10}
-        y={y(index) + bandwidth / 2}
+        x={x(index) + bandwidth / 2}
+        y={value < CUT_OFF ? y(value) - 10 : y(value) + 15}
         fontSize={14}
-        fill={value > CUT_OFF ? "white" : "black"}
+        fill={value >= CUT_OFF ? "white" : "black"}
         alignmentBaseline={"middle"}
+        textAnchor={"middle"}
       >
         {value}
       </Text>
     ));
   return (
-    <BarChart
-      style={{ height: 200 }}
-      data={barData}
-      yAccessor={({ item }) => item.value}
-      svg={{
-        fill: "blue",
-      }}
-      contentInset={{ top: 30, bottom: 30 }}
-      // horizontal={true}
-      // {...props}
-    >
-      <Grid direction={Grid.Direction.VERTICAL} />
-      {/* <LabelsReal data={data} /> */}
-    </BarChart>
+    <View style={{ flexDirection: "row", height: 200, paddingVertical: 16 }}>
+      <BarChart
+        style={{ flex: 1 }}
+        data={barData}
+        yAccessor={({ item }) => item.value}
+        svg={{ fill: "white" }}
+        contentInset={{ top: 10, bottom: 10 }}
+        spacing={0.2}
+        gridMin={0}
+      >
+        <Grid direction={Grid.Direction.HORIZONTAL} />
+        {/* <Labels /> */}
+      </BarChart>
+    </View>
+    // <>
+    //   <BarChart
+    //     style={{ height: 200 }}
+    //     data={barData}
+    //     yAccessor={({ item }) => item.value}
+    //     svg={{
+    //       fill: "blue",
+    //     }}
+    //     contentInset={{ top: 30, bottom: 30 }}
+    //     // horizontal={true}
+    //     // {...props}
+    //   >
+    //     <Grid direction={Grid.Direction.VERTICAL} />
+    //     <LabelsReal />
+    //     {/* <Text>asdasd</Text> */}
+    //   </BarChart>
+    // </>
   );
 };
 

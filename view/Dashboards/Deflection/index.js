@@ -17,30 +17,31 @@ const DeflectionsPage = () => {
   };
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
-      <View style={{ marginHorizontal: 5, flex: 1, marginTop: 30 }}>
+      <View style={{ marginHorizontal: 5, flex: 2, marginTop: 30 }}>
         <H1 style={globalStyles.title}>Desvío de Presupuestos</H1>
+        <View>
+          <Picker
+            style={{
+              height: 50,
+              backgroundColor: "#FFF",
+              marginHorizontal: 10,
+            }}
+            selectedValue={month}
+            onValueChange={(e) => setMonth(e)}
+          >
+            <Picker.Item label="-- Seleccione un Mes --" value="" />
+            {Months.map((item, i) => (
+              <Picker.Item label={item.text} value={item.text} key={i} />
+            ))}
+          </Picker>
+        </View>
       </View>
-      <View>
-        <Picker
-          style={{
-            height: 50,
-            backgroundColor: "#FFF",
-            marginHorizontal: 10,
-          }}
-          selectedValue={month}
-          onValueChange={(e) => setMonth(e)}
-        >
-          <Picker.Item label="-- Seleccione un Mes --" value="" />
-          {Months.map((item, i) => (
-            <Picker.Item label={item.text} value={item.text} key={i} />
-          ))}
-        </Picker>
-      </View>
+
       {month ? (
-        <View style={[{ flex: 10 }]}>
+        <View style={[{ flex: 8 }]}>
           <DeflectionChart
-            budgetedData={[14, -1, 100, -95, -94, -24, -8, 85, -91, 35]}
-            realData={[24, 28, 93, 77, -42, -62, 52, -87, 21, 53]}
+            budgetedData={[14, 1, 100, 95, 94]}
+            realData={[24, 28, 93, 77, 42]}
           />
           <View
             style={{ flexDirection: "row", justifyContent: "space-around" }}
@@ -51,7 +52,7 @@ const DeflectionsPage = () => {
                 style={{
                   width: 15,
                   height: 10,
-                  backgroundColor: "blue",
+                  backgroundColor: "white",
                 }}
               ></View>
             </View>

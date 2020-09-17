@@ -47,26 +47,25 @@ const LoginPage = () => {
         setMsg("El usuario indicado no se encuentra registrado");
       }
     } catch (error) {
+      console.log(error);
       setMsg(error.response.data.msg);
     }
   };
   // Cuando el usuario presiona en iniciar sesión.
   const handleSubmit = async () => {
-    setLoading(true);
-
     //validar
     if (email === "" || password === "") {
       // Mostrar un error
       setMsg("Todos los campos son obligatorios");
       return;
     }
-
+    setLoading(true);
     try {
       // autenticar el usuario
       login();
       setTimeout(() => {
         setLoading(false);
-      }, 500);
+      }, 1000);
     } catch (error) {
       setMsg(error.message);
     }
