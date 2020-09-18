@@ -18,6 +18,15 @@ export const getItem = async (keyName) => {
   }
 };
 
+export const removeItem = async (keyName) => {
+  try {
+    await AsyncStorage.removeItem(keyName);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const clearAll = async () => {
   try {
     // return await AsyncStorage.removeItem(USERLOGGED);

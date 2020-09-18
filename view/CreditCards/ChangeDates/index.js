@@ -7,7 +7,7 @@ import useAlert from "../../../hooks/useAlert";
 import { useNavigation } from "@react-navigation/native";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { CardView } from "react-native-credit-card-input";
-import { CREDITCARDS, saveItem } from "../../../utils/storage";
+import { CREDITCARDS, saveItem, removeItem } from "../../../utils/storage";
 import clientAxios from "../../../config/axios";
 
 const ChangeDatesCreditCardPage = ({ route }) => {
@@ -61,13 +61,14 @@ const ChangeDatesCreditCardPage = ({ route }) => {
       if (resp) {
         setLoading(false);
         setMsg(`Fechas del Resúmen editadas correctamente`);
-        navigation.navigate("CreditCardsPage");
       } else {
+        // await removeItem(CREDITCARDS)
         await saveItem(CREDITCARDS, creditCard);
         console.log("nuevooo", creditCard);
         setCardsList(await getItem(CREDITCARDS));
-        navigation.navigate("CreditCardsPage");
       }
+
+      navigation.navigate("CreditCardsPage");
     } catch (error) {
       console.log("error", error);
       if (error.response.data.errores) {
@@ -75,7 +76,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
       }
 
       await saveItem(CREDITCARDS, creditCard);
-      console.log("nuevooo", creditCard);
+      console.log("nuevo ERROR", creditCard);
       setMsg("Tarjeta de Crédito guardada en Memoria");
       navigation.navigate("CreditCardsPage");
       setLoading(false);
