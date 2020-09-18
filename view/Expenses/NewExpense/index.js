@@ -26,9 +26,10 @@ import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { addItemToList, EXPENSES } from "../../../utils/storage";
-import { getCurrentDate } from "../../../utils";
+import { getCurrentDate, getEmailUserLogged } from "../../../utils";
 // import {ImageUploader} from 'react-images-upload';
 import ImageUploader from "../../../components/ImageUploader";
+import clientAxios from "../../../config/axios";
 
 const NewExpensePage = () => {
   // const [image, setImage] = useState(null);
@@ -48,6 +49,26 @@ const NewExpensePage = () => {
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation();
+
+  const createExpense = async (expense) => {
+    try {
+      setLoading(true);
+      const resp = await clientAxios.post(`/expenses/`, expense);
+      if (resp) {
+        setLoading(false);
+        setMsg(`Egreso cargado correctamente`);
+
+        //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
+
+        navigation.navigate("ExpensesPage");
+      }
+    } catch (error) {
+      setMsg(error.response.data.errores[0].msg);
+      await addItemToList(EXPENSES, expense);
+      setMsg("Egreso guardado en Memoria");
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (
@@ -74,7 +95,10 @@ const NewExpensePage = () => {
         return;
       }
     }
+
+    setLoading(true);
     const date = getCurrentDate();
+    const email = await getEmailUserLogged();
     const expense = {
       amount,
       paymentType,
@@ -85,16 +109,11 @@ const NewExpensePage = () => {
       date,
       area,
       voucher,
+      email,
     };
     // expense.id = shortid.generate();
-    setLoading(true);
-    await addItemToList(EXPENSES, expense);
-    //llamar API insertar egreso en BD
-    setTimeout(() => {
-      setLoading(false);
-
-      navigation.navigate("ExpensesPage");
-    }, 1500);
+    createExpense(expense);
+    setLoading(false);
   };
 
   return (

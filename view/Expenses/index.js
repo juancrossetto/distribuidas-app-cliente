@@ -7,6 +7,8 @@ import Expense from "../../components/Expense";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
 import { saveItem, getItem, EXPENSES } from "../../utils/storage";
+import clientAxios from "../../config/axios";
+import { getEmailUserLogged } from "../../utils";
 
 const ExpensesPage = (props) => {
   const isFocused = useIsFocused();
@@ -16,17 +18,21 @@ const ExpensesPage = (props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const getExpenses = async () => {
-      try {
-        //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-        // saveItem(EXPENSES, res);
-        // setExpensesList(res);
-        throw ex;
-      } catch (error) {
+  const getExpenses = async () => {
+    try {
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/expenses/${email}`);
+      if (resp.data.expenses) {
+        setExpensesList(resp.data.expenses);
+      } else {
         setExpensesList(await getItem(EXPENSES));
       }
-    };
+    } catch (error) {
+      setExpensesList(await getItem(EXPENSES));
+    }
+  };
+
+  useEffect(() => {
     setLoading(true);
     getExpenses();
     setLoading(false);

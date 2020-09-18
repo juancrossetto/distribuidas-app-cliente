@@ -40,8 +40,9 @@ const LoansDetailPage = ({ type }) => {
       throw ex;
     } catch (error) {
       const loans = await getItem(LOANS);
-      console.log("loans", loans, type);
-      setLoansList(loans.filter((l) => l.type === type));
+      if (loans) {
+        setLoansList(loans.filter((l) => l.type === type));
+      }
     }
   };
 

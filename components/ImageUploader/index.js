@@ -26,14 +26,9 @@ const ImageUploader = ({ image, setImage }) => {
         quality: 1,
       });
       if (!result.cancelled) {
-        console.log(result);
         setImage(result.uri);
       }
-
-      console.log(result);
-    } catch (E) {
-      console.log(E);
-    }
+    } catch (e) {}
   };
 
   return (

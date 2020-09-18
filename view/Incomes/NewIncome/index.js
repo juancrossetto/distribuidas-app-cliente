@@ -60,6 +60,7 @@ const NewIncomePage = () => {
     const income = {
       amount,
       category,
+      paymentMethod,
       bankAccount,
       date,
       email,
@@ -118,7 +119,10 @@ const NewIncomePage = () => {
               selectedValue={paymentMethod}
               onValueChange={(val) => setPaymentMethod(val)}
             >
-              <Picker.Item label="-- Seleccione el Medio de Pago --" value="" />
+              <Picker.Item
+                label="-- Seleccione el Método de Cobro --"
+                value=""
+              />
               <Picker.Item label={"Efectivo"} value={"EFE"} />
               <Picker.Item label={"Deposito en cuenta"} value={"BAN"} />
             </Picker>

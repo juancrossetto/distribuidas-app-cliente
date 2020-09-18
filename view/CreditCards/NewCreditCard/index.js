@@ -5,20 +5,24 @@ import globalStyles from "../../../styles/global";
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities, Months } from "../../../utils/enums";
-import { getCurrentDate, getRandomCardNumber } from "../../../utils";
+import { getCurrentDate, getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign } from "@expo/vector-icons";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CREDITCARDS, addItemToList } from "../../../utils/storage";
+import { CardView } from "react-native-credit-card-input";
+import clientAxios from "../../../config/axios";
 
 const NewCreditCardPage = () => {
   const [number, setNumber] = useState(0);
-  const [dueMonth, setDueMonth] = useState(null);
-  const [dueYear, setDueYear] = useState(null);
+  // const [expiryMonth, setExpiryMonth] = useState(null);
+  // const [expiryYear, setExpiryYear] = useState(null);
   const [entity, setEntity] = useState("");
   // const [cbu, setCBU] = useState("");
-  const [alias, setAlias] = useState("");
+
+  const [expiry, setExpiry] = useState("");
+  const [name, setName] = useState("");
   const [closeDateSummary, setCloseDateSummary] = useState(null);
   const [dueDateSummary, setDueDateSummary] = useState(null);
 
@@ -49,9 +53,10 @@ const NewCreditCardPage = () => {
       number <= 0 ||
       // cbu <= 0 ||
       entity.trim() === "" ||
-      alias.trim() === "" ||
-      dueMonth === null ||
-      dueYear === null ||
+      name.trim() === "" ||
+      expiry.trim() === "" ||
+      // expiryMonth === null ||
+      // expiryYear === null ||
       closeDateSummary === null ||
       dueDateSummary === null
     ) {
@@ -59,7 +64,7 @@ const NewCreditCardPage = () => {
       return;
     }
 
-    if (number.length !== 4) {
+    if (number.length !== 16) {
       setMsg("Tarjeta no válida");
       return;
     }
@@ -69,38 +74,75 @@ const NewCreditCardPage = () => {
       return;
     }
 
-    // if (cbu.length !== 22) {
-    //   setMsg("CBU/CVU no válido");
-    //   return;
-    // }
-
     const date = getCurrentDate();
+    const email = await getEmailUserLogged();
     const creditCard = {
       number,
-      // cbu,
       entity,
-      alias,
-      dueMonth,
-      dueYear,
+      name,
+      expiry,
+      // expiryMonth,
+      // expiryYear,
       closeDateSummary,
       dueDateSummary,
       date,
+      email,
     };
-    creditCard.id = shortid.generate();
-    setLoading(true);
-
-    await addItemToList(CREDITCARDS, creditCard);
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("CreditCardsPage");
-    }, 1500);
+    // creditCard.id = shortid.generate();
+    createCreditCard(creditCard);
+    setLoading(false);
+    // await addItemToList(CREDITCARDS, creditCard);
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   navigation.navigate("CreditCardsPage");
+    // }, 1500);
   };
+
+  const createCreditCard = async (creditCard) => {
+    try {
+      setLoading(true);
+      const resp = await clientAxios.post(`/creditCards/`, creditCard);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Tarjeta de Crédito cargada correctamente`);
+
+        navigation.navigate("CreditCardsPage");
+      }
+    } catch (error) {
+      console.log("error", error);
+      if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      }
+
+      await addItemToList(CREDITCARDS, creditCard);
+      setMsg("Tarjeta de Crédito guardada en Memoria");
+      navigation.navigate("CreditCardsPage");
+      setLoading(false);
+    }
+  };
+
+  // const onChange = (form) => console.log(form);
   return (
     <Container
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Asocia tu Tarjeta de Crédito</H1>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginBottom: 10,
+          }}
+        >
+          <CardView
+            number={number}
+            name={name}
+            expiry={expiry}
+            // onChange={onChange}
+          />
+        </View>
         <Form>
           <NativeView>
             <Picker
@@ -120,17 +162,7 @@ const NewCreditCardPage = () => {
               ))}
             </Picker>
           </NativeView>
-          {/* <NativeView style={{ marginTop: 22 }}>
-            <Item inlineLabel last style={globalStyles.input}>
-              <Input
-                maxLength={22}
-                keyboardType="numeric"
-                placeholder="CBU/CBU"
-                onChangeText={(val) => setCBU(val)}
-              />
-            </Item>
-          </NativeView>    */}
-          <NativeView style={{ marginTop: 22, flexDirection: "row" }}>
+          {/* <NativeView style={{ marginTop: 22, flexDirection: "row" }}>
             <NativeView style={{ flex: 1 }}>
               <Picker
                 style={{
@@ -138,8 +170,8 @@ const NewCreditCardPage = () => {
                   backgroundColor: "#FFF",
                   width: "90%",
                 }}
-                selectedValue={dueMonth}
-                onValueChange={(val) => setDueMonth(val)}
+                selectedValue={expiryMonth}
+                onValueChange={(val) => setExpiryMonth(val)}
               >
                 <Picker.Item label="-- Mes de Vencimiento --" value="" />
                 {Months.map((item, i) => (
@@ -153,33 +185,50 @@ const NewCreditCardPage = () => {
                   height: 50,
                   backgroundColor: "#FFF",
                 }}
-                selectedValue={dueYear}
-                onValueChange={(val) => setDueYear(val)}
+                selectedValue={expiryYear}
+                onValueChange={(val) => setExpiryYear(val)}
               >
                 <Picker.Item label="-- Año Vencimiento --" value="0" />
-                <Picker.Item label="2020" value="2020" />
-                <Picker.Item label="2021" value="2021" />
-                <Picker.Item label="2022" value="2022" />
-                <Picker.Item label="2023" value="2023" />
-                <Picker.Item label="2024" value="2024" />
-                <Picker.Item label="2025" value="2025" />
-                <Picker.Item label="2026" value="2026" />
-                <Picker.Item label="2027" value="2027" />
-                <Picker.Item label="2028" value="2028" />
-                <Picker.Item label="2029" value="2029" />
-                <Picker.Item label="2030" value="2030" />
+                <Picker.Item label="2020" value="20" />
+                <Picker.Item label="2021" value="21" />
+                <Picker.Item label="2022" value="22" />
+                <Picker.Item label="2023" value="23" />
+                <Picker.Item label="2024" value="24" />
+                <Picker.Item label="2025" value="25" />
+                <Picker.Item label="2026" value="26" />
+                <Picker.Item label="2027" value="27" />
+                <Picker.Item label="2028" value="28" />
+                <Picker.Item label="2029" value="29" />
+                <Picker.Item label="2030" value="30" />
               </Picker>
             </NativeView>
-          </NativeView>
-
+          </NativeView> */}
           <NativeView style={{ marginTop: 22 }}>
             <Item inlineLabel last style={globalStyles.input}>
               <AntDesign name="creditcard" size={20} color="blue" />
               <Input
+                maxLength={16}
+                keyboardType="numeric"
+                placeholder="Número de Tarjeta de Crédito"
+                onChangeText={(val) => setNumber(val)}
+              />
+            </Item>
+          </NativeView>
+          <NativeView style={{ marginTop: 0 }}>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                placeholder="Mes y Año de Expiración (MM/YY)"
                 maxLength={4}
                 keyboardType="numeric"
-                placeholder="Últimos 4 digitos Tarjeta de Crédito"
-                onChangeText={(val) => setNumber(val)}
+                onChangeText={(val) => setExpiry(val)}
+              />
+            </Item>
+          </NativeView>
+          <NativeView style={{ marginTop: 0 }}>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                placeholder="Nombre"
+                onChangeText={(val) => setName(val)}
               />
             </Item>
           </NativeView>
@@ -225,17 +274,9 @@ const NewCreditCardPage = () => {
               confirmTextIOS="Confirmar"
             />
           </NativeView>
-          <NativeView style={{ marginTop: 20 }}>
-            <Item inlineLabel last style={globalStyles.input}>
-              <Input
-                placeholder="Alias"
-                onChangeText={(val) => setAlias(val)}
-              />
-            </Item>
-          </NativeView>
         </Form>
         <AnimatedButton
-          text="Finalizar Inversión"
+          text="Registrar Tarjeta"
           onPress={() => handleSubmit()}
         />
         {loading && (
@@ -246,7 +287,6 @@ const NewCreditCardPage = () => {
         <CustomAlert />
       </View>
     </Container>
-    // </ApplicationProvider>
   );
 };
 

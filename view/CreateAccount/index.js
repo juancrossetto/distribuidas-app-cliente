@@ -30,7 +30,6 @@ const CreateAccountPage = () => {
         navigation.navigate("Login");
       }
     } catch (error) {
-      console.log("error", error.response.data.errores);
       setMsg(error.response.data.errores[0].msg);
       // if (error.response.data.errores.length > 1) {
       //   setMsg(error.response.data.errores[0].msg);

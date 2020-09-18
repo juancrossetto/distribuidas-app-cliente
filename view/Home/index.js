@@ -21,6 +21,7 @@ import CreditCardsPage from "../CreditCards";
 import LoansPage from "../Loans";
 import NewLoanPage from "../Loans/NewLoan";
 import NewCreditCardPage from "../CreditCards/NewCreditCard";
+import ChangeDatesCreditCardPage from "../CreditCards/ChangeDates";
 import NewBudgetPage from "../Budgets/NewBudget";
 import WeekDuesPage from "../Dashboards/WeekDues";
 import DeflectionsPage from "../Dashboards/Deflection";
@@ -352,6 +353,21 @@ const cardsStack = ({ navigation }) => {
         options={{
           title: "Asociando tu Tarjeta",
           headerRight: () => <CreditCardsPage />,
+          headerStyle: {
+            backgroundColor: "#f4511e",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="ChangeDatesCreditCardPage"
+        component={ChangeDatesCreditCardPage}
+        options={{
+          title: "Actualización de Fechas",
           headerStyle: {
             backgroundColor: "#f4511e",
           },

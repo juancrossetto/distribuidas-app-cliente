@@ -16,7 +16,7 @@ const IncomesPage = (props) => {
   const [incomesList, setIncomesList] = useState([]);
 
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [isMounted, setIsMounted] = useState(true);
 
   const getIncomes = async () => {
@@ -36,8 +36,6 @@ const IncomesPage = (props) => {
 
   useEffect(() => {
     // setIsMounted(true);
-    // console.log("isMounted", isMounted);
-
     // if (isMounted) {
     setLoading(true);
     getIncomes();

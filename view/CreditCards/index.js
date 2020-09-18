@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, FlatList, SafeAreaView } from "react-native";
 import globalStyles from "../../styles/global";
-import { Container, H1, Fab } from "native-base";
+import { Container, H1, Fab, Spinner } from "native-base";
 import useAlert from "../../hooks/useAlert";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import CreditCard from "../../components/CreditCard";
+import CreditCardCustom from "../../components/CreditCard";
 import { Ionicons } from "@expo/vector-icons";
-import { saveItem, getItem, CREDITCARDS } from "../../utils/storage";
+import { getItem, CREDITCARDS } from "../../utils/storage";
+import { getEmailUserLogged } from "../../utils";
+import clientAxios from "../../config/axios";
 
 const CreditCardsPage = (props) => {
   const isFocused = useIsFocused();
@@ -17,10 +19,13 @@ const CreditCardsPage = (props) => {
 
   const getCreditCards = async () => {
     try {
-      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-      // saveItem(CREDITCARDS, res);
-      // setCardsList(res);
-      throw ex;
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/creditcards/${email}`);
+      if (resp.data.creditCards) {
+        setCardsList(resp.data.creditCards);
+      } else {
+        setCardsList(await getItem(CREDITCARDS));
+      }
     } catch (error) {
       const cards = await getItem(CREDITCARDS);
       setCardsList(cards);
@@ -28,17 +33,6 @@ const CreditCardsPage = (props) => {
   };
 
   useEffect(() => {
-    // setCardsList([
-    //   {
-    //     number: "4599",
-    //     entity: "Santander",
-    //     dueMonth: "12",
-    //     dueYear: "2020",
-    //     closeDateSummary: "12/10/2020",
-    //     dueDateSummary: "15/10/2020",
-    //     id: "ZMUgTPyBp1",
-    //   },
-    // ]);
     setLoading(true);
     getCreditCards();
     setLoading(false);
@@ -57,12 +51,13 @@ const CreditCardsPage = (props) => {
       ) : (
         <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
           <H1 style={globalStyles.title}>Tarjetas de Crédito</H1>
+
           <SafeAreaView style={{ flex: 5 }}>
             {cardsList && cardsList.length > 0 ? (
               <FlatList
                 style={{ flex: 1 }}
                 data={cardsList}
-                renderItem={({ item }) => <CreditCard item={item} />}
+                renderItem={({ item }) => <CreditCardCustom item={item} />}
                 keyExtractor={(inc) => inc.id}
               />
             ) : (
