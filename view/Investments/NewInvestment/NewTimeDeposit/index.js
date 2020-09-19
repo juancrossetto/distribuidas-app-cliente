@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Text,
   Container,
-  Button,
   H1,
   Form,
   Item,
   Input,
   View,
   Spinner,
+  ListItem,
+  CheckBox,
+  Body,
 } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
-import shortid from "shortid";
+// import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { getFutureDate, getEmailUserLogged } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
@@ -25,6 +27,7 @@ import clientAxios from "../../../../config/axios";
 const NewTimeDepositPage = () => {
   const [amount, setAmount] = useState(0);
   const [days, setDays] = useState(0);
+  const [autmomaticRenovation, setAutmomaticRenovation] = useState(false);
   const [interestRate, setInterestRate] = useState(0);
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,6 +84,7 @@ const NewTimeDepositPage = () => {
       bankAccount,
       dueDate: getFutureDate(days),
       email,
+      autmomaticRenovation,
     };
     // investment.id = shortid.generate();
     createTimeDeposit(timeDeposit);
@@ -144,6 +148,18 @@ const NewTimeDepositPage = () => {
                 onChangeText={(val) => setInterestRate(val)}
               />
             </Item>
+          </NativeView>
+          <NativeView>
+            <ListItem>
+              <CheckBox
+                checked={autmomaticRenovation}
+                color="black"
+                onPress={() => setAutmomaticRenovation(!autmomaticRenovation)}
+              />
+              <Body>
+                <Text>Renovación Automática</Text>
+              </Body>
+            </ListItem>
           </NativeView>
           {/* <NativeView style={{ marginTop: 10 }}>
             <Text style={{ fontSize: 18, textAlign: "center" }}>

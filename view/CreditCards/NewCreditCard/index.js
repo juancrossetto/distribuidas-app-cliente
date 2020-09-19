@@ -74,7 +74,7 @@ const NewCreditCardPage = () => {
       return;
     }
 
-    const date = getCurrentDate();
+    const date = new Date();
     const email = await getEmailUserLogged();
     const creditCard = {
       number,
@@ -110,14 +110,15 @@ const NewCreditCardPage = () => {
         navigation.navigate("CreditCardsPage");
       }
     } catch (error) {
-      console.log("error", error);
-      if (error.response.data.errores) {
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
         setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(CREDITCARDS, creditCard);
+        setMsg("Tarjeta de Crédito guardada en Memoria");
       }
 
-      await addItemToList(CREDITCARDS, creditCard);
-      setMsg("Tarjeta de Crédito guardada en Memoria");
-      navigation.navigate("CreditCardsPage");
       setLoading(false);
     }
   };
@@ -240,7 +241,7 @@ const NewCreditCardPage = () => {
                   : closeDateSummary
               }
               onPress={() => setIsClosedDatePickerVisibility(true)}
-              color="#E1E1E1"
+              color={!closeDateSummary ? "#212316" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isClosedDatePickerVisible}
@@ -261,7 +262,7 @@ const NewCreditCardPage = () => {
                   : dueDateSummary
               }
               onPress={() => setIsDueDatePickerVisibility(true)}
-              color="#E1E1E1"
+              color={!dueDateSummary ? "#212316" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isDueDatePickerVisible}

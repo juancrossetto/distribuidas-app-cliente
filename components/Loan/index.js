@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { formatDate } from "../../utils";
 import { PaymentMethods } from "../../utils/enums";
 import styles from "../Expense/styles";
 
@@ -17,7 +18,7 @@ const Loan = ({ item }) => {
         <Text style={styles.label}>Método de Pago:</Text>
         <Text style={styles.text}>{paymentMethodSelected.text}</Text>
       </View>
-      {paymentMethodSelected.text === "BAN" && (
+      {item.paymentMethod === "BAN" && (
         <View style={styles.textContainer}>
           <Text style={styles.label}>Cuenta Bancaria:</Text>
           <Text style={styles.text}>{item.bankAccount}</Text>
@@ -25,7 +26,7 @@ const Loan = ({ item }) => {
       )}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha de Prestamo:</Text>
-        <Text style={styles.text}>{item.date}</Text>
+        <Text style={styles.text}>{formatDate(item.date)}</Text>
       </View>
     </View>
   );

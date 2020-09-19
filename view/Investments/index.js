@@ -3,12 +3,12 @@ import { View, SafeAreaView, FlatList } from "react-native";
 import { Container, H1, Fab } from "native-base";
 import globalStyles from "../../styles/global";
 import Investment from "../../components/Investment";
-import { getCurrentDate } from "../../utils";
+import { getEmailUserLogged } from "../../utils";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-
 import { Ionicons } from "@expo/vector-icons";
 import useAlert from "../../hooks/useAlert";
 import { INVESTMENTS, getItem, saveItem } from "../../utils/storage";
+import clientAxios from "../../config/axios";
 
 const InvestmentsPage = (props) => {
   const isFocused = useIsFocused();
@@ -19,31 +19,23 @@ const InvestmentsPage = (props) => {
 
   const getInvestments = async () => {
     try {
-      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-      // saveItem(INVESTMENTS, res);
-      // setInvestmentsList(res);
-      throw ex;
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/investments/${email}`);
+      if (resp.data.investments) {
+        setInvestmentsList(resp.data.investments);
+      } else {
+        setInvestmentsList(await getItem(INVESTMENTS));
+      }
     } catch (error) {
-      const inv = await getItem(INVESTMENTS);
-      setInvestmentsList(inv);
+      setInvestmentsList(await getItem(INVESTMENTS));
     }
   };
 
   useEffect(() => {
-    // setInvestmentsList([
-    //   {
-    //     type: "Plazo Fijo",
-    //     bankAccount: "1234567891",
-    //     days: 60,
-    //     amount: 1000,
-    //     interestRate: 18,
-    //     date: getCurrentDate(),
-    //     id: "ZMUgTPyBp",
-    //   },
-    // ]);
     setLoading(true);
     getInvestments();
     setLoading(false);
+    return () => {};
   }, [props, isFocused]);
 
   const handleAdd = () => {

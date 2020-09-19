@@ -5,12 +5,13 @@ import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
-import { getCurrentDate } from "../../../utils";
+import { getCurrentDate, getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { LoanTypes } from "../../../utils/enums";
 import { LOANS, addItemToList } from "../../../utils/storage";
+import clientAxios from "../../../config/axios";
 
 const NewLoanPage = ({ route }) => {
   const type = route.params.type;
@@ -23,6 +24,32 @@ const NewLoanPage = ({ route }) => {
 
   const navigation = useNavigation();
 
+  const createLoan = async (loan) => {
+    try {
+      setLoading(true);
+      const resp = await clientAxios.post(`/loans/`, loan);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Préstamo cargado correctamente`);
+
+        navigation.navigate("LoansPage");
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(LOANS, loan);
+        setMsg("Préstamo guardado en Memoria");
+        navigation.navigate("LoansPage");
+      }
+
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (amount <= 0 || paymentMethod.trim() === "") {
       setMsg("Todos los campos son obligatorios");
@@ -33,20 +60,18 @@ const NewLoanPage = ({ route }) => {
       return;
     }
 
+    const email = await getEmailUserLogged();
     const loan = {
       amount,
       type,
       paymentMethod,
       bankAccount,
-      date: getCurrentDate(),
+      date: new Date(),
+      email,
     };
-    loan.id = shortid.generate();
-    setLoading(true);
-    await addItemToList(LOANS, loan);
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("LoansPage");
-    }, 2000);
+    // loan.id = shortid.generate();
+    createLoan(loan);
+    setLoading(false);
   };
   return (
     <Container

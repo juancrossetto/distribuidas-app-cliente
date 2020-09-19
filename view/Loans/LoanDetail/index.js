@@ -8,41 +8,29 @@ import Loan from "../../../components/Loan";
 import { Ionicons } from "@expo/vector-icons";
 // import { PaymentMethods } from "../../../utils/enums";
 import { LOANS, getItem, saveItem } from "../../../utils/storage";
+import clientAxios from "../../../config/axios";
+import { getEmailUserLogged } from "../../../utils";
 
 const LoansDetailPage = ({ type }) => {
   const isFocused = useIsFocused();
   const [CustomAlert, setMsg] = useAlert();
   const [loansList, setLoansList] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const loans = [
-  //   {
-  //     amount: 10.0,
-  //     loanType: "REA",
-  //     paymentMethod: "BAN",
-  //     bankAccount: "1234567891",
-  //     date: getCurrentDate(),
-  //     id: "BMUgTPyBr",
-  //   },
-  //   {
-  //     amount: 1500,
-  //     loanType: "TOM",
-  //     paymentMethod: "EFE",
-  //     date: getCurrentDate(),
-  //     id: "BMUgTPyBr2",
-  //   },
-  // ];
 
   const getLoans = async () => {
     try {
-      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-      // saveItem(LOANS, res);
-      // setLoansList(res);
-      throw ex;
-    } catch (error) {
-      const loans = await getItem(LOANS);
-      if (loans) {
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/loans/${email}`);
+      console.log(resp.data);
+      if (resp.data.loans) {
+        setLoansList(resp.data.loans.filter((l) => l.type === type));
+      } else {
+        const loans = await getItem(LOANS);
         setLoansList(loans.filter((l) => l.type === type));
       }
+    } catch (error) {
+      const loans = await getItem(LOANS);
+      setLoansList(loans.filter((l) => l.type === type));
     }
   };
 
