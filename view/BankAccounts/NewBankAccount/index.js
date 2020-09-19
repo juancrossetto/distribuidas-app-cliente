@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
-import shortid from "shortid";
+// import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
-import { getCurrentDate, getRandomCardNumber } from "../../../utils";
+import { getCurrentDate, getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -14,6 +14,7 @@ import {
   BANKACCOUNTS,
   DEBITCARDS,
 } from "../../../utils/storage";
+import clientAxios from "../../../config/axios";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -25,6 +26,31 @@ const NewBankAccountPage = () => {
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
+
+  const createBankAccount = async (bankAccount) => {
+    try {
+      setLoading(true);
+      const resp = await clientAxios.post(`/bankAccounts/`, bankAccount);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Cuenta Bancaria cargada correctamente`);
+
+        navigation.navigate("BankAccountsPage");
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(BANKACCOUNTS, bankAccount);
+        setMsg("Cuenta Bancaria guardada en Memoria");
+      }
+
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (
@@ -48,26 +74,19 @@ const NewBankAccountPage = () => {
       return;
     }
     // const debitCardNumber = getRandomCardNumber(16);
+    const email = await getEmailUserLogged();
     const bankAccount = {
       cbu,
       entity,
       debitCard,
       alias,
       balance,
-      date: getCurrentDate(),
+      date: new Date(), //getCurrentDate(),
+      email,
     };
-    bankAccount.id = shortid.generate();
-    setLoading(true);
-    await addItemToList(BANKACCOUNTS, bankAccount);
-    // const newDebitCard = {
-    //   number: debitCard,
-    //   cbu,
-    // }
-    // await addItemToList(DEBITCARDS, bankAccount);
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("BankAccountsPage");
-    }, 1500);
+    // bankAccount.id = shortid.generate();
+    createBankAccount(bankAccount);
+    setLoading(false);
   };
   return (
     <Container
@@ -134,10 +153,7 @@ const NewBankAccountPage = () => {
             </Item>
           </NativeView>
         </Form>
-        <AnimatedButton
-          text="Finalizar Inversión"
-          onPress={() => handleSubmit()}
-        />
+        <AnimatedButton text="Guardar Cuenta" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
             <Spinner color="white" />

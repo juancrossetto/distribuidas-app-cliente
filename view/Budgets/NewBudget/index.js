@@ -8,36 +8,58 @@ import { BudgetCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getCurrentDate } from "../../../utils";
+import { getEmailUserLogged } from "../../../utils";
 import { addItemToList, BUDGETS } from "../../../utils/storage";
+import clientAxios from "../../../config/axios";
 
 const NewBudgetPage = () => {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
-  const [bankAccount, setBankAccount] = useState("");
+  // const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [CustomAlert, setMsg] = useAlert();
+
+  const createBudget = async (budget) => {
+    try {
+      setLoading(true);
+      console.log(budget);
+      const resp = await clientAxios.post(`/budgets/`, budget);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Presupuesto cargado correctamente`);
+
+        navigation.navigate("BudgetsPage");
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(BUDGETS, budget);
+        setMsg("Presupuesto guardado en Memoria");
+      }
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (amount <= 0) {
       setMsg("El monto debe ser superior a 0");
       return;
     }
-    if (category.trim() === "" || bankAccount.trim() === "") {
+    if (category.trim() === "") {
       setMsg("Todos los campos son obligatorios");
       return;
     }
-    const budget = { amount, category, bankAccount };
-    budget.id = shortid.generate();
-    budget.date = getCurrentDate();
-    setLoading(true);
-
-    await addItemToList(BUDGETS, budget);
-    //llamar API insertar prestamo en BD
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("BudgetsPage");
-    }, 2000);
+    const email = await getEmailUserLogged();
+    const budget = { amount, category, email };
+    // budget.id = shortid.generate();
+    budget.date = new Date();
+    createBudget(budget);
+    setLoading(false);
   };
   return (
     <Container
@@ -71,7 +93,7 @@ const NewBudgetPage = () => {
               ))}
             </Picker>
           </NativeView>
-          <NativeView>
+          {/* <NativeView>
             <Picker
               style={{
                 height: 50,
@@ -89,7 +111,7 @@ const NewBudgetPage = () => {
               <Picker.Item label="3456789011" value="3456789011" />
               <Picker.Item label="2414205416" value="2414205416" />
             </Picker>
-          </NativeView>
+          </NativeView> */}
         </Form>
         <AnimatedButton
           text="Guardar Presupuesto"

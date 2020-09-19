@@ -1,10 +1,11 @@
-import React from 'react';
-import {Text, View} from 'react-native';
-import styles from '../Expense/styles';
+import React from "react";
+import { Text, View } from "react-native";
+import { formatDate } from "../../utils";
+import styles from "../Expense/styles";
 
-const Income = ({item}) => {
+const Income = ({ item }) => {
   return (
-    <View style={[styles.expense, {marginBottom: 5}]}>
+    <View style={[styles.expense, { marginBottom: 5 }]}>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Monto:</Text>
         <Text style={styles.text}>$ {item.amount}</Text>
@@ -19,7 +20,7 @@ const Income = ({item}) => {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha:</Text>
-        <Text style={styles.text}>{item.date}</Text>
+        <Text style={styles.text}>{formatDate(item.date)}</Text>
       </View>
     </View>
   );

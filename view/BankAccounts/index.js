@@ -7,6 +7,8 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import BankAccount from "../../components/BankAccount";
 import { Ionicons } from "@expo/vector-icons";
 import { saveItem, getItem, BANKACCOUNTS } from "../../utils/storage";
+import { getEmailUserLogged } from "../../utils";
+import clientAxios from "../../config/axios";
 
 const BankAccountsPage = (props) => {
   const isFocused = useIsFocused();
@@ -17,10 +19,13 @@ const BankAccountsPage = (props) => {
 
   const getBankAccounts = async () => {
     try {
-      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-      // saveItem(BANKACCOUNTS, res);
-      // setBankAccountsList(res);
-      throw ex;
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/bankAccounts/${email}`);
+      if (resp.data.bankAccounts) {
+        setBankAccountsList(resp.data.bankAccounts);
+      } else {
+        setBankAccountsList(await getItem(BANKACCOUNTS));
+      }
     } catch (error) {
       setBankAccountsList(await getItem(BANKACCOUNTS));
     }

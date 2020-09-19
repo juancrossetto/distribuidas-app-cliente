@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View, Image } from "react-native";
+import { formatDate } from "../../utils";
 import {
   PaymentMethods,
   ExpenseTypes,
@@ -73,7 +74,7 @@ const Expense = ({ item }) => {
 
         <View style={styles.textContainer}>
           <Text style={styles.label}>Fecha:</Text>
-          <Text style={styles.text}>{item.date}</Text>
+          <Text style={styles.text}>{formatDate(item.date)}</Text>
         </View>
       </View>
       {item.voucher && (

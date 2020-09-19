@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { formatDate } from "../../utils";
 import { BudgetCategories } from "../../utils/enums";
 import styles from "../Expense/styles";
 
@@ -16,13 +17,13 @@ const Budget = ({ item }) => {
         <Text style={styles.label}>Rubro:</Text>
         <Text style={styles.text}>{category}</Text>
       </View>
-      <View style={styles.textContainer}>
+      {/* <View style={styles.textContainer}>
         <Text style={styles.label}>Cuenta Bancaria:</Text>
         <Text style={styles.text}>{item.bankAccount}</Text>
-      </View>
+      </View> */}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha:</Text>
-        <Text style={styles.text}>{item.date}</Text>
+        <Text style={styles.text}>{formatDate(item.date)}</Text>
       </View>
     </View>
   );

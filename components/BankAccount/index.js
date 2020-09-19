@@ -18,7 +18,7 @@ const BankAccount = ({ item }) => {
         </Text>
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.label}>Últimos 4 digitos Tarjeta débito:</Text>
+        <Text style={styles.label}>Tarjeta débito:</Text>
         <Text style={styles.text}>{item.debitCard}</Text>
       </View>
       <View style={styles.textContainer}>

@@ -97,7 +97,7 @@ const NewExpensePage = () => {
     }
 
     setLoading(true);
-    const date = getCurrentDate();
+    const date = new Date();
     const email = await getEmailUserLogged();
     const expense = {
       amount,

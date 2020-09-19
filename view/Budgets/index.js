@@ -3,11 +3,12 @@ import { View, ScrollView, FlatList, SafeAreaView } from "react-native";
 import { Container, H1, Fab, Icon } from "native-base";
 import globalStyles from "../../styles/global";
 import Budget from "../../components/Budget";
-import { getCurrentDate } from "../../utils";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
-import { saveItem, getItem, BUDGETS } from "../../utils/storage";
+import { getItem, BUDGETS } from "../../utils/storage";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import clientAxios from "../../config/axios";
+import { getEmailUserLogged } from "../../utils";
 
 const BudgetsPage = (props) => {
   const [CustomAlert, setMsg] = useAlert();
@@ -19,49 +20,24 @@ const BudgetsPage = (props) => {
 
   const getBudgets = async () => {
     try {
-      //llamamos API, si devuelve OK, pisamos storage, sino usamos el storage.
-      // saveItem(BUDGETS, res);
-      // setBudgetsList(res);
-      throw ex;
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/budgets/${email}`);
+      console.log(resp);
+      if (resp.data.budgets) {
+        setBudgetsList(resp.data.budgets);
+      } else {
+        setBudgetsList(await getItem(BUDGETS));
+      }
     } catch (error) {
       setBudgetsList(await getItem(BUDGETS));
     }
   };
 
   useEffect(() => {
-    // setBudgetsList([
-    //   {
-    //     amount: 100,
-    //     category: "PER",
-    //     bankAccount: "1234567891",
-    //     date: getCurrentDate(),
-    //     id: "ZMUgTPyBp",
-    //   },
-    //   {
-    //     amount: 2500,
-    //     category: "EXT",
-    //     bankAccount: "2414205416",
-    //     date: getCurrentDate(),
-    //     id: "ZMUgTPyBf",
-    //   },
-    //   {
-    //     amount: 100,
-    //     category: "PER",
-    //     bankAccount: "1234567891",
-    //     date: getCurrentDate(),
-    //     id: "ZMUgTPyBp2",
-    //   },
-    //   {
-    //     amount: 2500,
-    //     category: "EXT",
-    //     bankAccount: "2414205416",
-    //     date: getCurrentDate(),
-    //     id: "ZMUgTPyBb",
-    //   },
-    // ]);
     setLoading(true);
     getBudgets();
     setLoading(false);
+    return () => {};
   }, [props, isFocused]);
 
   const handleAdd = () => {

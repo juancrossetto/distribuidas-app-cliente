@@ -13,57 +13,15 @@ import {
   getAllStorage,
   clearAll,
 } from "./utils/storage";
-import { getCurrentDate } from "./utils";
 const Stack = createStackNavigator();
 
 const App = () => {
-  // const ingresos = [
-  //   {
-  //     amount: 100,
-  //     category: "PER",
-  //     bankAccount: "1234567891",
-  //     date: getCurrentDate(),
-  //     id: "ZMUgTPyBp",
-  //   },
-  // ];
-  // saveItem(INCOMES, JSON.stringify(ingresos));
-
-  // const egresos = [
-  //   {
-  //     amount: 10.0,
-  //     paymentType: "TRC",
-  //     expenseType: "PER",
-  //     detail: "",
-  //     category: "5",
-  //     date: getCurrentDate(),
-  //     id: "BMUgTPyBp",
-  //   },
-  //   {
-  //     amount: 1500,
-  //     paymentType: "TRC",
-  //     expenseType: "PER",
-  //     detail: "",
-  //     category: "5",
-  //     date: getCurrentDate(),
-  //     id: "BMUgTPyBr",
-  //   },
-  //   {
-  //     amount: 10.05,
-  //     paymentType: "TRC",
-  //     expenseType: "PER",
-  //     detail: "",
-  //     category: "5",
-  //     date: getCurrentDate(),
-  //     id: "BMUgTPyBn",
-  //   },
-  // ];
-
   useEffect(() => {
     // clearAll();
   }, []);
   // saveItem(EXPENSES, JSON.stringify(egresos));
 
-  //console.disableYellowBox = true; // Para deshabilitar los warnings
+  console.disableYellowBox = true; // Para deshabilitar los warnings
   return (
     <>
       <Root>
