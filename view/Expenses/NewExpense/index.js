@@ -63,9 +63,15 @@ const NewExpensePage = () => {
         navigation.navigate("ExpensesPage");
       }
     } catch (error) {
-      setMsg(error.response.data.errores[0].msg);
-      await addItemToList(EXPENSES, expense);
-      setMsg("Egreso guardado en Memoria");
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(EXPENSES, expense);
+        setMsg("Egreso guardado en Memoria");
+        navigation.navigate("ExpensesPage");
+      }
       setLoading(false);
     }
   };

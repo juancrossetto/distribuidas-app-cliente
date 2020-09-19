@@ -15,42 +15,82 @@ import globalStyles from "../../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
-import { getCurrentDate } from "../../../../utils";
+import { getFutureDate, getEmailUserLogged } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../../components/AnimatedButton";
 import { INVESTMENTS, addItemToList } from "../../../../utils/storage";
+import clientAxios from "../../../../config/axios";
 
 const NewTimeDepositPage = () => {
   const [amount, setAmount] = useState(0);
-  const [days, setDays] = useState("");
+  const [days, setDays] = useState(0);
+  const [interestRate, setInterestRate] = useState(0);
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
 
+  const createTimeDeposit = async (timeDeposit) => {
+    try {
+      setLoading(true);
+      console.log(timeDeposit);
+      const resp = await clientAxios.post(`/investments/`, timeDeposit);
+
+      if (resp) {
+        setLoading(false);
+        setMsg(`Plazo Fijo cargado correctamente`);
+
+        //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
+
+        navigation.navigate("InvestmentsPage");
+      }
+    } catch (error) {
+      if (error.response.data.msg) {
+        setMsg(error.response.data.msg);
+      } else if (error.response.data.errores) {
+        setMsg(error.response.data.errores[0].msg);
+      } else {
+        await addItemToList(INVESTMENTS, timeDeposit);
+        setMsg("Plazo Fijo guardado en Memoria");
+        navigation.navigate("InvestmentsPage");
+      }
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async () => {
-    if (amount <= 0 || days <= 0 || bankAccount.trim() === "") {
+    if (
+      amount <= 0 ||
+      days <= 0 ||
+      interestRate <= 0 ||
+      bankAccount.trim() === ""
+    ) {
       setMsg("Todos los campos son obligatorios");
       return;
     }
-    const investment = {
+    const email = await getEmailUserLogged();
+    const date = new Date();
+    const timeDeposit = {
       type: "Plazo Fijo",
       amount,
-      date: getCurrentDate(),
+      date,
       days,
-      interestRate: 18,
+      interestRate,
       bankAccount,
+      dueDate: getFutureDate(days),
+      email,
     };
-    investment.id = shortid.generate();
-    setLoading(true);
-    await addItemToList(INVESTMENTS, investment);
+    // investment.id = shortid.generate();
+    createTimeDeposit(timeDeposit);
+    setLoading(false);
+    // await addItemToList(INVESTMENTS, timeDeposit);
 
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("InvestmentsPage");
-    }, 1500);
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   navigation.navigate("InvestmentsPage");
+    // }, 1500);
   };
   return (
     <Container
@@ -96,11 +136,20 @@ const NewTimeDepositPage = () => {
               />
             </Item>
           </NativeView>
-          <NativeView style={{ marginTop: 10 }}>
+          <NativeView style={{ marginTop: 0 }}>
+            <Item inlineLabel last style={globalStyles.input}>
+              <Input
+                keyboardType="numeric"
+                placeholder="Tasa de Interes Anual"
+                onChangeText={(val) => setInterestRate(val)}
+              />
+            </Item>
+          </NativeView>
+          {/* <NativeView style={{ marginTop: 10 }}>
             <Text style={{ fontSize: 18, textAlign: "center" }}>
               Tasa de Interes Anual: 18 %
             </Text>
-          </NativeView>
+          </NativeView> */}
         </Form>
         <AnimatedButton
           text="Finalizar Inversión"

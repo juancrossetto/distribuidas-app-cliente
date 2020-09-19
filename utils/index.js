@@ -1,4 +1,5 @@
 import { getItem, USERLOGGED } from "./storage";
+var moment = require("moment"); // require
 
 export const getCurrentDate = () => {
   let date = new Date();
@@ -16,6 +17,10 @@ export const formatDate = (dateString) => {
     date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : date.getMonth() + 1;
   let year = date.getFullYear();
   return `${day}/${month}/${year}`;
+};
+
+export const getFutureDate = function (days) {
+  return moment().add(days, "days");
 };
 
 export const noop = () => {};

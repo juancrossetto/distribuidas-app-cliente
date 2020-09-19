@@ -9,7 +9,7 @@ import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { saveItem, addItemToList, INCOMES } from "../../../utils/storage";
-import { getCurrentDate, getEmailUserLogged } from "../../../utils";
+import { getEmailUserLogged } from "../../../utils";
 import clientAxios from "../../../config/axios";
 
 const NewIncomePage = () => {
@@ -42,6 +42,7 @@ const NewIncomePage = () => {
       } else {
         await addItemToList(INCOMES, income);
         setMsg("Ingreso guardado en Memoria");
+        navigation.navigate("IncomesPage");
       }
       setLoading(false);
     }
