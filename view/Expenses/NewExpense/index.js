@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Container,
@@ -14,8 +14,8 @@ import {
 } from "native-base";
 import { View as NativeView, Picker, SafeAreaView } from "react-native";
 import globalStyles from "../../../styles/global";
-import shortid from "shortid";
-import { useNavigation } from "@react-navigation/native";
+// import shortid from "shortid";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import {
   PaymentMethods,
   ExpenseTypes,
@@ -25,17 +25,23 @@ import {
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { addItemToList, EXPENSES } from "../../../utils/storage";
-import { getCurrentDate, getEmailUserLogged } from "../../../utils";
-// import {ImageUploader} from 'react-images-upload';
+import {
+  addItemToList,
+  BANKACCOUNTS,
+  CREDITCARDS,
+  EXPENSES,
+  getItem,
+} from "../../../utils/storage";
+import { getEmailUserLogged } from "../../../utils";
 import ImageUploader from "../../../components/ImageUploader";
 import clientAxios from "../../../config/axios";
 
 const NewExpensePage = () => {
-  // const [image, setImage] = useState(null);
+  const isFocused = useIsFocused();
   const [CustomAlert, setMsg] = useAlert();
   const [amount, setAmount] = useState(0);
   const [paymentType, setPaymentType] = useState("");
+  const [paymentId, setPaymentId] = useState("");
   const [expenseType, setExpenseType] = useState("");
   const [detail, setDetail] = useState("");
   const [category, setCategory] = useState("");
@@ -43,12 +49,55 @@ const NewExpensePage = () => {
   const [withFees, setWithFees] = useState(false);
   const [fees, setFees] = useState(0);
 
+  const [bankAccounts, setBankAccounts] = useState([]);
+  const [creditCards, setCreditCards] = useState([]);
+
   //   const [fees, CounterButtons] = useCounterButtons(1, 1, 12);
   const [voucher, setVoucher] = useState(null);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    initializeData();
+
+    return () => {};
+  }, [isFocused]);
+
+  const initializeData = async () => {
+    await getBankAccounts();
+    await getCreditCards();
+    setLoading(false);
+    console.log(creditCards);
+  };
+  const getBankAccounts = async () => {
+    try {
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/bankAccounts/${email}`);
+      if (resp.data.bankAccounts) {
+        setBankAccounts(resp.data.bankAccounts);
+      } else {
+        setBankAccounts(await getItem(BANKACCOUNTS));
+      }
+    } catch (error) {
+      setBankAccounts(await getItem(BANKACCOUNTS));
+    }
+  };
+
+  const getCreditCards = async () => {
+    try {
+      const email = await getEmailUserLogged();
+      const resp = await clientAxios.get(`/creditCards/${email}`);
+      if (resp.data.creditCards) {
+        setCreditCards(resp.data.creditCards);
+      } else {
+        setCreditCards(await getItem(CREDITCARDS));
+      }
+    } catch (error) {
+      setCreditCards(await getItem(CREDITCARDS));
+    }
+  };
 
   const createExpense = async (expense) => {
     try {
@@ -101,10 +150,21 @@ const NewExpensePage = () => {
         return;
       }
     }
-
+    if (paymentType === "TRC" && paymentId === "") {
+      setMsg("Por favor Seleccione una Tarjeta de Crédito");
+      return;
+    }
+    if (paymentType === "TRD" && paymentId === "") {
+      setMsg("Por favor Seleccione una Tarjeta de Débito");
+      return;
+    }
+    if (paymentType === "BAN" && paymentId === "") {
+      setMsg("Por favor Seleccione una Cuenta de Banco");
+      return;
+    }
     setLoading(true);
     const date = new Date();
-    const email = await getEmailUserLogged();
+
     const expense = {
       amount,
       paymentType,
@@ -115,7 +175,8 @@ const NewExpensePage = () => {
       date,
       area,
       voucher,
-      email,
+      email: await getEmailUserLogged(),
+      paymentId,
     };
     // expense.id = shortid.generate();
     createExpense(expense);
@@ -155,25 +216,6 @@ const NewExpensePage = () => {
               ))}
             </Picker>
           </NativeView>
-          <NativeView>
-            <Picker
-              style={{
-                height: 50,
-                backgroundColor: "#FFF",
-                marginTop: 22,
-              }}
-              selectedValue={expenseType}
-              onValueChange={(val) => setExpenseType(val)}
-            >
-              <Picker.Item
-                label="-- Seleccione un tipo de Egreso --"
-                value=""
-              />
-              {ExpenseTypes.map((item, i) => (
-                <Picker.Item label={item.text} value={item.value} key={i} />
-              ))}
-            </Picker>
-          </NativeView>
           {expenseType === "PER" ? (
             <NativeView>
               <Picker
@@ -208,7 +250,64 @@ const NewExpensePage = () => {
               </NativeView>,
             ]
           ) : null}
-
+          <NativeView>
+            {(paymentType.trim() === "TRC" ||
+              paymentType.trim() === "TRD" ||
+              paymentType.trim() === "BAN") && (
+              <Picker
+                style={{
+                  height: 50,
+                  backgroundColor: "#FFF",
+                  marginTop: 22,
+                }}
+                selectedValue={paymentId}
+                onValueChange={(val) => setPaymentId(val)}
+              >
+                <Picker.Item
+                  label="-- Seleccione la fuente de cobro --"
+                  value=""
+                />
+                {(() => {
+                  if (paymentType.trim() === "TRC") {
+                    return creditCards?.map((item, i) => (
+                      <Picker.Item
+                        label={item?.number.toString()}
+                        value={item?.number.toString()}
+                        key={i}
+                      />
+                    ));
+                  }
+                  if (paymentType.trim() === "TRD") {
+                    return bankAccounts?.map((item, i) => (
+                      <Picker.Item
+                        label={item?.debitCard.toString()}
+                        value={item?.debitCard.toString()}
+                        key={i}
+                      />
+                    ));
+                  } else {
+                    return bankAccounts?.map((item, i) => (
+                      <Picker.Item
+                        label={item?.alias.toString()}
+                        value={item?.cbu.toString()}
+                        key={i}
+                      />
+                    ));
+                  }
+                  // if (conditionTwo) return <span>Two</span>;
+                  // else conditionOne;
+                  // return <span>Three</span>;
+                })()}
+                {/* {creditCards?.map((item, i) => (
+                  <Picker.Item
+                    label={item.number}
+                    value={item.number}
+                    key={i}
+                  />
+                ))} */}
+              </Picker>
+            )}
+          </NativeView>
           <NativeView>
             {paymentType.trim() === "TRC" && (
               <ListItem>
@@ -222,6 +321,7 @@ const NewExpensePage = () => {
                 </Body>
               </ListItem>
             )}
+
             {withFees && paymentType.trim() === "TRC" && (
               <Picker
                 style={{
@@ -252,6 +352,25 @@ const NewExpensePage = () => {
           </NativeView>
           <NativeView>
             <Picker
+              style={{
+                height: 50,
+                backgroundColor: "#FFF",
+                marginTop: 22,
+              }}
+              selectedValue={expenseType}
+              onValueChange={(val) => setExpenseType(val)}
+            >
+              <Picker.Item
+                label="-- Seleccione un tipo de Egreso --"
+                value=""
+              />
+              {ExpenseTypes.map((item, i) => (
+                <Picker.Item label={item.text} value={item.value} key={i} />
+              ))}
+            </Picker>
+          </NativeView>
+          <NativeView>
+            <Picker
               style={{ marginTop: 22, height: 50, backgroundColor: "#FFF" }}
               selectedValue={area}
               onValueChange={(val) => setArea(val)}
@@ -270,13 +389,6 @@ const NewExpensePage = () => {
             <ImageUploader image={voucher} setImage={setVoucher} />
           </NativeView>
         </Form>
-        {/* </SafeAreaView> */}
-        {/* </View> */}
-        {/* <View
-        style={{
-          flex: 1,
-        }}
-      > */}
         <View style={{ marginTop: 20 }}>
           <AnimatedButton
             text="Guardar Egreso"
