@@ -10,7 +10,7 @@ import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { saveItem, addItemToList, INCOMES } from "../../../utils/storage";
 import { getEmailUserLogged } from "../../../utils";
-import clientAxios from "../../../config/axios";
+import { createIncomeService } from "../../../services/incomeService";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -22,30 +22,13 @@ const NewIncomePage = () => {
   const [CustomAlert, setMsg] = useAlert();
 
   const createIncome = async (income) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/incomes/`, income);
-
-      if (resp) {
-        setLoading(false);
-        setMsg(`Ingreso cargado correctamente`);
-
-        //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-
-        navigation.navigate("IncomesPage");
-      }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(INCOMES, income);
-        setMsg("Ingreso guardado en Memoria");
-        navigation.navigate("IncomesPage");
-      }
-      setLoading(false);
+    setLoading(true);
+    const resp = await createIncomeService(income);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("IncomesPage");
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -71,17 +54,8 @@ const NewIncomePage = () => {
       date,
       email,
     };
-    // income.id = shortid.generate();
     createIncome(income);
     setLoading(false);
-    // await addItemToList(INCOMES, income);
-
-    //llamar API insertar ingreso en BD
-    //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   navigation.navigate("IncomesPage");
-    // }, 1500);
   };
   return (
     <Container

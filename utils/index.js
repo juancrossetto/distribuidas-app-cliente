@@ -53,3 +53,8 @@ export const getEmailUserLogged = async () => {
   const user = await getItem(USERLOGGED);
   return user.email;
 };
+
+export const getResult = async (msg, isSuccess) => {
+  const result = { msg: msg, isSuccess: isSuccess };
+  return result;
+};
