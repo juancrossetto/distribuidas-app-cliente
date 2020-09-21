@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 import globalStyles from "../../styles/global";
 import { Container, H1, Fab, Spinner } from "native-base";
 import useAlert from "../../hooks/useAlert";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import CreditCardCustom from "../../components/CreditCard";
 import { Ionicons } from "@expo/vector-icons";
-import { getItem, CREDITCARDS } from "../../utils/storage";
-import { getEmailUserLogged } from "../../utils";
-import clientAxios from "../../config/axios";
+import { getCreditCardsService } from "../../services/creditCardService";
 
 const CreditCardsPage = (props) => {
   const isFocused = useIsFocused();
@@ -18,24 +16,13 @@ const CreditCardsPage = (props) => {
   const [cardsList, setCardsList] = useState([]);
 
   const getCreditCards = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/creditcards/${email}`);
-      if (resp.data.creditCards) {
-        setCardsList(resp.data.creditCards);
-      } else {
-        setCardsList(await getItem(CREDITCARDS));
-      }
-    } catch (error) {
-      const cards = await getItem(CREDITCARDS);
-      setCardsList(cards);
-    }
+    setLoading(true);
+    setCardsList(await getCreditCardsService());
+    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
     getCreditCards();
-    setLoading(false);
     return () => {};
   }, [props, isFocused]);
 

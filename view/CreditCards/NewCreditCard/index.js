@@ -13,6 +13,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CREDITCARDS, addItemToList } from "../../../utils/storage";
 import { CardView } from "react-native-credit-card-input";
 import clientAxios from "../../../config/axios";
+import { createCreditCardService } from "../../../services/creditCardService";
 
 const NewCreditCardPage = () => {
   const [number, setNumber] = useState(0);
@@ -81,8 +82,6 @@ const NewCreditCardPage = () => {
       entity,
       name,
       expiry,
-      // expiryMonth,
-      // expiryYear,
       closeDateSummary,
       dueDateSummary,
       date,
@@ -91,36 +90,20 @@ const NewCreditCardPage = () => {
     // creditCard.id = shortid.generate();
     createCreditCard(creditCard);
     setLoading(false);
-    // await addItemToList(CREDITCARDS, creditCard);
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   navigation.navigate("CreditCardsPage");
-    // }, 1500);
   };
 
   const createCreditCard = async (creditCard) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/creditCards/`, creditCard);
-
-      if (resp) {
-        setLoading(false);
-        setMsg(`Tarjeta de Crédito cargada correctamente`);
-
-        navigation.navigate("CreditCardsPage");
+    setLoading(true);
+    const resp = await createCreditCardService(creditCard);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("CreditCardsPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(CREDITCARDS, creditCard);
-        setMsg("Tarjeta de Crédito guardada en Memoria");
-      }
-
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   // const onChange = (form) => console.log(form);

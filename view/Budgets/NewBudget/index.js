@@ -23,7 +23,6 @@ const NewBudgetPage = () => {
   const createBudget = async (budget) => {
     try {
       setLoading(true);
-      console.log(budget);
       const resp = await clientAxios.post(`/budgets/`, budget);
 
       if (resp) {
@@ -93,25 +92,6 @@ const NewBudgetPage = () => {
               ))}
             </Picker>
           </NativeView>
-          {/* <NativeView>
-            <Picker
-              style={{
-                height: 50,
-                marginTop: 22,
-                backgroundColor: "#FFF",
-              }}
-              selectedValue={bankAccount}
-              onValueChange={(val) => setBankAccount(val)}
-            >
-              <Picker.Item
-                label="-- Seleccione una Cuenta Bancaria --"
-                value=""
-              />
-              <Picker.Item label="1234567891" value="1234567891" />
-              <Picker.Item label="3456789011" value="3456789011" />
-              <Picker.Item label="2414205416" value="2414205416" />
-            </Picker>
-          </NativeView> */}
         </Form>
         <AnimatedButton
           text="Guardar Presupuesto"

@@ -3,15 +3,15 @@ import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
-import shortid from "shortid";
-import { useNavigation } from "@react-navigation/native";
-import { getCurrentDate, getEmailUserLogged } from "../../../utils";
+// import shortid from "shortid";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { LoanTypes } from "../../../utils/enums";
-import { LOANS, addItemToList } from "../../../utils/storage";
-import clientAxios from "../../../config/axios";
+import { getBankAccountsService } from "../../../services/bankAccountService";
+import { createLoanService } from "../../../services/loanService";
 
 const NewLoanPage = ({ route }) => {
   const type = route.params.type;
@@ -23,31 +23,31 @@ const NewLoanPage = ({ route }) => {
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    getBankAccounts();
+
+    return () => {};
+  }, [isFocused]);
+
+  const getBankAccounts = async () => {
+    setBankAccounts(await getBankAccountsService());
+  };
 
   const createLoan = async (loan) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/loans/`, loan);
-
-      if (resp) {
-        setLoading(false);
-        setMsg(`Préstamo cargado correctamente`);
-
-        navigation.navigate("LoansPage");
+    setLoading(true);
+    const resp = await createLoanService(loan);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("LoansPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(LOANS, loan);
-        setMsg("Préstamo guardado en Memoria");
-        navigation.navigate("LoansPage");
-      }
-
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -119,12 +119,20 @@ const NewLoanPage = ({ route }) => {
                 onValueChange={(val) => setBankAccount(val)}
               >
                 <Picker.Item
-                  label="-- Seleccione una Cuenta Bancaria --"
+                  label={
+                    bankAccounts.length > 0
+                      ? "-- Seleccione una Cuenta Bancaria --"
+                      : "-- No posee cuentas Bancarias Registradas --"
+                  }
                   value=""
                 />
-                <Picker.Item label="1234567891" value="1234567891" />
-                <Picker.Item label="3456789011" value="3456789011" />
-                <Picker.Item label="2414205416" value="2414205416" />
+                {bankAccounts?.map((item, i) => (
+                  <Picker.Item
+                    label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                    value={item?.cbu.toString()}
+                    key={i}
+                  />
+                ))}
               </Picker>
             </NativeView>
           )}

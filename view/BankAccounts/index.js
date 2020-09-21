@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 import globalStyles from "../../styles/global";
 import { Container, H1, Fab, Spinner } from "native-base";
 import useAlert from "../../hooks/useAlert";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import BankAccount from "../../components/BankAccount";
 import { Ionicons } from "@expo/vector-icons";
-import { saveItem, getItem, BANKACCOUNTS } from "../../utils/storage";
-import { getEmailUserLogged } from "../../utils";
-import clientAxios from "../../config/axios";
+import { getBankAccountsService } from "../../services/bankAccountService";
 
 const BankAccountsPage = (props) => {
   const isFocused = useIsFocused();
@@ -18,23 +16,13 @@ const BankAccountsPage = (props) => {
   const [loading, setLoading] = useState(false);
 
   const getBankAccounts = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/bankAccounts/${email}`);
-      if (resp.data.bankAccounts) {
-        setBankAccountsList(resp.data.bankAccounts);
-      } else {
-        setBankAccountsList(await getItem(BANKACCOUNTS));
-      }
-    } catch (error) {
-      setBankAccountsList(await getItem(BANKACCOUNTS));
-    }
+    setLoading(true);
+    setBankAccountsList(await getBankAccountsService());
+    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
     getBankAccounts();
-    setLoading(false);
     return () => {};
   }, [props, isFocused]);
 

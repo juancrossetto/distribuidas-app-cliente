@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, ScrollView, SafeAreaView } from "react-native";
-import { Container, H1, Fab, Icon } from "native-base";
+import { View, FlatList, SafeAreaView } from "react-native";
+import { Container, H1, Fab, Spinner } from "native-base";
 import globalStyles from "../../../styles/global";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import useAlert from "../../../hooks/useAlert";
 import Loan from "../../../components/Loan";
 import { Ionicons } from "@expo/vector-icons";
-// import { PaymentMethods } from "../../../utils/enums";
-import { LOANS, getItem, saveItem } from "../../../utils/storage";
-import clientAxios from "../../../config/axios";
-import { getEmailUserLogged } from "../../../utils";
+import { getLoansService } from "../../../services/loanService";
 
 const LoansDetailPage = ({ type }) => {
   const isFocused = useIsFocused();
@@ -17,31 +14,18 @@ const LoansDetailPage = ({ type }) => {
   const [loansList, setLoansList] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const navigation = useNavigation();
   const getLoans = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/loans/${email}`);
-      console.log(resp.data);
-      if (resp.data.loans) {
-        setLoansList(resp.data.loans.filter((l) => l.type === type));
-      } else {
-        const loans = await getItem(LOANS);
-        setLoansList(loans.filter((l) => l.type === type));
-      }
-    } catch (error) {
-      const loans = await getItem(LOANS);
-      setLoansList(loans.filter((l) => l.type === type));
-    }
+    setLoading(true);
+    const loans = await getLoansService();
+    setLoansList(loans.filter((l) => l.type === type));
+    setLoading(false);
   };
 
   useEffect(() => {
-    // setLoansList(loans.filter((l) => l.loanType === type));
-    setLoading(true);
     getLoans();
-    setLoading(false);
     return () => {};
   }, [type, isFocused]);
-  const navigation = useNavigation();
 
   const handleAdd = () => {
     navigation.navigate("NewLoanPage", { type: type });

@@ -15,7 +15,7 @@ const AmountSpentPage = () => {
   for (let i = 0; i < 6; i++) {
     expenses.push({
       paymentMethod: PaymentMethods[i].text,
-      amount: Math.floor(Math.random() * 5000 + 100),
+      amount: Math.floor(Math.random() * 5000 + 2000),
       color: randomColor(),
     });
   }

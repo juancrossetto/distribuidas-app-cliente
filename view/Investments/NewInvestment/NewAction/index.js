@@ -12,62 +12,82 @@ import {
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../../styles/global";
 import shortid from "shortid";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Actions } from "../../../../utils/enums";
-import { getCurrentDate } from "../../../../utils";
+import { getEmailUserLogged } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import AnimatedButton from "../../../../components/AnimatedButton";
-import { INVESTMENTS, addItemToList } from "../../../../utils/storage";
+import { getBankAccountsService } from "../../../../services/bankAccountService";
+import { createInvestmentService } from "../../../../services/investmentService";
 
 const NewActionPage = () => {
-  const [action, setAction] = useState("");
+  const [specie, setSpecie] = useState("");
   const [unitValue, setUnitValue] = useState(0);
   // const [rate, setRate] = useState(0);
-  const [quantity, setQuantity] = useState("");
+  const [specieQuantity, setSpecieQuantity] = useState("");
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    getBankAccounts();
+    if (specie) {
+      const actionSelected = Actions.filter((t) => t.value === specie)[0]
+        .actionValue;
+      setUnitValue(actionSelected);
+    }
+    return () => {};
+  }, [specie, isFocused]);
+
+  const getBankAccounts = async () => {
+    setBankAccounts(await getBankAccountsService());
+  };
+
+  const createAction = async (action) => {
+    setLoading(true);
+    const resp = await createInvestmentService(action);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("InvestmentsPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
+      }
+    }
+    setLoading(false);
+  };
 
   const handleSubmit = async () => {
     if (
-      action.trim() === "" ||
+      specie.trim() === "" ||
       unitValue <= 0 ||
-      quantity <= 0 ||
+      specieQuantity <= 0 ||
       bankAccount.trim() === ""
     ) {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+    const email = await getEmailUserLogged();
+    const date = new Date();
     const investment = {
       type: "Acción",
-      action,
+      specie,
       unitValue,
       // rate,
-      quantity,
+      specieQuantity,
       bankAccount,
-      date: getCurrentDate(),
+      date,
+      email,
     };
-    investment.id = shortid.generate();
+    // investment.id = shortid.generate();
+    createAction(investment);
     setLoading(true);
-    await addItemToList(INVESTMENTS, investment);
-
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("InvestmentsPage");
-    }, 1500);
   };
 
-  useEffect(() => {
-    if (action) {
-      const actionSelected = Actions.filter((t) => t.value === action)[0]
-        .actionValue;
-      setUnitValue(actionSelected);
-    }
-
-    return () => {};
-  }, [action]);
   return (
     <Container
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
@@ -87,8 +107,8 @@ const NewActionPage = () => {
                   marginTop: 22,
                   backgroundColor: "#FFF",
                 }}
-                selectedValue={action}
-                onValueChange={(val) => setAction(val)}
+                selectedValue={specie}
+                onValueChange={(val) => setSpecie(val)}
               >
                 <Picker.Item label="-- Seleccione una Acción --" value="" />
                 {Actions.map((item, i) => (
@@ -96,24 +116,13 @@ const NewActionPage = () => {
                 ))}
               </Picker>
             </NativeView>
-            {action ? (
+            {specie ? (
               <NativeView style={{ marginTop: 10 }}>
                 <Text style={{ fontSize: 18, textAlign: "center" }}>
                   Valor Unitario de la Acción: $ {unitValue}
                 </Text>
               </NativeView>
             ) : null}
-
-            {/* <NativeView>
-            <Item inlineLabel last style={globalStyles.input}>
-              <MaterialCommunityIcons name="cash-usd" size={24} color="green" />
-              <Input
-                keyboardType="numeric"
-                placeholder="Monto a Invertir"
-                onChangeText={(val) => setAmount(val)}
-              />
-            </Item>
-          </NativeView> */}
             <NativeView>
               <Picker
                 style={{
@@ -125,12 +134,20 @@ const NewActionPage = () => {
                 onValueChange={(val) => setBankAccount(val)}
               >
                 <Picker.Item
-                  label="-- Seleccione una Cuenta Bancaria --"
+                  label={
+                    bankAccounts.length > 0
+                      ? "-- Seleccione una Cuenta Bancaria --"
+                      : "-- No posee cuentas Bancarias Registradas --"
+                  }
                   value=""
                 />
-                <Picker.Item label="1234567891" value="2414205416" />
-                <Picker.Item label="3456789011" value="3456789011" />
-                <Picker.Item label="2414205416" value="2414205416" />
+                {bankAccounts?.map((item, i) => (
+                  <Picker.Item
+                    label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                    value={item?.cbu.toString()}
+                    key={i}
+                  />
+                ))}
               </Picker>
             </NativeView>
 
@@ -139,7 +156,7 @@ const NewActionPage = () => {
                 <Input
                   keyboardType="numeric"
                   placeholder="Cantidad de Acciones compradas"
-                  onChangeText={(val) => setQuantity(val)}
+                  onChangeText={(val) => setSpecieQuantity(val)}
                 />
               </Item>
             </NativeView>

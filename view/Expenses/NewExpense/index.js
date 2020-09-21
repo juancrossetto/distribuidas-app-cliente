@@ -25,16 +25,11 @@ import {
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  addItemToList,
-  BANKACCOUNTS,
-  CREDITCARDS,
-  EXPENSES,
-  getItem,
-} from "../../../utils/storage";
 import { getEmailUserLogged } from "../../../utils";
 import ImageUploader from "../../../components/ImageUploader";
-import clientAxios from "../../../config/axios";
+import { createExpenseService } from "../../../services/expenseService";
+import { getBankAccountsService } from "../../../services/bankAccountService";
+import { getCreditCardsService } from "../../../services/creditCardService";
 
 const NewExpensePage = () => {
   const isFocused = useIsFocused();
@@ -69,60 +64,27 @@ const NewExpensePage = () => {
     await getBankAccounts();
     await getCreditCards();
     setLoading(false);
-    console.log(creditCards);
   };
   const getBankAccounts = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/bankAccounts/${email}`);
-      if (resp.data.bankAccounts) {
-        setBankAccounts(resp.data.bankAccounts);
-      } else {
-        setBankAccounts(await getItem(BANKACCOUNTS));
-      }
-    } catch (error) {
-      setBankAccounts(await getItem(BANKACCOUNTS));
-    }
+    setBankAccounts(await getBankAccountsService());
   };
 
   const getCreditCards = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/creditCards/${email}`);
-      if (resp.data.creditCards) {
-        setCreditCards(resp.data.creditCards);
-      } else {
-        setCreditCards(await getItem(CREDITCARDS));
-      }
-    } catch (error) {
-      setCreditCards(await getItem(CREDITCARDS));
-    }
+    setCreditCards(await getCreditCardsService());
   };
 
   const createExpense = async (expense) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/expenses/`, expense);
-      if (resp) {
-        setLoading(false);
-        setMsg(`Egreso cargado correctamente`);
-
-        //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-
-        navigation.navigate("ExpensesPage");
+    setLoading(true);
+    const resp = await createExpenseService(expense);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("ExpensesPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(EXPENSES, expense);
-        setMsg("Egreso guardado en Memoria");
-        navigation.navigate("ExpensesPage");
-      }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -216,40 +178,7 @@ const NewExpensePage = () => {
               ))}
             </Picker>
           </NativeView>
-          {expenseType === "PER" ? (
-            <NativeView>
-              <Picker
-                style={{
-                  height: 50,
-                  marginTop: 22,
-                  backgroundColor: "#FFF",
-                }}
-                selectedValue={category}
-                onValueChange={(val) => setCategory(val)}
-              >
-                <Picker.Item label="-- Seleccione una Categoría --" value="" />
-                {ExpenseCategories.map((item, i) => (
-                  <Picker.Item label={item.text} value={item.value} key={i} />
-                ))}
-              </Picker>
-            </NativeView>
-          ) : expenseType === "EXT" ? (
-            [
-              <NativeView
-                style={{
-                  marginTop: 22,
-                }}
-                key="0"
-              >
-                <Item inlineLabel last style={globalStyles.input}>
-                  <Input
-                    placeholder="Detalle extraordinario"
-                    onChangeText={(val) => setDetail(val)}
-                  />
-                </Item>
-              </NativeView>,
-            ]
-          ) : null}
+
           <NativeView>
             {(paymentType.trim() === "TRC" ||
               paymentType.trim() === "TRD" ||
@@ -294,17 +223,7 @@ const NewExpensePage = () => {
                       />
                     ));
                   }
-                  // if (conditionTwo) return <span>Two</span>;
-                  // else conditionOne;
-                  // return <span>Three</span>;
                 })()}
-                {/* {creditCards?.map((item, i) => (
-                  <Picker.Item
-                    label={item.number}
-                    value={item.number}
-                    key={i}
-                  />
-                ))} */}
               </Picker>
             )}
           </NativeView>
@@ -369,6 +288,40 @@ const NewExpensePage = () => {
               ))}
             </Picker>
           </NativeView>
+          {expenseType === "PER" ? (
+            <NativeView>
+              <Picker
+                style={{
+                  height: 50,
+                  marginTop: 22,
+                  backgroundColor: "#FFF",
+                }}
+                selectedValue={category}
+                onValueChange={(val) => setCategory(val)}
+              >
+                <Picker.Item label="-- Seleccione una Categoría --" value="" />
+                {ExpenseCategories.map((item, i) => (
+                  <Picker.Item label={item.text} value={item.value} key={i} />
+                ))}
+              </Picker>
+            </NativeView>
+          ) : expenseType === "EXT" ? (
+            [
+              <NativeView
+                style={{
+                  marginTop: 22,
+                }}
+                key="0"
+              >
+                <Item inlineLabel last style={globalStyles.input}>
+                  <Input
+                    placeholder="Detalle extraordinario"
+                    onChangeText={(val) => setDetail(val)}
+                  />
+                </Item>
+              </NativeView>,
+            ]
+          ) : null}
           <NativeView>
             <Picker
               style={{ marginTop: 22, height: 50, backgroundColor: "#FFF" }}

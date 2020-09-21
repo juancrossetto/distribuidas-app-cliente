@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { View, SafeAreaView, FlatList } from "react-native";
-import { Container, H1, Fab } from "native-base";
+import { Container, H1, Fab, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
 import Investment from "../../components/Investment";
 import { getEmailUserLogged } from "../../utils";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import useAlert from "../../hooks/useAlert";
-import { INVESTMENTS, getItem, saveItem } from "../../utils/storage";
-import clientAxios from "../../config/axios";
+import { getInvestmentsService } from "../../services/investmentService";
 
 const InvestmentsPage = (props) => {
   const isFocused = useIsFocused();
@@ -18,23 +17,24 @@ const InvestmentsPage = (props) => {
   const [investmentsList, setInvestmentsList] = useState([]);
 
   const getInvestments = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/investments/${email}`);
-      if (resp.data.investments) {
-        setInvestmentsList(resp.data.investments);
-      } else {
-        setInvestmentsList(await getItem(INVESTMENTS));
-      }
-    } catch (error) {
-      setInvestmentsList(await getItem(INVESTMENTS));
-    }
+    setLoading(true);
+    setInvestmentsList(await getInvestmentsService());
+    setLoading(false);
+    // try {
+    //   const email = await getEmailUserLogged();
+    //   const resp = await clientAxios.get(`/investments/${email}`);
+    //   if (resp.data.investments) {
+    //     setInvestmentsList(resp.data.investments);
+    //   } else {
+    //     setInvestmentsList(await getItem(INVESTMENTS));
+    //   }
+    // } catch (error) {
+    //   setInvestmentsList(await getItem(INVESTMENTS));
+    // }
   };
 
   useEffect(() => {
-    setLoading(true);
     getInvestments();
-    setLoading(false);
     return () => {};
   }, [props, isFocused]);
 
@@ -44,9 +44,7 @@ const InvestmentsPage = (props) => {
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       {loading ? (
-        <View>
-          <Spinner color="white" />
-        </View>
+        <View>{/* <Spinner color="white" /> */}</View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30 }]}>
           <H1 style={globalStyles.title}>Inversiones</H1>

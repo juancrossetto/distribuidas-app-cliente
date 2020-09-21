@@ -444,7 +444,7 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Monto gastado",
           tabBarIcon: () => (
-            <AntDesign name={"piechart"} size={24} color={"#000"} />
+            <AntDesign name={"piechart"} size={24} color={"#fff"} />
           ),
         }}
       />
@@ -454,7 +454,7 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Saldo de cuenta",
           tabBarIcon: () => (
-            <AntDesign name="linechart" size={24} color={"#000"} />
+            <AntDesign name="linechart" size={24} color={"#fff"} />
           ),
         }}
       />
@@ -463,7 +463,7 @@ function DashboardTabsStack() {
         component={WeekDuesPage}
         options={{
           tabBarLabel: "Vencimientos de la Semana",
-          tabBarIcon: () => <EvilIcons name="chart" size={24} color={"#000"} />,
+          tabBarIcon: () => <EvilIcons name="chart" size={24} color={"#fff"} />,
         }}
       />
       <Tab.Screen
@@ -472,7 +472,7 @@ function DashboardTabsStack() {
         options={{
           tabBarLabel: "Desvíos",
           tabBarIcon: () => (
-            <FontAwesome5 name="chart-bar" size={24} color={"#000"} />
+            <FontAwesome5 name="chart-bar" size={24} color={"#fff"} />
           ),
         }}
       />

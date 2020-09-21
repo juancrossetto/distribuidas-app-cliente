@@ -37,6 +37,13 @@ const Investment = ({ item }) => {
               ).toFixed(3)}
             </Text>
           </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Vencimiento:</Text>
+            <Text style={styles.text}>
+              {formatDate(item.dueDate)}
+              {item.autmomaticRenovation && " Con Renovación Automatica"}
+            </Text>
+          </View>
         </>
       ) : null}
       {item.type === "Títulos Valores" ? (
@@ -44,39 +51,33 @@ const Investment = ({ item }) => {
           <View style={styles.textContainer}>
             <Text style={styles.label}>Título a Invertir:</Text>
             <Text style={styles.text}>
-              {Titles.filter((t) => t.value === item.title)[0].text}
+              {Titles?.filter((t) => t.value === item.specie)[0].text}
+              {/* {item.specie} */}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Cantidad de Títulos Comprados:</Text>
-            <Text style={styles.text}>{item.quantity}</Text>
+            <Text style={styles.text}>{item.specieQuantity}</Text>
           </View>
         </>
       ) : null}
-      {item.type === "Accion" ? (
+      {item.type === "Acción" ? (
         <>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Acción a Invertir:</Text>
             <Text style={styles.text}>
-              {Actions.filter((t) => t.value === item.action)[0].text}
+              {Actions.filter((t) => t.value === item.specie)[0].text}
             </Text>
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Cantidad de Acciones Compradas:</Text>
-            <Text style={styles.text}>{item.quantity}</Text>
+            <Text style={styles.text}>{item.specieQuantity}</Text>
           </View>
         </>
       ) : null}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha de Inversión:</Text>
         <Text style={styles.text}>{formatDate(item.date)}</Text>
-      </View>
-      <View style={styles.textContainer}>
-        <Text style={styles.label}>Vencimiento:</Text>
-        <Text style={styles.text}>
-          {formatDate(item.dueDate)}
-          {item.autmomaticRenovation && " con Renovación Automatica"}
-        </Text>
       </View>
     </View>
   );

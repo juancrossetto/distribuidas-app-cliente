@@ -18,11 +18,15 @@ const Income = ({ item }) => {
         </Text>
       </View>
       {item.paymentMethod === "BAN" ? (
-        <View style={styles.textContainer}>
-          <Text style={styles.label}>Medio de Pago:</Text>
-          <Text style={styles.text}>
-            Deposito en cuenta: {item.bankAccount}
-          </Text>
+        <View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Medio de Pago:</Text>
+            <Text style={styles.text}>Deposito en cuenta</Text>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Cuenta Bancaria:</Text>
+            <Text style={styles.text}>{item.bankAccount}</Text>
+          </View>
         </View>
       ) : (
         <View style={styles.textContainer}>

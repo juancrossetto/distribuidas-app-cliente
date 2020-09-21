@@ -21,7 +21,7 @@ const App = () => {
   }, []);
   // saveItem(EXPENSES, JSON.stringify(egresos));
 
-  //console.disableYellowBox = true; // Para deshabilitar los warnings
+  console.disableYellowBox = true; // Para deshabilitar los warnings
   return (
     <>
       <Root>

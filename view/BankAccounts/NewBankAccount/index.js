@@ -5,16 +5,11 @@ import globalStyles from "../../../styles/global";
 // import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
-import { getCurrentDate, getEmailUserLogged } from "../../../utils";
+import { getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  addItemToList,
-  BANKACCOUNTS,
-  DEBITCARDS,
-} from "../../../utils/storage";
-import clientAxios from "../../../config/axios";
+import { createBankAccountService } from "../../../services/bankAccountService";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -28,28 +23,17 @@ const NewBankAccountPage = () => {
   const navigation = useNavigation();
 
   const createBankAccount = async (bankAccount) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/bankAccounts/`, bankAccount);
-
-      if (resp) {
-        setLoading(false);
-        setMsg(`Cuenta Bancaria cargada correctamente`);
-
-        navigation.navigate("BankAccountsPage");
+    setLoading(true);
+    const resp = await createBankAccountService(bankAccount);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("BankAccountsPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(BANKACCOUNTS, bankAccount);
-        setMsg("Cuenta Bancaria guardada en Memoria");
-      }
-
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {

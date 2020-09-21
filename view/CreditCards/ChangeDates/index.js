@@ -62,21 +62,17 @@ const ChangeDatesCreditCardPage = ({ route }) => {
         setLoading(false);
         setMsg(`Fechas del Resúmen editadas correctamente`);
       } else {
-        // await removeItem(CREDITCARDS)
         await saveItem(CREDITCARDS, creditCard);
-        console.log("nuevooo", creditCard);
         setCardsList(await getItem(CREDITCARDS));
       }
 
       navigation.navigate("CreditCardsPage");
     } catch (error) {
-      console.log("error", error);
       if (error.response.data.errores) {
         setMsg(error.response.data.errores[0].msg);
       }
 
       await saveItem(CREDITCARDS, creditCard);
-      console.log("nuevo ERROR", creditCard);
       setMsg("Tarjeta de Crédito guardada en Memoria");
       navigation.navigate("CreditCardsPage");
       setLoading(false);

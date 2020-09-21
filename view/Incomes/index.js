@@ -23,14 +23,8 @@ const IncomesPage = (props) => {
   };
 
   useEffect(() => {
-    // setIsMounted(true);
-    // if (isMounted) {
     getIncomes();
-    // }
-
-    return () => {
-      //   setIsMounted(false);
-    };
+    return () => {};
   }, [props, isFocused]);
 
   const handleAdd = () => {

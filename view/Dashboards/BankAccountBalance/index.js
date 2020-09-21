@@ -1,11 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Picker } from "react-native";
 import { Container, H1 } from "native-base";
 import globalStyles from "../../../styles/global";
 import { PaymentMethods } from "../../../utils/enums";
 import BankAccountBalanceChart from "../../../components/Charts/BankAccountBalanceChart";
+import { useIsFocused } from "@react-navigation/native";
+import { getBankAccountsService } from "../../../services/bankAccountService";
+
 const BankAccountBalancePage = () => {
   const [bankAccountSelected, setBankAccountSelected] = useState(null);
+  const isFocused = useIsFocused();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    getBankAccounts();
+
+    return () => {};
+  }, [isFocused]);
+
+  const getBankAccounts = async () => {
+    setBankAccounts(await getBankAccountsService());
+  };
 
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
@@ -24,18 +39,20 @@ const BankAccountBalancePage = () => {
             onValueChange={(val) => setBankAccountSelected(val)}
           >
             <Picker.Item
-              label="-- Seleccione una Cuenta Bancaria --"
+              label={
+                bankAccounts.length > 0
+                  ? "-- Seleccione una Cuenta Bancaria --"
+                  : "-- No posee cuentas Bancarias Registradas --"
+              }
               value=""
             />
-            <Picker.Item
-              label="1234567891"
-              value={[100, 10, 40, -24, 250, 100, 350, 0, 43]}
-            />
-            <Picker.Item label="3456789011" value={[200, 10, 150, -10]} />
-            <Picker.Item
-              label="2414205416"
-              value={[10, 40, 30, -20, 50, 200]}
-            />
+            {bankAccounts?.map((item, i) => (
+              <Picker.Item
+                label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                value={[100, 10, 40, -24, 250, 100, 350, 0, 43]}
+                key={i}
+              />
+            ))}
           </Picker>
         </View>
         {bankAccountSelected ? (

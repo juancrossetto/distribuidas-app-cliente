@@ -38,9 +38,27 @@ const Expense = ({ item }) => {
           <Text style={styles.text}>{paymentMethod}</Text>
         </View>
         {item.paymentType === "TRC" && item.fees > 0 && (
+          <View>
+            <View style={styles.textContainer}>
+              <Text style={styles.label}>Nro Tarjeta:</Text>
+              <Text style={styles.text}>{item.paymentId}</Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.label}>Cantidad de Cuotas:</Text>
+              <Text style={styles.text}>{item.fees}</Text>
+            </View>
+          </View>
+        )}
+        {item.paymentType === "TRD" && (
           <View style={styles.textContainer}>
-            <Text style={styles.label}>Cantidad de Cuotas:</Text>
-            <Text style={styles.text}>{item.fees}</Text>
+            <Text style={styles.label}>Nro Tarjeta:</Text>
+            <Text style={styles.text}>{item.paymentId}</Text>
+          </View>
+        )}
+        {item.paymentType === "BAN" && (
+          <View style={styles.textContainer}>
+            <Text style={styles.label}>Nro Cuenta:</Text>
+            <Text style={styles.text}>{item.paymentId}</Text>
           </View>
         )}
         <View style={styles.textContainer}>

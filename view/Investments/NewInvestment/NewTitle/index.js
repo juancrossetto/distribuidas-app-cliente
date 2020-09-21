@@ -11,68 +11,92 @@ import {
 } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../../styles/global";
-import shortid from "shortid";
-import { useNavigation } from "@react-navigation/native";
+// import shortid from "shortid";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Titles } from "../../../../utils/enums";
-import { getCurrentDate } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import AnimatedButton from "../../../../components/AnimatedButton";
-import { INVESTMENTS, addItemToList } from "../../../../utils/storage";
+import { getBankAccountsService } from "../../../../services/bankAccountService";
+import { createInvestmentService } from "../../../../services/investmentService";
+import { getEmailUserLogged } from "../../../../utils";
 
 const NewTitlePage = () => {
-  const [title, setTitle] = useState("");
+  const [specie, setSpecie] = useState("");
   // const [unitValue, setUnitValue] = useState(0);
   const [rate, setRate] = useState(0);
-  const [quantity, setQuantity] = useState("");
+  const [specieQuantity, setSpecieQuantity] = useState("");
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    getBankAccounts();
+    if (specie) {
+      const rateTitle = Titles.filter((t) => t.value === specie)[0].rate;
+      setRate(rateTitle);
+    }
+    return () => {};
+  }, [specie, isFocused]);
+
+  const getBankAccounts = async () => {
+    setBankAccounts(await getBankAccountsService());
+  };
+
+  const createTitle = async (title) => {
+    setLoading(true);
+    const resp = await createInvestmentService(title);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("InvestmentsPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
+      }
+    }
+    setLoading(false);
+  };
 
   const handleSubmit = async () => {
     if (
-      title.trim() === "" ||
+      specie.trim() === "" ||
       rate <= 0 ||
-      quantity <= 0 ||
+      specieQuantity <= 0 ||
       bankAccount.trim() === ""
     ) {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+    const date = new Date();
+    const email = await getEmailUserLogged();
     const investment = {
       type: "Títulos Valores",
-      title,
+      specie,
       rate,
       // rate,
-      date: getCurrentDate(),
-      quantity,
+      date,
+      specieQuantity,
       bankAccount,
+      email,
     };
-    investment.id = shortid.generate();
-    setLoading(true);
-    await addItemToList(INVESTMENTS, investment);
-
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate("InvestmentsPage");
-    }, 1500);
+    // investment.id = shortid.generate();
+    createTitle(investment);
+    setLoading(false);
   };
 
-  useEffect(() => {
-    if (title) {
-      const rateTitle = Titles.filter((t) => t.value === title)[0].rate;
-      setRate(rateTitle);
-    }
-
-    return () => {};
-  }, [title]);
   return (
     <Container
       style={([globalStyles.container], { backgroundColor: "#E84347" })}
     >
       {loading ? (
-        <NativeView>
+        <NativeView
+          style={{
+            marginTop: 50,
+          }}
+        >
           <Spinner color="white" />
         </NativeView>
       ) : (
@@ -86,8 +110,8 @@ const NewTitlePage = () => {
                   marginTop: 22,
                   backgroundColor: "#FFF",
                 }}
-                selectedValue={title}
-                onValueChange={(val) => setTitle(val)}
+                selectedValue={specie}
+                onValueChange={(val) => setSpecie(val)}
               >
                 <Picker.Item label="-- Seleccione un Título --" value="" />
                 {Titles.map((item, i) => (
@@ -95,7 +119,7 @@ const NewTitlePage = () => {
                 ))}
               </Picker>
             </NativeView>
-            {title ? (
+            {specie ? (
               <NativeView style={{ marginTop: 10 }}>
                 <Text style={{ fontSize: 18, textAlign: "center" }}>
                   Tasa del Título: $ {rate}
@@ -124,12 +148,20 @@ const NewTitlePage = () => {
                 onValueChange={(val) => setBankAccount(val)}
               >
                 <Picker.Item
-                  label="-- Seleccione una Cuenta Bancaria --"
+                  label={
+                    bankAccounts.length > 0
+                      ? "-- Seleccione una Cuenta Bancaria --"
+                      : "-- No posee cuentas Bancarias Registradas --"
+                  }
                   value=""
                 />
-                <Picker.Item label="1234567891" value="2414205416" />
-                <Picker.Item label="3456789011" value="3456789011" />
-                <Picker.Item label="2414205416" value="2414205416" />
+                {bankAccounts?.map((item, i) => (
+                  <Picker.Item
+                    label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                    value={item?.cbu.toString()}
+                    key={i}
+                  />
+                ))}
               </Picker>
             </NativeView>
 
@@ -138,7 +170,7 @@ const NewTitlePage = () => {
                 <Input
                   keyboardType="numeric"
                   placeholder="Cantidad de Títulos comprados"
-                  onChangeText={(val) => setQuantity(val)}
+                  onChangeText={(val) => setSpecieQuantity(val)}
                 />
               </Item>
             </NativeView>

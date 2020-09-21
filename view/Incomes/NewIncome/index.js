@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, H1, Form, Item, Input, View, Spinner } from "native-base";
 import { View as NativeView, Picker } from "react-native";
 import globalStyles from "../../../styles/global";
-import shortid from "shortid";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { IncomeCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { saveItem, addItemToList, INCOMES } from "../../../utils/storage";
 import { getEmailUserLogged } from "../../../utils";
 import { createIncomeService } from "../../../services/incomeService";
+import { getBankAccountsService } from "../../../services/bankAccountService";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -18,8 +17,21 @@ const NewIncomePage = () => {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
   const [CustomAlert, setMsg] = useAlert();
+
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const [bankAccounts, setBankAccounts] = useState([]);
+
+  useEffect(() => {
+    getBankAccounts();
+
+    return () => {};
+  }, [isFocused]);
+
+  const getBankAccounts = async () => {
+    setBankAccounts(await getBankAccountsService());
+  };
 
   const createIncome = async (income) => {
     setLoading(true);
@@ -27,6 +39,10 @@ const NewIncomePage = () => {
     if (resp.isSuccess) {
       setMsg(resp.msg);
       navigation.navigate("IncomesPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
+      }
     }
     setLoading(false);
   };
@@ -119,12 +135,20 @@ const NewIncomePage = () => {
                 onValueChange={(val) => setBankAccount(val)}
               >
                 <Picker.Item
-                  label="-- Seleccione una Cuenta Bancaria --"
+                  label={
+                    bankAccounts.length > 0
+                      ? "-- Seleccione una Cuenta Bancaria --"
+                      : "-- No posee cuentas Bancarias Registradas --"
+                  }
                   value=""
                 />
-                <Picker.Item label="1234567891" value="1234567891" />
-                <Picker.Item label="3456789011" value="3456789011" />
-                <Picker.Item label="2414205416" value="2414205416" />
+                {bankAccounts?.map((item, i) => (
+                  <Picker.Item
+                    label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                    value={item?.cbu.toString()}
+                    key={i}
+                  />
+                ))}
               </Picker>
             </NativeView>
           )}
