@@ -18,7 +18,7 @@ const LoansDetailPage = ({ type }) => {
   const getLoans = async () => {
     setLoading(true);
     const loans = await getLoansService();
-    setLoansList(loans.filter((l) => l.type === type));
+    setLoansList(loans?.filter((l) => l.type === type));
     setLoading(false);
   };
 

@@ -7,8 +7,9 @@ import useAlert from "../../../hooks/useAlert";
 import { useNavigation } from "@react-navigation/native";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { CardView } from "react-native-credit-card-input";
-import { CREDITCARDS, saveItem, removeItem } from "../../../utils/storage";
-import clientAxios from "../../../config/axios";
+// import { CREDITCARDS, saveItem, removeItem } from "../../../utils/storage";
+// import clientAxios from "../../../config/axios";
+import { updateCreditCardService } from "../../../services/creditCardService";
 
 const ChangeDatesCreditCardPage = ({ route }) => {
   const card = route.params.card;
@@ -56,27 +57,17 @@ const ChangeDatesCreditCardPage = ({ route }) => {
 
   const updateDates = async (creditCard) => {
     // LLamar API  UpdateDatesCreditCard;
-    try {
-      const resp = await clientAxios.put(`/creditcards/`, creditCard);
-      if (resp) {
-        setLoading(false);
-        setMsg(`Fechas del Resúmen editadas correctamente`);
-      } else {
-        await saveItem(CREDITCARDS, creditCard);
-        setCardsList(await getItem(CREDITCARDS));
-      }
-
+    setLoading(true);
+    const resp = await updateCreditCardService(creditCard);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
       navigation.navigate("CreditCardsPage");
-    } catch (error) {
-      if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-
-      await saveItem(CREDITCARDS, creditCard);
-      setMsg("Tarjeta de Crédito guardada en Memoria");
-      navigation.navigate("CreditCardsPage");
-      setLoading(false);
     }
+    setLoading(false);
   };
   return (
     <Container

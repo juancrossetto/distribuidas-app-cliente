@@ -1,7 +1,7 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { EXPENSES, getItem } from "../utils/storage";
+import { EXPENSES, MONTHLYEXPENSES, getItem, saveItem } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -52,5 +52,21 @@ export const createExpenseService = async (expense) => {
       await addItemToList(EXPENSES, expense);
       return getResult(`Egreso guardado en Memoria`, true);
     }
+  }
+};
+
+export const getMonthlyExpensesService = async () => {
+  try {
+    const email = await getEmail();
+    const resp = await clientAxios.post(`/expenses/monthlyexpenses/`, {
+      email,
+    });
+    if (resp.data.expenses) {
+      await saveItem(MONTHLYEXPENSES, resp.data.expenses);
+      console.log(resp.data.expenses);
+      return resp.data.expenses;
+    }
+  } catch (error) {
+    return await getItem(MONTHLYEXPENSES);
   }
 };

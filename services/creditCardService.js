@@ -42,3 +42,24 @@ export const createCreditCardService = async (creditCard) => {
     }
   }
 };
+
+export const updateCreditCardService = async (creditCard) => {
+  try {
+    console.log(creditCard);
+    const resp = await clientAxios.put(`/creditcards/`, creditCard);
+    if (resp) {
+      return getResult(`Tarjeta de Crédito actualizada correctamente`, true);
+    } else {
+      return getResult(`Error al actualizar Tarjeta de Crédito`, false);
+    }
+  } catch (error) {
+    if (error.response.data.msg) {
+      return getResult(error.response.data.msg, false);
+    } else if (error.response.data.errores) {
+      return getResult(error.response.data.errores[0].msg, false);
+    } else {
+      await addItemToList(CREDITCARDS, creditCard);
+      return getResult(`Tarjeta de Crédito actualizada en Memoria`, true);
+    }
+  }
+};

@@ -1,19 +1,21 @@
 import React from "react";
 import { PieChart } from "react-native-svg-charts";
-
 import { Text } from "react-native-svg";
+import { getRandomColor } from "../../../utils";
+
 const AmountSpentChart = ({ data }) => {
   const pieData = data
-    .filter((exp) => exp.amount > 0)
+    .filter((exp) => exp.TotalAmount > 0)
     .map((exp, index) => ({
-      value: exp.amount,
-      paymentMethod: exp.paymentMethod,
+      value: exp.TotalAmount,
+      paymentMethod: exp._id,
       svg: {
-        fill: exp.color,
+        fill: getRandomColor(),
         onPress: () => console.log("press", index),
       },
       key: `pie-${index}`,
     }));
+
   const Labels = ({ slices, height, width, data }) => {
     return slices.map((slice, index) => {
       const { labelCentroid, pieCentroid, value } = slice;

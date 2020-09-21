@@ -28,6 +28,10 @@ const LoginPage = () => {
       navigation.navigate("Home");
     }
   };
+
+  const initUserConfiguration = async () => {
+    console.log("iniciamooo");
+  };
   const login = async () => {
     try {
       // const resp = await clientAxios.get(`/users/${email}`);
@@ -42,13 +46,31 @@ const LoginPage = () => {
           name: resp.data.user.name,
           password: resp.data.user.password,
         });
+        // Logica al Loguearse
+        await initUserConfiguration();
         navigation.navigate("Home");
       } else {
         setMsg("El usuario indicado no se encuentra registrado");
       }
     } catch (error) {
       console.log(error);
-      setMsg(error.response.data.msg);
+      if (
+        error &&
+        error.response &&
+        error.response.data &&
+        error.response.data.msg
+      ) {
+        setMsg(error.response.data.msg);
+      } else {
+        setMsg("Error al intentar loguearse, revise su conexión");
+      }
+      // console.log(error);
+      // console.log(error.response);
+      // if (error.response.data.msg) {
+      //   setMsg(error.response.data.msg);
+      // } else if (error.response.data.errores) {
+      //   setMsg(error.response.data.errores[0].msg);
+      // }
     }
   };
   // Cuando el usuario presiona en iniciar sesión.
