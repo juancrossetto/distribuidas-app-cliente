@@ -32,9 +32,7 @@ const BankAccountsPage = (props) => {
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       {loading ? (
-        <View>
-          <Spinner color="white" />
-        </View>
+        <View>{/* <Spinner color="white" /> */}</View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30 }]}>
           <H1 style={globalStyles.title}>Cuenta Bancaria</H1>

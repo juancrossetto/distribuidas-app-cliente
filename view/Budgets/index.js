@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { View, ScrollView, FlatList, SafeAreaView } from "react-native";
-import { Container, H1, Fab, Icon } from "native-base";
+import { Container, H1, Fab, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
 import Budget from "../../components/Budget";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
-import { getItem, BUDGETS } from "../../utils/storage";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import clientAxios from "../../config/axios";
-import { getEmailUserLogged } from "../../utils";
+import { getBudgetsService } from "../../services/budgetService";
 
 const BudgetsPage = (props) => {
   const [CustomAlert, setMsg] = useAlert();
@@ -19,24 +17,13 @@ const BudgetsPage = (props) => {
   const [loading, setLoading] = useState(false);
 
   const getBudgets = async () => {
-    try {
-      const email = await getEmailUserLogged();
-      const resp = await clientAxios.get(`/budgets/${email}`);
-      console.log(resp);
-      if (resp.data.budgets) {
-        setBudgetsList(resp.data.budgets);
-      } else {
-        setBudgetsList(await getItem(BUDGETS));
-      }
-    } catch (error) {
-      setBudgetsList(await getItem(BUDGETS));
-    }
+    setLoading(true);
+    setBudgetsList(await getBudgetsService());
+    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
     getBudgets();
-    setLoading(false);
     return () => {};
   }, [props, isFocused]);
 
@@ -46,9 +33,7 @@ const BudgetsPage = (props) => {
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       {loading ? (
-        <View>
-          <Spinner color="white" />
-        </View>
+        <View>{/* <Spinner color="white" /> */}</View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
           <H1 style={globalStyles.title}>Presupuestos</H1>

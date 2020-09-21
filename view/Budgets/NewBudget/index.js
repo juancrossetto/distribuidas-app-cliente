@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getEmailUserLogged } from "../../../utils";
 import { addItemToList, BUDGETS } from "../../../utils/storage";
 import clientAxios from "../../../config/axios";
+import { createBudgetService } from "../../../services/budgetService";
 
 const NewBudgetPage = () => {
   const [amount, setAmount] = useState(0);
@@ -21,27 +22,17 @@ const NewBudgetPage = () => {
   const [CustomAlert, setMsg] = useAlert();
 
   const createBudget = async (budget) => {
-    try {
-      setLoading(true);
-      const resp = await clientAxios.post(`/budgets/`, budget);
-
-      if (resp) {
-        setLoading(false);
-        setMsg(`Presupuesto cargado correctamente`);
-
-        navigation.navigate("BudgetsPage");
+    setLoading(true);
+    const resp = await createBudgetService(budget);
+    if (resp.isSuccess) {
+      setMsg(resp.msg);
+      navigation.navigate("BudgetsPage");
+    } else {
+      if (resp.msg) {
+        setMsg(resp.msg);
       }
-    } catch (error) {
-      if (error.response.data.msg) {
-        setMsg(error.response.data.msg);
-      } else if (error.response.data.errores) {
-        setMsg(error.response.data.errores[0].msg);
-      } else {
-        await addItemToList(BUDGETS, budget);
-        setMsg("Presupuesto guardado en Memoria");
-      }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {

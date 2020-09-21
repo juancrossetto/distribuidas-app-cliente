@@ -32,9 +32,7 @@ const CreditCardsPage = (props) => {
   return (
     <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
       {loading ? (
-        <View>
-          <Spinner color="white" />
-        </View>
+        <View>{/* <Spinner color="white" /> */}</View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
           <H1 style={globalStyles.title}>Tarjetas de Crédito</H1>
