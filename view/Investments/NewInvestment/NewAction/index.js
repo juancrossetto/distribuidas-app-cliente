@@ -135,7 +135,7 @@ const NewActionPage = () => {
               >
                 <Picker.Item
                   label={
-                    bankAccounts.length > 0
+                    bankAccounts?.length > 0
                       ? "-- Seleccione una Cuenta Bancaria --"
                       : "-- No posee cuentas Bancarias Registradas --"
                   }
@@ -144,7 +144,7 @@ const NewActionPage = () => {
                 {bankAccounts?.map((item, i) => (
                   <Picker.Item
                     label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
-                    value={item?.cbu.toString()}
+                    value={item?.id.toString()}
                     key={i}
                   />
                 ))}

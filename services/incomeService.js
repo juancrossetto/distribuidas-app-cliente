@@ -2,6 +2,7 @@ import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
 import { getItem, INCOMES } from "../utils/storage";
+import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -25,18 +26,24 @@ export const createIncomeService = async (income) => {
     const resp = await clientAxios.post(`/incomes/`, income);
 
     if (resp && resp.data && resp.data.income) {
-      const { id, amount } = resp.data.income;
-      //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-      const changeBalance = true;
-      // await clientAxios.put(
-      //   `/bankaccounts/changeBalance/`,
-      //   { id, amount }
-      // );
-      if (changeBalance) {
-        return getResult(`Ingreso cargado correctamente`, true);
-      } else {
-        return getResult(`Hubo un error al actualizar el saldo`, true);
+      const { bankAccount, amount, paymentMethod } = resp.data.income;
+
+      if (paymentMethod === "BAN") {
+        //llama API actualizar saldo cuenta bancaria
+
+        const changeBalance = await updateBankAccountBalanceService(
+          bankAccount,
+          amount
+        );
+        if (!changeBalance.isSuccess) {
+          return getResult(
+            `Hubo un error al actualizar el saldo: ${changeBalance.msg}`,
+            true
+          );
+        }
       }
+
+      return getResult(`Ingreso cargado correctamente`, true);
     }
   } catch (error) {
     console.log(error);

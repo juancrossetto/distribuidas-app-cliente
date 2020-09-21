@@ -41,3 +41,28 @@ export const createBankAccountService = async (bankAccount) => {
     }
   }
 };
+
+export const updateBankAccountBalanceService = async (
+  idBankAccount,
+  amount
+) => {
+  try {
+    const resp = await clientAxios.put(`/bankaccounts/changeBalance/`, {
+      id: idBankAccount,
+      amount,
+    });
+    if (resp) {
+      return getResult(`Saldo en cuenta actualizado correctamente`, true);
+    }
+  } catch (error) {
+    if (error.response.data.msg) {
+      return getResult(error.response.data.msg, false);
+    } else if (error.response.data.errores) {
+      return getResult(error.response.data.errores[0].msg, false);
+    } else {
+      // await addItemToList(BANKACCOUNTS, bankAccount);
+      // return getResult(`Saldo en cuenta actualizado en Memoria`, true);
+      return getResult(`PENDIENTE ACTUALIZAR EN MEMORIA SALDO CUENTA`, true);
+    }
+  }
+};

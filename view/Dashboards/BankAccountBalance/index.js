@@ -40,7 +40,7 @@ const BankAccountBalancePage = () => {
           >
             <Picker.Item
               label={
-                bankAccounts.length > 0
+                bankAccounts?.length > 0
                   ? "-- Seleccione una Cuenta Bancaria --"
                   : "-- No posee cuentas Bancarias Registradas --"
               }

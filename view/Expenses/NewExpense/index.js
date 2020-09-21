@@ -217,8 +217,8 @@ const NewExpensePage = () => {
                   } else {
                     return bankAccounts?.map((item, i) => (
                       <Picker.Item
-                        label={item?.alias.toString()}
-                        value={item?.cbu.toString()}
+                        label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                        value={item?.id.toString()}
                         key={i}
                       />
                     ));
