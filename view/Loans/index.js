@@ -8,7 +8,7 @@ const LoansPage = () => {
     <Container>
       <Tabs
         tabBarUnderlineStyle={{
-          backgroundColor: "#f4511e",
+          backgroundColor: "#BB86FC",
         }}
         renderTabBar={() => <ScrollableTab />}
       >

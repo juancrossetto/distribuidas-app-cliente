@@ -58,7 +58,7 @@ const CreateAccountPage = () => {
   };
 
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>OrganizApp</H1>
 

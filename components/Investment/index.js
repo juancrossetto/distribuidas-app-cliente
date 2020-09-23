@@ -29,7 +29,12 @@ const Investment = ({ item }) => {
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.label}>Ganancia:</Text>
-            <Text style={[styles.text, { color: "green" }]}>
+            <Text
+              style={[
+                styles.text,
+                { color: "#33cc33", fontSize: 18, fontWeight: "bold" },
+              ]}
+            >
               $
               {(
                 item.amount *

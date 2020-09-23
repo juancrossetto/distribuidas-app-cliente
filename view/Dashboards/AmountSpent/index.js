@@ -10,7 +10,7 @@ import { getRandomColor } from "../../../utils";
 const AmountSpentPage = () => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
-  // let expenses = [];
+  let colors = [];
   const [expenses, setExpenses] = useState([]);
   useEffect(() => {
     getMonthlyExpenses();
@@ -34,7 +34,14 @@ const AmountSpentPage = () => {
   // }
 
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container
+      style={[
+        globalStyles.container,
+        {
+          backgroundColor: "#6200EE",
+        },
+      ]}
+    >
       {loading ? (
         <View>
           <Spinner color="white" />
@@ -44,44 +51,55 @@ const AmountSpentPage = () => {
           <View style={[{ marginTop: 30, flex: 1 }]}>
             <H1 style={globalStyles.title}>Gastos de este mes</H1>
           </View>
-          <View style={[globalStyles.content, { flex: 10 }]}>
-            <AmountSpentChart
-              data={expenses}
-              style={{
-                flex: 10,
-                borderColor: "red",
-                borderWidth: 2,
-              }}
-            />
-          </View>
-          <View
-            style={{
-              backgroundColor: "#fff1",
-              marginTop: 10,
-              padding: 15,
-              borderRadius: 5,
-            }}
-          >
-            {expenses?.map((exp, i) => (
-              <Text
-                key={i}
+          {expenses && expenses.length > 0 ? (
+            <>
+              <View style={[globalStyles.content, { flex: 10 }]}>
+                <AmountSpentChart
+                  data={expenses}
+                  style={{
+                    flex: 10,
+                    borderColor: "red",
+                    borderWidth: 2,
+                  }}
+                />
+              </View>
+              <View
                 style={{
-                  color: "#FFF",
+                  backgroundColor: "#fff1",
+                  marginTop: 10,
+                  padding: 15,
+                  borderRadius: 5,
                 }}
               >
-                <View
-                  style={{
-                    width: 15,
-                    height: 10,
-                    backgroundColor: exp.color,
-                  }}
-                ></View>
-                {exp &&
-                  PaymentMethods?.filter((p) => p.value === exp._id)[0].text}
-                : ${exp.TotalAmount}
-              </Text>
-            ))}
-          </View>
+                {expenses?.map((exp, i) => (
+                  <Text
+                    key={i}
+                    style={{
+                      color: "#FFF",
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 15,
+                        height: 10,
+                        backgroundColor: exp.color,
+                      }}
+                    ></View>
+                    {exp &&
+                      PaymentMethods?.filter((p) => p.value === exp._id)[0]
+                        .text}
+                    : ${exp.TotalAmount}
+                  </Text>
+                ))}
+              </View>
+            </>
+          ) : (
+            <View style={[{ marginTop: 30, flex: 1 }]}>
+              <H1 style={globalStyles.subtitle}>
+                Usted no posee egresos este mes
+              </H1>
+            </View>
+          )}
         </>
       )}
     </Container>

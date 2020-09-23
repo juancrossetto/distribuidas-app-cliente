@@ -26,7 +26,7 @@ const CloseSessionPage = () => {
   }, []);
 
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={globalStyles.content}>
         <View>
           <Spinner color="white" />

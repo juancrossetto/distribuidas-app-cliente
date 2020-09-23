@@ -37,11 +37,11 @@ const NewIncomePage = () => {
     setLoading(true);
     const resp = await createIncomeService(income);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("IncomesPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -75,7 +75,7 @@ const NewIncomePage = () => {
   };
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.subtitle}>Nuevo Ingreso</H1>

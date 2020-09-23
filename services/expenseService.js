@@ -63,10 +63,21 @@ export const getMonthlyExpensesService = async () => {
     });
     if (resp.data.expenses) {
       await saveItem(MONTHLYEXPENSES, resp.data.expenses);
-      console.log(resp.data.expenses);
       return resp.data.expenses;
     }
   } catch (error) {
     return await getItem(MONTHLYEXPENSES);
+  }
+};
+
+export const getPaymentTotalAmountService = async (paymentType, paymentId) => {
+  try {
+    const resp = await clientAxios.post(`/expenses/getbypayment/`, {
+      paymentType,
+      id: paymentId,
+    });
+    return getResult(resp.data, true);
+  } catch (error) {
+    return getResult(`Hubo un error al obtener el total a pagar`, false);
   }
 };

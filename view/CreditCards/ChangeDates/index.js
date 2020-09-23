@@ -12,8 +12,7 @@ import { CardView } from "react-native-credit-card-input";
 import { updateCreditCardService } from "../../../services/creditCardService";
 
 const ChangeDatesCreditCardPage = ({ route }) => {
-  const card = route.params.card;
-
+  const { card, fromLogin } = route.params;
   const navigation = useNavigation();
   const [CustomAlert, setMsg] = useAlert();
   const [loading, setLoading] = useState(false);
@@ -60,18 +59,22 @@ const ChangeDatesCreditCardPage = ({ route }) => {
     setLoading(true);
     const resp = await updateCreditCardService(creditCard);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
-      navigation.navigate("CreditCardsPage");
+      setMsg(resp.data);
+      if (fromLogin) {
+        navigation.navigate("Home");
+      } else {
+        navigation.navigate("CreditCardsPage");
+      }
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
   };
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.subtitle}>
@@ -87,7 +90,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
           }}
         >
           <CardView
-            number={card.number}
+            number={card.number?.toString()}
             expiry={card.expiry}
             name={card.name}
             brand={"visa"}
@@ -103,7 +106,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
                   : closeDateSummary
               }
               onPress={() => setIsClosedDatePickerVisibility(true)}
-              color={!closeDateSummary ? "#212316" : "#4BB543"}
+              color={!closeDateSummary ? "#2b6fa6" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isClosedDatePickerVisible}
@@ -125,7 +128,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
                   : dueDateSummary
               }
               onPress={() => setIsDueDatePickerVisibility(true)}
-              color={!dueDateSummary ? "#212316" : "#4BB543"}
+              color={!dueDateSummary ? "#2b6fa6" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isDueDatePickerVisible}

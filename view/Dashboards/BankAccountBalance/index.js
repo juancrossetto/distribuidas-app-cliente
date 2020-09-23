@@ -23,7 +23,7 @@ const BankAccountBalancePage = () => {
   };
 
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={[globalStyles.content]}>
         <View>
           <H1 style={globalStyles.title}>Estado de Cuentas Bancarias</H1>
@@ -61,8 +61,10 @@ const BankAccountBalancePage = () => {
             <View
               style={{ flexDirection: "row", justifyContent: "space-around" }}
             >
-              <Text>Saldo al 15/05/2020: $ {bankAccountSelected[0]}</Text>
-              <Text>
+              <Text style={{ color: "#fff" }}>
+                Saldo al 15/05/2020: $ {bankAccountSelected[0]}
+              </Text>
+              <Text style={{ color: "#fff" }}>
                 Saldo al 15/05/2021: ${" "}
                 {bankAccountSelected[bankAccountSelected.length - 1]}
               </Text>

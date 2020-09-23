@@ -23,7 +23,6 @@ export const getCreditCardsService = async () => {
 
 export const createCreditCardService = async (creditCard) => {
   try {
-    console.log(creditCard);
     const resp = await clientAxios.post(`/creditCards/`, creditCard);
 
     if (resp) {
@@ -45,7 +44,6 @@ export const createCreditCardService = async (creditCard) => {
 
 export const updateCreditCardService = async (creditCard) => {
   try {
-    console.log(creditCard);
     const resp = await clientAxios.put(`/creditcards/`, creditCard);
     if (resp) {
       return getResult(`Tarjeta de Crédito actualizada correctamente`, true);

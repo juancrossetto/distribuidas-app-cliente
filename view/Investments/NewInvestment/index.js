@@ -10,7 +10,7 @@ const NewInvestmentPage = () => {
     <Container>
       <Tabs
         tabBarUnderlineStyle={{
-          backgroundColor: "#f4511e",
+          backgroundColor: "#3700B3",
         }}
         renderTabBar={() => <ScrollableTab />}
       >
@@ -25,7 +25,7 @@ const NewInvestmentPage = () => {
         </Tab>
         <Tab heading="Fondos">
           <Container
-            style={([globalStyles.container], { backgroundColor: "#E84347" })}
+            style={([globalStyles.container], { backgroundColor: "#6200EE" })}
           >
             <View style={globalStyles.content}>
               <H1 style={globalStyles.title}>Proximamente Fondos</H1>

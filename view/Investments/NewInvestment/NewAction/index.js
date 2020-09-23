@@ -51,11 +51,11 @@ const NewActionPage = () => {
     setLoading(true);
     const resp = await createInvestmentService(action);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("InvestmentsPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -90,7 +90,7 @@ const NewActionPage = () => {
 
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       {loading ? (
         <NativeView>

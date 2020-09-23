@@ -26,11 +26,11 @@ const NewBankAccountPage = () => {
     setLoading(true);
     const resp = await createBankAccountService(bankAccount);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("BankAccountsPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -74,7 +74,7 @@ const NewBankAccountPage = () => {
   };
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Asocia tu cuenta</H1>

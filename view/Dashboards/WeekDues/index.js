@@ -7,7 +7,7 @@ import BankAccountBalanceChart from "../../../components/Charts/BankAccountBalan
 
 const WeekDuesPage = () => {
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={[globalStyles.content]}>
         <View>
           <H1 style={globalStyles.title}>Vencimientos de la Semana</H1>

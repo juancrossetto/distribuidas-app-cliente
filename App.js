@@ -13,6 +13,9 @@ import {
   getAllStorage,
   clearAll,
 } from "./utils/storage";
+import ChangeDatesCreditCardPage from "./view/CreditCards/ChangeDates";
+import CreditCardsPage from "./view/CreditCards";
+
 const Stack = createStackNavigator();
 
 const App = () => {
@@ -41,7 +44,7 @@ const App = () => {
               options={{
                 title: "Crear Cuenta",
                 headerStyle: {
-                  backgroundColor: "#28303B",
+                  backgroundColor: "#3700B3",
                 },
                 headerTintColor: "#FFF",
                 headerTitleStyle: {
@@ -54,6 +57,22 @@ const App = () => {
               component={HomePage}
               options={{
                 title: "Página Principal",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="ChangeDatesCreditCardPage"
+              component={ChangeDatesCreditCardPage}
+              options={{
+                title: "ChangeDatesCreditCardPage",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="CreditCardsPage"
+              component={CreditCardsPage}
+              options={{
+                title: "ChangeDatesCreditCardPage",
                 headerShown: false,
               }}
             />

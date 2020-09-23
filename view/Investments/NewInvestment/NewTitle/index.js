@@ -50,11 +50,11 @@ const NewTitlePage = () => {
     setLoading(true);
     const resp = await createInvestmentService(title);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("InvestmentsPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -89,7 +89,7 @@ const NewTitlePage = () => {
 
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       {loading ? (
         <NativeView

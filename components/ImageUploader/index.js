@@ -36,7 +36,7 @@ const ImageUploader = ({ image, setImage }) => {
       <Button
         title={image ? "Imagen Cargada!" : "Adjuntar Recibo"}
         onPress={pickImage}
-        color={image ? "#4BB543" : "#ff5c5c"}
+        color={image ? "#4BB543" : "#2b6fa6"}
       />
       {/* {image && (
         <Image

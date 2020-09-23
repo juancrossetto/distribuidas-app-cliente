@@ -25,6 +25,24 @@ export const getFutureDate = function (days) {
 
 export const noop = () => {};
 
+export const getEmailUserLogged = async () => {
+  const user = await getItem(USERLOGGED);
+  return user.email;
+};
+
+export const getResult = async (data, isSuccess) => {
+  const result = { data: data, isSuccess: isSuccess };
+  return result;
+};
+
+export const getRandomColor = () => {
+  return (
+    "#" +
+    ((Math.random() * 0xffffff) << 0).toString(16) +
+    "000000"
+  ).slice(0, 7);
+};
+
 function validateFormatCard(value) {
   var v = value.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
   var matches = v.match(/\d{4,16}/g);
@@ -47,22 +65,4 @@ export const getRandomCardNumber = (digits) => {
     randomstring += chars.substring(rnum, rnum + 1);
   }
   return validateFormatCard(randomstring);
-};
-
-export const getEmailUserLogged = async () => {
-  const user = await getItem(USERLOGGED);
-  return user.email;
-};
-
-export const getResult = async (msg, isSuccess) => {
-  const result = { msg: msg, isSuccess: isSuccess };
-  return result;
-};
-
-export const getRandomColor = () => {
-  return (
-    "#" +
-    ((Math.random() * 0xffffff) << 0).toString(16) +
-    "000000"
-  ).slice(0, 7);
 };

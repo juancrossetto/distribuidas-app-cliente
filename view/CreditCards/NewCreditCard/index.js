@@ -96,20 +96,19 @@ const NewCreditCardPage = () => {
     setLoading(true);
     const resp = await createCreditCardService(creditCard);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("CreditCardsPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
   };
 
-  // const onChange = (form) => console.log(form);
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Asocia tu Tarjeta de Crédito</H1>
@@ -121,7 +120,7 @@ const NewCreditCardPage = () => {
           }}
         >
           <CardView
-            number={number}
+            number={number?.toString()}
             name={name}
             expiry={expiry}
             // onChange={onChange}
@@ -224,7 +223,7 @@ const NewCreditCardPage = () => {
                   : closeDateSummary
               }
               onPress={() => setIsClosedDatePickerVisibility(true)}
-              color={!closeDateSummary ? "#212316" : "#4BB543"}
+              color={!closeDateSummary ? "#2b6fa6" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isClosedDatePickerVisible}
@@ -245,7 +244,7 @@ const NewCreditCardPage = () => {
                   : dueDateSummary
               }
               onPress={() => setIsDueDatePickerVisibility(true)}
-              color={!dueDateSummary ? "#212316" : "#4BB543"}
+              color={!dueDateSummary ? "#2b6fa6" : "#4BB543"}
             />
             <DateTimePickerModal
               isVisible={isDueDatePickerVisible}

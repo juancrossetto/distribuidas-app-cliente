@@ -7,6 +7,8 @@ import Income from "../../components/Income";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
 import { getIncomesService } from "../../services/incomeService";
+import { createExcel } from "../../components/Test";
+import AnimatedButton from "../../components/AnimatedButton";
 
 const IncomesPage = (props) => {
   const isFocused = useIsFocused();
@@ -31,9 +33,15 @@ const IncomesPage = (props) => {
     navigation.navigate("NewIncomePage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
         <H1 style={globalStyles.title}>Ingresos</H1>
+        {incomesList && (
+          <AnimatedButton
+            text="Descargar Excel"
+            onPress={() => createExcel(incomesList)}
+          />
+        )}
         {incomesList && incomesList.length > 0 ? (
           <SafeAreaView style={{ flex: 5 }}>
             <FlatList
@@ -53,7 +61,7 @@ const IncomesPage = (props) => {
           active={true}
           direction="up"
           containerStyle={{}}
-          style={{ backgroundColor: "#f4511e" }}
+          style={{ backgroundColor: "#3700b3" }}
           position="bottomLeft"
           onPress={() => handleAdd()}
         >

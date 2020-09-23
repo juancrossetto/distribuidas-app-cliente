@@ -40,11 +40,11 @@ const NewLoanPage = ({ route }) => {
     setLoading(true);
     const resp = await createLoanService(loan);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("LoansPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -75,7 +75,7 @@ const NewLoanPage = ({ route }) => {
   };
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>

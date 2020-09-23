@@ -80,7 +80,7 @@ const IncomesStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -98,7 +98,7 @@ const IncomesStack = ({ navigation }) => {
           //   // <NavigationDrawerStructure navigationProps={navigation} />
           // ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -123,7 +123,7 @@ function expensesStack({ navigation }) {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -138,7 +138,7 @@ function expensesStack({ navigation }) {
           title: "Nuevo Egreso",
           headerRight: () => <ExpensesPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -163,7 +163,7 @@ function investmentsStack({ navigation }) {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -178,7 +178,7 @@ function investmentsStack({ navigation }) {
           title: "Invertí",
           headerRight: () => <InvestmentsPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -203,7 +203,7 @@ const bankAccountsStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -218,7 +218,7 @@ const bankAccountsStack = ({ navigation }) => {
           title: "Asocie su Cuenta Bancaria",
           headerRight: () => <BankAccountsPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -243,7 +243,7 @@ const loansStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -260,7 +260,7 @@ const loansStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -275,7 +275,7 @@ const loansStack = ({ navigation }) => {
           title: "Carga tu préstamo",
           // headerRight: () => <LoansPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -294,7 +294,7 @@ const budgetsStack = ({ navigation }) => {
       initialRouteName="BudgetsPage"
       screenOptions={{
         headerStyle: {
-          backgroundColor: "#f4511e",
+          backgroundColor: "#3700B3",
         },
         headerTintColor: "#fff",
         headerTitleStyle: {
@@ -319,7 +319,7 @@ const budgetsStack = ({ navigation }) => {
           title: "Carga tu Presupuesto",
           headerRight: () => <BudgetsPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
         }}
       />
@@ -339,7 +339,7 @@ const cardsStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -354,7 +354,7 @@ const cardsStack = ({ navigation }) => {
           title: "Asociando tu Tarjeta",
           headerRight: () => <CreditCardsPage />,
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -369,7 +369,7 @@ const cardsStack = ({ navigation }) => {
         options={{
           title: "Actualización de Fechas",
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -394,7 +394,7 @@ const closeSessionStack = ({ navigation }) => {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -427,7 +427,7 @@ function DashboardTabsStack() {
         activeTintColor: "#FFFFFF",
         inactiveTintColor: "#F8F8F8",
         style: {
-          backgroundColor: "#f4511e",
+          backgroundColor: "#3700B3",
         },
         labelStyle: {
           textAlign: "center",
@@ -492,7 +492,7 @@ function DashboardsStack({ navigation }) {
             <NavigationDrawerStructure navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: "#3700B3",
           },
           headerTintColor: "#fff",
           headerTitleStyle: {
@@ -519,7 +519,7 @@ function HomePage() {
         options={{
           drawerLabel: "Inicio",
           drawerIcon: () => (
-            <AntDesign name={"areachart"} size={25} color={"#e84347"} />
+            <AntDesign name={"areachart"} size={25} color={"#6200EE"} />
           ),
         }}
         component={DashboardsStack}
@@ -529,7 +529,7 @@ function HomePage() {
         options={{
           drawerLabel: "Ingresos",
           drawerIcon: () => (
-            <MaterialIcons name="attach-money" size={25} color={"#e84347"} />
+            <MaterialIcons name="attach-money" size={25} color={"#6200EE"} />
           ),
         }}
         component={IncomesStack}
@@ -539,7 +539,7 @@ function HomePage() {
         options={{
           drawerLabel: "Egresos",
           drawerIcon: () => (
-            <MaterialIcons name="money-off" size={25} color={"#e84347"} />
+            <MaterialIcons name="money-off" size={25} color={"#6200EE"} />
           ),
         }}
         component={expensesStack}
@@ -549,7 +549,7 @@ function HomePage() {
         options={{
           drawerLabel: "Cuentas Bancarias",
           drawerIcon: () => (
-            <FontAwesome name="bank" size={25} color={"#e84347"} />
+            <FontAwesome name="bank" size={25} color={"#6200EE"} />
           ),
         }}
         component={bankAccountsStack}
@@ -559,7 +559,7 @@ function HomePage() {
         options={{
           drawerLabel: "Inversiones",
           drawerIcon: () => (
-            <FontAwesome5 name={"piggy-bank"} size={25} color={"#e84347"} />
+            <FontAwesome5 name={"piggy-bank"} size={25} color={"#6200EE"} />
           ),
         }}
         component={investmentsStack}
@@ -569,7 +569,7 @@ function HomePage() {
         options={{
           drawerLabel: "Presupuestos",
           drawerIcon: () => (
-            <FontAwesome5 name={"newspaper"} size={25} color={"#e84347"} />
+            <FontAwesome5 name={"newspaper"} size={25} color={"#6200EE"} />
           ),
         }}
         component={budgetsStack}
@@ -579,7 +579,7 @@ function HomePage() {
         options={{
           drawerLabel: "Préstamos",
           drawerIcon: () => (
-            <Fontisto name="money-symbol" size={25} color={"#e84347"} />
+            <Fontisto name="money-symbol" size={25} color={"#6200EE"} />
           ),
         }}
         component={loansStack}
@@ -589,7 +589,7 @@ function HomePage() {
         options={{
           drawerLabel: "Tarjetas",
           drawerIcon: () => (
-            <Entypo name="credit-card" size={25} color={"#e84347"} />
+            <Entypo name="credit-card" size={25} color={"#6200EE"} />
           ),
         }}
         component={cardsStack}

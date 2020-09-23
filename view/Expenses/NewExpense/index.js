@@ -47,7 +47,6 @@ const NewExpensePage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
 
-  //   const [fees, CounterButtons] = useCounterButtons(1, 1, 12);
   const [voucher, setVoucher] = useState(null);
 
   const [loading, setLoading] = useState(true);
@@ -77,11 +76,11 @@ const NewExpensePage = () => {
     setLoading(true);
     const resp = await createExpenseService(expense);
     if (resp.isSuccess) {
-      setMsg(resp.msg);
+      setMsg(resp.data);
       navigation.navigate("ExpensesPage");
     } else {
-      if (resp.msg) {
-        setMsg(resp.msg);
+      if (resp.data) {
+        setMsg(resp.data);
       }
     }
     setLoading(false);
@@ -147,7 +146,7 @@ const NewExpensePage = () => {
 
   return (
     <Container
-      style={([globalStyles.container], { backgroundColor: "#E84347" })}
+      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
     >
       <View style={[globalStyles.content, { marginTop: 10, flex: 5 }]}>
         <H1 style={globalStyles.subtitle}>Nuevo Egreso</H1>

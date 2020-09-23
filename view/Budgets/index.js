@@ -31,7 +31,7 @@ const BudgetsPage = (props) => {
     navigation.navigate("NewBudgetPage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       {loading ? (
         <View>{/* <Spinner color="white" /> */}</View>
       ) : (
@@ -56,7 +56,7 @@ const BudgetsPage = (props) => {
               active={true}
               direction="up"
               containerStyle={{}}
-              style={{ backgroundColor: "#f4511e" }}
+              style={{ backgroundColor: "#3700B3" }}
               position="bottomLeft"
               onPress={() => handleAdd()}
             >

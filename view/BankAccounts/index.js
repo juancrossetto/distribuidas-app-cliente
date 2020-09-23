@@ -30,7 +30,7 @@ const BankAccountsPage = (props) => {
     navigation.navigate("NewBankAccountPage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       {loading ? (
         <View>{/* <Spinner color="white" /> */}</View>
       ) : (
@@ -54,7 +54,7 @@ const BankAccountsPage = (props) => {
             <Fab
               active={true}
               direction="up"
-              style={{ backgroundColor: "#f4511e" }}
+              style={{ backgroundColor: "#3700b3" }}
               position="bottomLeft"
               onPress={() => handleAdd()}
             >

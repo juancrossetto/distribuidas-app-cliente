@@ -2,10 +2,11 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   expense: {
-    backgroundColor: "#e1e1e1",
+    backgroundColor: "#8252c2",
     borderBottomColor: "#fff",
     borderStyle: "solid",
     borderBottomWidth: 1,
+    borderBottomColor: "#8252c2",
     paddingVertical: 20,
     paddingHorizontal: 10,
     borderRadius: 5,
@@ -13,11 +14,13 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
     fontSize: 16,
+    color: "#e1e1e1",
     // marginTop: 20,
   },
   text: {
     fontSize: 16,
     marginLeft: 10,
+    color: "#fff",
   },
   textContainer: {
     flexDirection: "row",

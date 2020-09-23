@@ -42,7 +42,7 @@ const InvestmentsPage = (props) => {
     navigation.navigate("NewInvestmentPage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       {loading ? (
         <View>{/* <Spinner color="white" /> */}</View>
       ) : (
@@ -64,7 +64,7 @@ const InvestmentsPage = (props) => {
             <Fab
               active={true}
               direction="up"
-              style={{ backgroundColor: "#f4511e" }}
+              style={{ backgroundColor: "#3700B3" }}
               position="bottomLeft"
               onPress={() => handleAdd()}
             >

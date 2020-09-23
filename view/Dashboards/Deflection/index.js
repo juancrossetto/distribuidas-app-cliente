@@ -16,7 +16,7 @@ const DeflectionsPage = () => {
     console.log(e);
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#e84347" }]}>
+    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
       <View style={{ marginHorizontal: 5, flex: 2, marginTop: 30 }}>
         <H1 style={globalStyles.title}>Desvío de Presupuestos</H1>
         <View>
@@ -46,17 +46,17 @@ const DeflectionsPage = () => {
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>Presupuestado</Text>
+              <Text style={{ color: "#fff" }}>Presupuestado</Text>
               <View
                 style={{
                   width: 15,
                   height: 10,
-                  backgroundColor: "white",
+                  backgroundColor: "#fff",
                 }}
               ></View>
             </View>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text>Real</Text>
+              <Text style={{ color: "#fff" }}>Real</Text>
               <View
                 style={{
                   width: 15,
