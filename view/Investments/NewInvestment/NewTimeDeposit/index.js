@@ -146,6 +146,7 @@ const NewTimeDepositPage = () => {
               <Item inlineLabel last style={globalStyles.input}>
                 <Input
                   keyboardType="numeric"
+                  keyboardType="numeric"
                   placeholder="Tasa de Interes Anual"
                   onChangeText={(val) => setInterestRate(val)}
                 />
@@ -155,7 +156,7 @@ const NewTimeDepositPage = () => {
               <ListItem>
                 <CheckBox
                   checked={autmomaticRenovation}
-                  color="black"
+                  color="#3700B3"
                   onPress={() => setAutmomaticRenovation(!autmomaticRenovation)}
                 />
                 <Body>

@@ -4,9 +4,11 @@ import { Container, Spinner, Text, H1, Input, Form, Item } from "native-base";
 import globalStyles from "../../styles/global";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import useAlert from "../../hooks/useAlert";
-import clientAxios from "../../config/axios";
 import AnimatedButton from "../../components/AnimatedButton";
 import { saveItem, getItem, USERLOGGED, clearAll } from "../../utils/storage";
+import { authUserService } from "../../services/userService";
+import * as Notifications from "expo-notifications";
+import { savePNTokenService } from "../../services/pushNotificationService";
 
 const LoginPage = () => {
   // State del formulario
@@ -30,11 +32,18 @@ const LoginPage = () => {
   };
 
   const initUserConfiguration = async () => {
+    // Guardar token para push notification en la base
+    saveTokenPushNotification();
     // REVISAR SI HA QUE ACTUALIZAR FECHA DE CIERRE Y VENCIMIENTO TARJETA CREDITO.
     //redirectCreditCards();
     // REVISAR SI VENCIO ALGUNA CUOTA, MARCARLA COMO VENCIDA (aGREGAR FLAG) Y DEBITAR PLATA.
   };
 
+  const saveTokenPushNotification = async () => {
+    const token = (await Notifications.getExpoPushTokenAsync()).data;
+    const resp = await savePNTokenService(token);
+    // console.log("token resp", resp);
+  };
   const redirectCreditCards = async () => {
     const card = {
       __v: 0,
@@ -66,44 +75,16 @@ const LoginPage = () => {
     );
   };
   const login = async () => {
-    try {
-      // const resp = await clientAxios.get(`/users/${email}`);
-      const resp = await clientAxios.post(`/auth/`, {
-        email,
-        password,
-      });
-      if (resp.data.user) {
-        await saveItem(USERLOGGED, {
-          id: resp.data.user._id,
-          email: resp.data.user.email,
-          name: resp.data.user.name,
-          password: resp.data.user.password,
-        });
-        // Logica al Loguearse
-        await initUserConfiguration();
-        navigation.navigate("Home");
-      } else {
-        setMsg("El usuario indicado no se encuentra registrado");
-      }
-    } catch (error) {
-      console.log(error);
-      if (
-        error &&
-        error.response &&
-        error.response.data &&
-        error.response.data.msg
-      ) {
-        setMsg(error.response.data.msg);
-      } else {
-        setMsg("Error al intentar loguearse, revise su conexión");
-      }
-      // if (error.response.data.msg) {
-      //   setMsg(error.response.data.msg);
-      // } else if (error.response.data.errores) {
-      //   setMsg(error.response.data.errores[0].msg);
-      // }
+    const resp = await authUserService(email, password);
+    if (resp.isSuccess) {
+      // Logica al Loguearse
+      await initUserConfiguration();
+      navigation.navigate("Home");
+    } else {
+      setMsg(resp.data);
     }
   };
+
   // Cuando el usuario presiona en iniciar sesión.
   const handleSubmit = async () => {
     //validar

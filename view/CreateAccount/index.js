@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Container, Button, Text, H1, Input, Form, Item } from "native-base";
+import { Container, H1, Input, Form, Item } from "native-base";
 import globalStyles from "../../styles/global";
 import { useNavigation } from "@react-navigation/native";
 import useAlert from "../../hooks/useAlert";
 import AnimatedButton from "../../components/AnimatedButton";
-import clientAxios from "../../config/axios";
+import { createAccountService } from "../../services/userService";
 
 const CreateAccountPage = () => {
   // State del formulario
@@ -18,22 +18,13 @@ const CreateAccountPage = () => {
   const navigation = useNavigation();
 
   const createAccount = async () => {
-    try {
-      const resp = await clientAxios.post(`/users/`, {
-        name: nombre,
-        email,
-        password,
-      });
+    const resp = await createAccountService(nombre, email, password);
 
-      if (resp) {
-        setMsg(`Usuario creado correctamente, !Bienvenido ${nombre}!`);
-        navigation.navigate("Login");
-      }
-    } catch (error) {
-      setMsg(error.response.data.errores[0].msg);
-      // if (error.response.data.errores.length > 1) {
-      //   setMsg(error.response.data.errores[0].msg);
-      // }
+    if (resp.isSuccess) {
+      setMsg(resp.data);
+      navigation.navigate("Login");
+    } else {
+      setMsg(resp.data);
     }
   };
 

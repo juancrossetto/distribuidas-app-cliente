@@ -1,7 +1,7 @@
 import axios from "axios"; //npm i axios
 
 const clientAxios = axios.create({
-  baseURL: "https://distribuidapp.herokuapp.com/api/", //"http://192.168.0.22:4000/api/", //
+  baseURL: "http://192.168.0.22:4000/api/", // "https://distribuidapp.herokuapp.com/api/", //
 });
 
 export default clientAxios;
