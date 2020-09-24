@@ -47,7 +47,11 @@ const PushNotification = ({ send = false }) => {
   }, []);
   console.log(expoPushToken);
   //   console.log(JSON.stringify(notification?.request.content.data));
-  return <View />;
+  return (
+    <View>
+      <Text>{expoPushToken}</Text>
+    </View>
+  );
   //   (
   //     <View
   //       style={{
