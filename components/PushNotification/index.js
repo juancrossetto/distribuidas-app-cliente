@@ -45,7 +45,6 @@ const PushNotification = ({ send = false }) => {
       Notifications.removeNotificationSubscription(responseListener);
     };
   }, []);
-  console.log(expoPushToken);
   return (
     <View>
       <Text>{expoPushToken}</Text>

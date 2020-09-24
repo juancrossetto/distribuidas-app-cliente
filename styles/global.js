@@ -37,7 +37,7 @@ const globalStyles = StyleSheet.create({
   buttonText: {
     textTransform: "uppercase",
     fontWeight: "bold",
-    color: "#000",
+    color: "#3700B3",
   },
   link: {
     color: "#8252c2",

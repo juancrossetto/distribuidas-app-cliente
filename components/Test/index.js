@@ -31,9 +31,36 @@ export const createExcel = async (data) => {
   //     city: "New York",
   //   },
   // ];
-  var ws = XLSX.utils.json_to_sheet(data);
+
   var wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "PresupAppData");
+  /*Ingresos */
+  var wsIncomes = XLSX.utils.json_to_sheet(data.incomes);
+  XLSX.utils.book_append_sheet(wb, wsIncomes, "Ingresos");
+
+  /*Egresos*/
+  var wsExpenses = XLSX.utils.json_to_sheet(data.expenses);
+  XLSX.utils.book_append_sheet(wb, wsExpenses, "Egresos");
+
+  /*Cuentas Bancarias*/
+  var wsBankAccounts = XLSX.utils.json_to_sheet(data.bankAccounts);
+  XLSX.utils.book_append_sheet(wb, wsBankAccounts, "Cuentas Bancarias");
+
+  /*Tarjetas de Credito*/
+  var wsCreditCards = XLSX.utils.json_to_sheet(data.creditCards);
+  XLSX.utils.book_append_sheet(wb, wsCreditCards, "Tarjetas de Crédito");
+
+  /*Presupuestos*/
+  var wsBudgets = XLSX.utils.json_to_sheet(data.budgets);
+  XLSX.utils.book_append_sheet(wb, wsBudgets, "Presupuestos");
+
+  /*Prestamos*/
+  var wsLoans = XLSX.utils.json_to_sheet(data.loans);
+  XLSX.utils.book_append_sheet(wb, wsLoans, "Prestamos");
+
+  /* Inversiones*/
+  var wsInvestments = XLSX.utils.json_to_sheet(data.investments);
+  XLSX.utils.book_append_sheet(wb, wsInvestments, "Inversiones");
+
   const wbout = XLSX.write(wb, {
     type: "base64",
     bookType: "xlsx",

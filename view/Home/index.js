@@ -26,6 +26,7 @@ import NewBudgetPage from "../Budgets/NewBudget";
 import WeekDuesPage from "../Dashboards/WeekDues";
 import DeflectionsPage from "../Dashboards/Deflection";
 import CloseSessionPage from "../CloseSession";
+import DownloadDataInExcelPage from "../DownloadDataInExcel";
 import {
   EvilIcons,
   FontAwesome,
@@ -462,7 +463,7 @@ function DashboardTabsStack() {
         name="WeekDuesPage"
         component={WeekDuesPage}
         options={{
-          tabBarLabel: "Vencimientos de la Semana",
+          tabBarLabel: "Vencimientos",
           tabBarIcon: () => <EvilIcons name="chart" size={24} color={"#fff"} />,
         }}
       />
@@ -471,6 +472,16 @@ function DashboardTabsStack() {
         component={DeflectionsPage}
         options={{
           tabBarLabel: "Desvíos",
+          tabBarIcon: () => (
+            <FontAwesome5 name="chart-bar" size={24} color={"#fff"} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="DownloadDataInExcelPage"
+        component={DownloadDataInExcelPage}
+        options={{
+          tabBarLabel: "Excel",
           tabBarIcon: () => (
             <FontAwesome5 name="chart-bar" size={24} color={"#fff"} />
           ),

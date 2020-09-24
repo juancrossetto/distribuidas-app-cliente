@@ -68,7 +68,7 @@ const AmountSpentPage = () => {
                   <Text
                     key={i}
                     style={{
-                      color: "#000",
+                      color: "#3700B3",
                       fontWeight: "bold",
                     }}
                   >
