@@ -24,9 +24,7 @@ const NewInvestmentPage = () => {
           <NewActionPage />
         </Tab>
         <Tab heading="Fondos">
-          <Container
-            style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-          >
+          <Container style={[globalStyles.container]}>
             <View style={globalStyles.content}>
               <H1 style={globalStyles.title}>Proximamente Fondos</H1>
             </View>

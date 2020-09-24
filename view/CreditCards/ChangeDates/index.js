@@ -73,9 +73,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.subtitle}>
           Actualiza las fechas de tu tarjeta
@@ -124,7 +122,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
             <Button
               title={
                 !dueDateSummary
-                  ? "Selecconar Fecha de Vencimiento"
+                  ? "Seleccionar Fecha de Vencimiento"
                   : dueDateSummary
               }
               onPress={() => setIsDueDatePickerVisibility(true)}
@@ -145,7 +143,7 @@ const ChangeDatesCreditCardPage = ({ route }) => {
         <AnimatedButton text="Ajustar Fechas" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
         <CustomAlert />

@@ -145,9 +145,7 @@ const NewExpensePage = () => {
   };
 
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={[globalStyles.content, { marginTop: 10, flex: 5 }]}>
         <H1 style={globalStyles.subtitle}>Nuevo Egreso</H1>
         {/* <SafeAreaView style={{ flex: 15 }}> */}
@@ -349,7 +347,7 @@ const NewExpensePage = () => {
         </View>
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
       </View>

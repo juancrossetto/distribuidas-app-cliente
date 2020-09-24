@@ -74,9 +74,7 @@ const NewLoanPage = ({ route }) => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>
           Nuevo Prestamo {type === "TOM" ? "Tomado" : "Realizado"}
@@ -143,7 +141,7 @@ const NewLoanPage = ({ route }) => {
         />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
         <CustomAlert />

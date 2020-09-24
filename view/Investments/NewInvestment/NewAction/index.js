@@ -89,12 +89,10 @@ const NewActionPage = () => {
   };
 
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       {loading ? (
         <NativeView>
-          <Spinner color="white" />
+          <Spinner color="#000" />
         </NativeView>
       ) : (
         <View style={globalStyles.content}>

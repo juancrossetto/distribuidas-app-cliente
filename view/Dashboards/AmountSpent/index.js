@@ -34,17 +34,10 @@ const AmountSpentPage = () => {
   // }
 
   return (
-    <Container
-      style={[
-        globalStyles.container,
-        {
-          backgroundColor: "#6200EE",
-        },
-      ]}
-    >
+    <Container style={[globalStyles.container]}>
       {loading ? (
         <View>
-          <Spinner color="white" />
+          <Spinner color="#000" />
         </View>
       ) : (
         <>
@@ -75,7 +68,8 @@ const AmountSpentPage = () => {
                   <Text
                     key={i}
                     style={{
-                      color: "#FFF",
+                      color: "#000",
+                      fontWeight: "bold",
                     }}
                   >
                     <View

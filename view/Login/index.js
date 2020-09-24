@@ -125,7 +125,7 @@ const LoginPage = () => {
   };
 
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>OrganizApp</H1>
         <Form>
@@ -148,7 +148,7 @@ const LoginPage = () => {
           onPress={() => handleSubmit()}
           disabled={loading}
         />
-        {loading && <Spinner color="white" />}
+        {loading && <Spinner color="#000" />}
         <Text
           onPress={() => navigation.navigate("CreateAccount")}
           style={globalStyles.link}

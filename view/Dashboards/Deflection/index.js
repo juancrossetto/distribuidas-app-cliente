@@ -16,7 +16,7 @@ const DeflectionsPage = () => {
     console.log(e);
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       <View style={{ marginHorizontal: 5, flex: 2, marginTop: 30 }}>
         <H1 style={globalStyles.title}>Desvío de Presupuestos</H1>
         <View>

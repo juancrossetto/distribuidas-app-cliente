@@ -28,7 +28,7 @@ const AmountSpentChart = ({ data }) => {
           fill={"white"}
           // textAnchor={"middle"}
           alignmentBaseline={"middle"}
-          fontSize={9}
+          fontSize={12}
           stroke={"black"}
           strokeWidth={0}
         >

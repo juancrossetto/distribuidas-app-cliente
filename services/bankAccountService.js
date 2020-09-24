@@ -66,3 +66,28 @@ export const updateBankAccountBalanceService = async (
     }
   }
 };
+
+export const getBankAccountMovementsService = async (
+  bankAccount,
+  fromDate,
+  toDate
+) => {
+  try {
+    const email = await getEmail();
+    const request = {
+      bankAccount,
+      email,
+      fromDate,
+      toDate,
+    };
+    const resp = await clientAxios.post(`/bankAccounts/getMovements`, request);
+
+    if (resp.data.movements) {
+      return getResult(resp.data.movements, true);
+    } else {
+      return getResult(`Error al obtener movimientos`, false);
+    }
+  } catch (error) {
+    return getResult(`Error al obtener movimientos`, false);
+  }
+};

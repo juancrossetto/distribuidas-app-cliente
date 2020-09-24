@@ -88,16 +88,14 @@ const NewTitlePage = () => {
   };
 
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       {loading ? (
         <NativeView
           style={{
             marginTop: 50,
           }}
         >
-          <Spinner color="white" />
+          <Spinner color="#000" />
         </NativeView>
       ) : (
         <View style={globalStyles.content}>

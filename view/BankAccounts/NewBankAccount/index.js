@@ -73,9 +73,7 @@ const NewBankAccountPage = () => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Asocia tu cuenta</H1>
         <Form>
@@ -140,7 +138,7 @@ const NewBankAccountPage = () => {
         <AnimatedButton text="Guardar Cuenta" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
         <CustomAlert />

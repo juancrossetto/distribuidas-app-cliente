@@ -52,9 +52,7 @@ const NewBudgetPage = () => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.subtitle}>Nuevo Presupuesto</H1>
         <Form>
@@ -90,7 +88,7 @@ const NewBudgetPage = () => {
         />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
       </View>

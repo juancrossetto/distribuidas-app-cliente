@@ -31,9 +31,9 @@ const BudgetsPage = (props) => {
     navigation.navigate("NewBudgetPage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       {loading ? (
-        <View>{/* <Spinner color="white" /> */}</View>
+        <View>{/* <Spinner color="#000" /> */}</View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
           <H1 style={globalStyles.title}>Presupuestos</H1>

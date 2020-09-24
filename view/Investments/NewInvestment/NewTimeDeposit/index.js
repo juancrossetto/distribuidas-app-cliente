@@ -88,9 +88,7 @@ const NewTimeDepositPage = () => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Plazos fijos</H1>
         {!loading ? (
@@ -173,7 +171,7 @@ const NewTimeDepositPage = () => {
           </Form>
         ) : (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
         <AnimatedButton

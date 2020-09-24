@@ -33,7 +33,7 @@ const IncomesPage = (props) => {
     navigation.navigate("NewIncomePage");
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
         <H1 style={globalStyles.title}>Ingresos</H1>
         {incomesList && (
@@ -70,7 +70,7 @@ const IncomesPage = (props) => {
       </View>
       {loading && (
         <View>
-          <Spinner color="white" />
+          <Spinner color="#000" />
         </View>
       )}
     </Container>

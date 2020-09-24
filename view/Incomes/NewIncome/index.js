@@ -74,9 +74,7 @@ const NewIncomePage = () => {
     setLoading(false);
   };
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.subtitle}>Nuevo Ingreso</H1>
         <Form>
@@ -156,7 +154,7 @@ const NewIncomePage = () => {
         <AnimatedButton text="Guardar Ingreso" onPress={() => handleSubmit()} />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
       </View>

@@ -107,9 +107,7 @@ const NewCreditCardPage = () => {
   };
 
   return (
-    <Container
-      style={([globalStyles.container], { backgroundColor: "#6200EE" })}
-    >
+    <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
         <H1 style={globalStyles.title}>Asocia tu Tarjeta de Crédito</H1>
         <View
@@ -264,7 +262,7 @@ const NewCreditCardPage = () => {
         />
         {loading && (
           <NativeView>
-            <Spinner color="white" />
+            <Spinner color="#000" />
           </NativeView>
         )}
         <CustomAlert />

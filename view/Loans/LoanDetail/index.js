@@ -31,10 +31,10 @@ const LoansDetailPage = ({ type }) => {
     navigation.navigate("NewLoanPage", { type: type });
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       {loading ? (
         <View>
-          <Spinner color="white" />
+          <Spinner color="#000" />
         </View>
       ) : (
         <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>

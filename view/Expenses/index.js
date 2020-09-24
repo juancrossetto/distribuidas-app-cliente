@@ -34,7 +34,7 @@ const ExpensesPage = (props) => {
     navigation.navigate("NewExpensePage", { expenses: expensesList });
   };
   return (
-    <Container style={[globalStyles.container, { backgroundColor: "#6200EE" }]}>
+    <Container style={[globalStyles.container]}>
       {!loading ? (
         <>
           <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
@@ -71,7 +71,7 @@ const ExpensesPage = (props) => {
           </View>
         </>
       ) : (
-        <View>{/* <Spinner color="white" /> */}</View>
+        <View>{/* <Spinner color="#000" /> */}</View>
       )}
     </Container>
   );
