@@ -83,7 +83,6 @@ const BankAccountBalancePage = () => {
       fromDate,
       toDate
     );
-    console.log("resp", resp);
     if (resp.isSuccess) {
       if (resp.data.length === 0) {
         setMsg("No se encontraron movimientos para la fecha indicada");
@@ -93,7 +92,6 @@ const BankAccountBalancePage = () => {
     } else {
       setMsg(resp.data);
     }
-    // console.log("respp", resp);
 
     setLoading(false);
   };

@@ -9,6 +9,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { getIncomesService } from "../../services/incomeService";
 import { createExcel } from "../../components/Test";
 import AnimatedButton from "../../components/AnimatedButton";
+import PushNotification from "../../components/PushNotification";
 
 const IncomesPage = (props) => {
   const isFocused = useIsFocused();
@@ -17,6 +18,7 @@ const IncomesPage = (props) => {
 
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
+  const [send, setSend] = useState(false);
 
   const getIncomes = async () => {
     setLoading(true);
@@ -25,6 +27,8 @@ const IncomesPage = (props) => {
   };
 
   useEffect(() => {
+    console.log("hola");
+
     getIncomes();
     return () => {};
   }, [props, isFocused]);
@@ -32,14 +36,20 @@ const IncomesPage = (props) => {
   const handleAdd = () => {
     navigation.navigate("NewIncomePage");
   };
+
+  const handlePress = () => {
+    setSend(true);
+    createExcel(incomesList);
+  };
   return (
     <Container style={[globalStyles.container]}>
       <View style={[globalStyles.content, { marginTop: 30, flex: 8 }]}>
         <H1 style={globalStyles.title}>Ingresos</H1>
+        <PushNotification send={send} />
         {incomesList && (
           <AnimatedButton
             text="Descargar Excel"
-            onPress={() => createExcel(incomesList)}
+            onPress={() => handlePress()}
           />
         )}
         {incomesList && incomesList.length > 0 ? (

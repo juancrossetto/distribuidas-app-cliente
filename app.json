@@ -11,7 +11,8 @@
       "./node_modules/@expo/vector-icons/AntDesign"
     ],
     "android": {
-      "package": "com.juancrossetto.distribuidasClient"
+      "package": "com.juancrossetto.distribuidasClient",
+      "useNextNotificationsApi": true
     }
   }
 }

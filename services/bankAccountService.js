@@ -80,6 +80,7 @@ export const getBankAccountMovementsService = async (
       fromDate,
       toDate,
     };
+    console.log(request);
     const resp = await clientAxios.post(`/bankAccounts/getMovements`, request);
 
     if (resp.data.movements) {
