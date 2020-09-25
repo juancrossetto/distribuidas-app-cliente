@@ -6,13 +6,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import CreateAccountPage from "./view/CreateAccount";
 import HomePage from "./view/Home";
 import LoginPage from "./view/Login";
-import {
-  saveItem,
-  INCOMES,
-  EXPENSES,
-  getAllStorage,
-  clearAll,
-} from "./utils/storage";
 import ChangeDatesCreditCardPage from "./view/CreditCards/ChangeDates";
 import CreditCardsPage from "./view/CreditCards";
 

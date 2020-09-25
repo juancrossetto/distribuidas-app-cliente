@@ -20,6 +20,7 @@ const NewLoanPage = ({ route }) => {
   // const [days, setDays] = useState("");
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fees, setFees] = useState(0);
   const [CustomAlert, setMsg] = useAlert();
 
   const navigation = useNavigation();
@@ -60,18 +61,29 @@ const NewLoanPage = ({ route }) => {
       return;
     }
 
+    if (paymentMethod === "BAN" && type === "TOM" && fees <= 0) {
+      setMsg("Seleccione la cantidad de cuotas");
+      return;
+    }
+
     const email = await getEmailUserLogged();
+    let bankAccountDescription = "";
+    if (paymentMethod === "BAN") {
+      const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+      bankAccountDescription = bank.alias.toString();
+    }
     const loan = {
       amount,
       type,
       paymentMethod,
       bankAccount,
+      bankAccountDescription,
+      fees,
       date: new Date(),
       email,
     };
     // loan.id = shortid.generate();
     createLoan(loan);
-    setLoading(false);
   };
   return (
     <Container style={[globalStyles.container]}>
@@ -134,8 +146,31 @@ const NewLoanPage = ({ route }) => {
               </Picker>
             </NativeView>
           )}
+          {paymentMethod === "BAN" && type === "TOM" && (
+            <NativeView>
+              <Picker
+                style={{
+                  height: 40,
+                  marginTop: 22,
+                  backgroundColor: "#FFF",
+                }}
+                selectedValue={fees}
+                onValueChange={(val) => setFees(val)}
+              >
+                <Picker.Item
+                  label="-- Seleccione cantidad de Cuotas --"
+                  value="0"
+                />
+                <Picker.Item label="6" value="6" />
+                <Picker.Item label="12" value="12" />
+                <Picker.Item label="18" value="18" />
+                <Picker.Item label="24" value="24" />
+              </Picker>
+            </NativeView>
+          )}
         </Form>
         <AnimatedButton
+          disabled={loading}
           text="Guardar Prestamo"
           onPress={() => handleSubmit()}
         />

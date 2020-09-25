@@ -22,9 +22,11 @@ const CreditCardsPage = (props) => {
   };
 
   useEffect(() => {
-    getCreditCards();
+    if (isFocused) {
+      getCreditCards();
+    }
     return () => {};
-  }, [props, isFocused]);
+  }, [isFocused]);
 
   const handleAdd = () => {
     navigation.navigate("NewCreditCardPage");

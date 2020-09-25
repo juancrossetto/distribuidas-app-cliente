@@ -22,9 +22,12 @@ const BankAccountsPage = (props) => {
   };
 
   useEffect(() => {
-    getBankAccounts();
-    return () => {};
-  }, [props, isFocused]);
+    if (isFocused) {
+      console.log("focus cuentas bancarias");
+      getBankAccounts();
+      return () => {};
+    }
+  }, [isFocused]);
 
   const handleAdd = () => {
     navigation.navigate("NewBankAccountPage");

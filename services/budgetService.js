@@ -1,7 +1,7 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { getItem, BUDGETS } from "../utils/storage";
+import { addItemToList, getItem, BUDGETS } from "../utils/storage";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -34,9 +34,19 @@ export const createBudgetService = async (budget) => {
     }
   } catch (error) {
     console.log(error);
-    if (error.response.data.msg) {
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.msg
+    ) {
       return getResult(error.response.data.msg, false);
-    } else if (error.response.data.errores) {
+    } else if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.errores
+    ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
       await addItemToList(BUDGETS, budget);

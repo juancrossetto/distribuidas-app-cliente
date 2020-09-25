@@ -23,7 +23,9 @@ const LoansDetailPage = ({ type }) => {
   };
 
   useEffect(() => {
-    getLoans();
+    if (isFocused) {
+      getLoans();
+    }
     return () => {};
   }, [type, isFocused]);
 

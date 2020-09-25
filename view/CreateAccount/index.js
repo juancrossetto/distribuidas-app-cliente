@@ -51,7 +51,7 @@ const CreateAccountPage = () => {
   return (
     <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
-        <H1 style={globalStyles.title}>OrganizApp</H1>
+        <H1 style={globalStyles.title}>My Budget</H1>
 
         <Form>
           <Item inlineLabel last style={globalStyles.input}>

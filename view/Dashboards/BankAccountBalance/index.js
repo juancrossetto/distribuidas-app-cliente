@@ -160,19 +160,20 @@ const BankAccountBalancePage = () => {
               >
                 <Picker.Item
                   label={
-                    bankAccounts?.length > 0
+                    bankAccounts && bankAccounts.length > 0
                       ? "-- Seleccione una Cuenta Bancaria --"
                       : "-- No posee cuentas Bancarias Registradas --"
                   }
                   value=""
                 />
-                {bankAccounts?.map((item, i) => (
-                  <Picker.Item
-                    label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
-                    value={item?.id.toString()}
-                    key={i}
-                  />
-                ))}
+                {bankAccounts &&
+                  bankAccounts.map((item, i) => (
+                    <Picker.Item
+                      label={`${item?.alias.toString()}  (${item?.cbu.toString()})`}
+                      value={item?.id?.toString()}
+                      key={i}
+                    />
+                  ))}
               </Picker>
             </View>
             <View>
@@ -196,9 +197,7 @@ const BankAccountBalancePage = () => {
                     renderItem={({ item }) => (
                       <DataTable.Row>
                         <DataTable.Cell>{formatDate(item.date)}</DataTable.Cell>
-                        <DataTable.Cell numeric>
-                          {item.amount > 0 ? "Ingreso" : "Egreso"}
-                        </DataTable.Cell>
+                        <DataTable.Cell numeric>{item.type}</DataTable.Cell>
                         <DataTable.Cell numeric>{item.amount}</DataTable.Cell>
                       </DataTable.Row>
                     )}

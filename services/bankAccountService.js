@@ -1,7 +1,7 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { getItem, BANKACCOUNTS } from "../utils/storage";
+import { addItemToList, getItem, BANKACCOUNTS } from "../utils/storage";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -31,9 +31,20 @@ export const createBankAccountService = async (bankAccount) => {
       //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
     }
   } catch (error) {
-    if (error.response.data.msg) {
+    console.log(error);
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.msg
+    ) {
       return getResult(error.response.data.msg, false);
-    } else if (error.response.data.errores) {
+    } else if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.errores
+    ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
       await addItemToList(BANKACCOUNTS, bankAccount);
@@ -44,12 +55,14 @@ export const createBankAccountService = async (bankAccount) => {
 
 export const updateBankAccountBalanceService = async (
   idBankAccount,
-  amount
+  amount,
+  type
 ) => {
   try {
     const resp = await clientAxios.put(`/bankaccounts/changeBalance/`, {
       id: idBankAccount,
       amount,
+      type,
     });
     if (resp) {
       return getResult(`Saldo en cuenta actualizado correctamente`, true);

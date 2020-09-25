@@ -1,7 +1,8 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { getItem, LOANS } from "../utils/storage";
+import { addItemToList, getItem, LOANS } from "../utils/storage";
+import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -24,21 +25,40 @@ export const createLoanService = async (loan) => {
   try {
     const resp = await clientAxios.post(`/loans/`, loan);
 
-    if (resp && resp.data && resp.data.loan) {
-      //   const { id, amount } = resp.data.loan;
-      //llamar API actualizar saldo cuenta bancaria (si elegimos esa opcion)
-      const changeBalance = true;
-      if (changeBalance) {
-        return getResult(`Prestamo cargado correctamente`, true);
-      } else {
-        return getResult(`Hubo un error al actualizar el saldo`, true);
+    const { bankAccount, amount, paymentMethod } = resp.data.loan;
+
+    if (paymentMethod === "BAN") {
+      //llama API actualizar saldo cuenta bancaria
+      const type =
+        loan.type === "TOM" ? "Prestamo Tomado" : "Prestamo Realizado";
+      const changeBalance = await updateBankAccountBalanceService(
+        bankAccount,
+        amount,
+        type
+      );
+      if (!changeBalance.isSuccess) {
+        return getResult(
+          `Hubo un error al actualizar el saldo: ${changeBalance.msg}`,
+          true
+        );
       }
     }
+    return getResult(`Presupuesto cargado correctamente`, true);
   } catch (error) {
     console.log(error);
-    if (error.response.data.msg) {
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.msg
+    ) {
       return getResult(error.response.data.msg, false);
-    } else if (error.response.data.errores) {
+    } else if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.errores
+    ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
       await addItemToList(LOANS, loan);

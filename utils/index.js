@@ -1,4 +1,5 @@
 import { getItem, USERLOGGED } from "./storage";
+import NetInfo from "@react-native-community/netinfo";
 var moment = require("moment"); // require
 
 export const getCurrentDate = () => {
@@ -70,4 +71,9 @@ export const getRandomCardNumber = (digits) => {
     randomstring += chars.substring(rnum, rnum + 1);
   }
   return validateFormatCard(randomstring);
+};
+
+export const isNetworkAvailable = async () => {
+  const response = await NetInfo.fetch();
+  return response.isConnected;
 };

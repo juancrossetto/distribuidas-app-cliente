@@ -16,7 +16,6 @@ const DownloadDataInExcelPage = () => {
     setLoading(true);
     const resp = await getAllDataService();
     setLoading(false);
-    console.log("respppp", resp.data.creditCards);
     createExcel(resp.data);
     return resp;
   };

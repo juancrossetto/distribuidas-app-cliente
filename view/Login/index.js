@@ -5,8 +5,21 @@ import globalStyles from "../../styles/global";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import useAlert from "../../hooks/useAlert";
 import AnimatedButton from "../../components/AnimatedButton";
-import { saveItem, getItem, USERLOGGED, clearAll } from "../../utils/storage";
-import { authUserService } from "../../services/userService";
+import {
+  saveItem,
+  clearAll,
+  getItem,
+  USERLOGGED,
+  INCOMES,
+  EXPENSES,
+  BANKACCOUNTS,
+  CREDITCARDS,
+  LOANS,
+  BUDGETS,
+  BANKACCOUNTSMOVEMENTS,
+  CREDITCARDMOVEMENTS,
+} from "../../utils/storage";
+import { authUserService, getAllDataService } from "../../services/userService";
 import * as Notifications from "expo-notifications";
 import { savePNTokenService } from "../../services/pushNotificationService";
 import { getCreditCardsService } from "../../services/creditCardService";
@@ -34,10 +47,13 @@ const LoginPage = () => {
 
   const initUserConfiguration = async () => {
     // Guardar token para push notification en la base
-    saveTokenPushNotification();
+    await saveTokenPushNotification();
+
+    //Obtener toda la informacion
+    await getAllData();
 
     // REVISAR SI HA QUE ACTUALIZAR FECHA DE CIERRE Y VENCIMIENTO TARJETA CREDITO.
-    redirectCreditCards();
+    await redirectCreditCards();
 
     // REVISAR SI VENCIO ALGUNA CUOTA, MARCARLA COMO VENCIDA (AGREGAR FLAG) Y DEBITAR PLATA.
     payFees();
@@ -71,6 +87,18 @@ const LoginPage = () => {
     });
   };
 
+  const getAllData = async () => {
+    const resp = await getAllDataService();
+    saveItem(INCOMES, resp.data.incomes);
+    saveItem(EXPENSES, resp.data.expenses);
+    saveItem(BANKACCOUNTS, resp.data.bankAccounts);
+    saveItem(CREDITCARDS, resp.data.creditCards);
+    saveItem(BUDGETS, resp.data.budgets);
+    saveItem(LOANS, resp.data.loans);
+    saveItem(CREDITCARDMOVEMENTS, resp.data.creditCardMovements);
+    saveItem(BANKACCOUNTSMOVEMENTS, resp.data.bankAccountMovements);
+  };
+
   const payFees = () => {
     console.log("to do");
   };
@@ -80,6 +108,7 @@ const LoginPage = () => {
     if (resp.isSuccess) {
       // Logica al Loguearse
       await initUserConfiguration();
+      setLoading(false);
       navigation.navigate("Home");
     } else {
       setMsg(resp.data);
@@ -98,9 +127,6 @@ const LoginPage = () => {
     try {
       // autenticar el usuario
       login();
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
     } catch (error) {
       setMsg(error.message);
     }
@@ -109,7 +135,7 @@ const LoginPage = () => {
   return (
     <Container style={[globalStyles.container]}>
       <View style={globalStyles.content}>
-        <H1 style={globalStyles.title}>OrganizApp</H1>
+        <H1 style={globalStyles.title}>My Budget</H1>
         <Form>
           <Item inlineLabel last style={globalStyles.input}>
             <Input
@@ -126,6 +152,7 @@ const LoginPage = () => {
           </Item>
         </Form>
         <AnimatedButton
+          disabled={loading}
           text="Iniciar Sesión"
           onPress={() => handleSubmit()}
           disabled={loading}

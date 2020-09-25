@@ -23,9 +23,11 @@ const BudgetsPage = (props) => {
   };
 
   useEffect(() => {
-    getBudgets();
+    if (isFocused) {
+      getBudgets();
+    }
     return () => {};
-  }, [props, isFocused]);
+  }, [isFocused]);
 
   const handleAdd = () => {
     navigation.navigate("NewBudgetPage");

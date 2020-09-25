@@ -78,4 +78,7 @@ export const BUDGETS = "@budgets";
 export const BANKACCOUNTS = "@bankAccounts";
 export const DEBICARDS = "@debitCards";
 
+export const CREDITCARDMOVEMENTS = "@creditCardMovements";
+export const BANKACCOUNTSMOVEMENTS = "@bankAccountMovements";
+
 export const MONTHLYEXPENSES = "@monthlyexpenses";

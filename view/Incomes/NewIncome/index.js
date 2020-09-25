@@ -36,6 +36,7 @@ const NewIncomePage = () => {
   const createIncome = async (income) => {
     setLoading(true);
     const resp = await createIncomeService(income);
+    console.log(resp);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("IncomesPage");
@@ -62,11 +63,17 @@ const NewIncomePage = () => {
 
     const date = new Date();
     const email = await getEmailUserLogged();
+    let bankAccountDescription = "";
+    if (paymentMethod === "BAN") {
+      const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+      bankAccountDescription = bank.alias.toString();
+    }
     const income = {
       amount,
       category,
       paymentMethod,
       bankAccount,
+      bankAccountDescription,
       date,
       email,
     };

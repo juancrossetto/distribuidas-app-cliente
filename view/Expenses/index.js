@@ -26,9 +26,13 @@ const ExpensesPage = (props) => {
   };
 
   useEffect(() => {
-    getExpenses();
+    if (isFocused) {
+      console.log("focus egresos");
+      getExpenses();
+    }
+
     return () => {};
-  }, [props, isFocused]);
+  }, [isFocused]);
 
   const handleAdd = () => {
     navigation.navigate("NewExpensePage", { expenses: expensesList });

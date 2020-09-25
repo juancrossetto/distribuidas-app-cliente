@@ -55,12 +55,12 @@ const Expense = ({ item }) => {
             <Text style={styles.text}>{item.paymentId}</Text>
           </View>
         )}
-        {/* {item.paymentType === "BAN" && (
+        {item.paymentType === "BAN" && (
           <View style={styles.textContainer}>
-            <Text style={styles.label}>Nro Cuenta:</Text>
-            <Text style={styles.text}>{item.paymentId}</Text>
+            <Text style={styles.label}>Cuenta:</Text>
+            <Text style={styles.text}>{item.bankAccountDescription}</Text>
           </View>
-        )} */}
+        )}
         <View style={styles.textContainer}>
           <Text style={styles.label}>Tipo de Egreso:</Text>
           <Text style={styles.text}>{expenseType}</Text>

@@ -21,7 +21,7 @@ const Loan = ({ item }) => {
       {item.paymentMethod === "BAN" && (
         <View style={styles.textContainer}>
           <Text style={styles.label}>Cuenta Bancaria:</Text>
-          <Text style={styles.text}>{item.bankAccount}</Text>
+          <Text style={styles.text}>{item.bankAccountDescription}</Text>
         </View>
       )}
       <View style={styles.textContainer}>

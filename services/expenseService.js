@@ -1,7 +1,13 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { EXPENSES, MONTHLYEXPENSES, getItem, saveItem } from "../utils/storage";
+import {
+  EXPENSES,
+  MONTHLYEXPENSES,
+  getItem,
+  saveItem,
+  addItemToList,
+} from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -31,7 +37,8 @@ export const createExpenseService = async (expense) => {
 
         const changeBalance = await updateBankAccountBalanceService(
           paymentId,
-          amount * -1
+          amount * -1,
+          "Egreso"
         );
         if (!changeBalance.isSuccess) {
           return getResult(
@@ -44,9 +51,20 @@ export const createExpenseService = async (expense) => {
       return getResult(`Egreso cargado correctamente`, true);
     }
   } catch (error) {
-    if (error.response.data.msg) {
+    console.log(error);
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.msg
+    ) {
       return getResult(error.response.data.msg, false);
-    } else if (error.response.data.errores) {
+    } else if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.errores
+    ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
       await addItemToList(EXPENSES, expense);

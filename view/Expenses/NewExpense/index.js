@@ -125,13 +125,18 @@ const NewExpensePage = () => {
     }
     setLoading(true);
     const date = new Date();
-
+    let bankAccountDescription = "";
+    if (paymentType === "BAN") {
+      const bank = bankAccounts.filter((b) => b.id === paymentId)[0];
+      bankAccountDescription = bank.alias.toString();
+    }
     const expense = {
       amount,
       paymentType,
       expenseType,
       detail,
       category,
+      bankAccountDescription,
       fees,
       date,
       area,
@@ -341,6 +346,7 @@ const NewExpensePage = () => {
         </Form>
         <View style={{ marginTop: 20 }}>
           <AnimatedButton
+            disabled={loading}
             text="Guardar Egreso"
             onPress={() => handleSubmit()}
           />

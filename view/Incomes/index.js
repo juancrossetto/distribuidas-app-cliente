@@ -25,13 +25,17 @@ const IncomesPage = (props) => {
   const getIncomes = async () => {
     setLoading(true);
     setIncomesList(await getIncomesService());
+    // console.log("ingresos", incomesList);
     setLoading(false);
   };
 
   useEffect(() => {
-    getIncomes();
+    if (isFocused) {
+      console.log("focus ingresos");
+      getIncomes();
+    }
     return () => {};
-  }, [props, isFocused]);
+  }, [isFocused]);
 
   const handleAdd = () => {
     navigation.navigate("NewIncomePage");
