@@ -8,10 +8,6 @@ import { clearAll, USERLOGGED } from "../../utils/storage";
 
 const CloseSessionPage = () => {
   // State del formulario
-  const [nombre, setNombre] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [CustomAlert, setMsg] = useAlert();
   // React Navigation
   const navigation = useNavigation();
 

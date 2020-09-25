@@ -9,6 +9,7 @@ import { saveItem, getItem, USERLOGGED, clearAll } from "../../utils/storage";
 import { authUserService } from "../../services/userService";
 import * as Notifications from "expo-notifications";
 import { savePNTokenService } from "../../services/pushNotificationService";
+import { getCreditCardsService } from "../../services/creditCardService";
 
 const LoginPage = () => {
   // State del formulario
@@ -34,46 +35,46 @@ const LoginPage = () => {
   const initUserConfiguration = async () => {
     // Guardar token para push notification en la base
     saveTokenPushNotification();
+
     // REVISAR SI HA QUE ACTUALIZAR FECHA DE CIERRE Y VENCIMIENTO TARJETA CREDITO.
-    //redirectCreditCards();
-    // REVISAR SI VENCIO ALGUNA CUOTA, MARCARLA COMO VENCIDA (aGREGAR FLAG) Y DEBITAR PLATA.
+    redirectCreditCards();
+
+    // REVISAR SI VENCIO ALGUNA CUOTA, MARCARLA COMO VENCIDA (AGREGAR FLAG) Y DEBITAR PLATA.
+    payFees();
   };
 
   const saveTokenPushNotification = async () => {
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     const resp = await savePNTokenService(token);
-    // console.log("token resp", resp);
   };
   const redirectCreditCards = async () => {
-    const card = {
-      __v: 0,
-      _id: "5f6805dae8493a4b88a7083e",
-      closeDateSummary: "2020-09-24T03:00:00.000Z",
-      date: "2020-09-21T01:46:01.483Z",
-      dueDateSummary: "2020-09-24T03:00:00.000Z",
-      email: "juancrossetto@gmail.com",
-      entity: "Galicia",
-      expiry: "0530",
-      id: "5f6805dae8493a4b88a7083d",
-      name: "Juanmita",
-      number: 1234567091323594,
-    };
-    Alert.alert(
-      "Fechas desactualizadas",
-      "Resumen Tarjeta de credito XXXX con Fechas desactualizadas",
-      [
-        {
-          text: "Ir a Actualizar fechas",
-          onPress: () =>
-            navigation.navigate("ChangeDatesCreditCardPage", {
-              card: card,
-              fromLogin: true,
-            }),
-        },
-      ],
-      { cancelable: false }
-    );
+    const creditCards = await getCreditCardsService();
+    creditCards.forEach((creditCard) => {
+      if (new Date(creditCard.dueDateSummary) < new Date()) {
+        Alert.alert(
+          "Fechas desactualizadas",
+          `Resumen Tarjeta de credito ${creditCard.number} con Fechas desactualizadas`,
+          [
+            {
+              text: "Ir a Actualizar fechas",
+              onPress: () =>
+                navigation.navigate("ChangeDatesCreditCardPage", {
+                  card: creditCard,
+                  fromLogin: true,
+                }),
+            },
+          ],
+          { cancelable: false }
+        );
+        return;
+      }
+    });
   };
+
+  const payFees = () => {
+    console.log("to do");
+  };
+
   const login = async () => {
     const resp = await authUserService(email, password);
     if (resp.isSuccess) {

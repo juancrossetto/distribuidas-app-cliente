@@ -5,10 +5,12 @@ import globalStyles from "../../styles/global";
 import AnimatedButton from "../../components/AnimatedButton";
 import { getAllDataService } from "../../services/userService";
 import { createExcel } from "../../components/Test";
+import useAlert from "../../hooks/useAlert";
 
 const DownloadDataInExcelPage = () => {
-  const [year, setYear] = useState(null);
+  const [year, setYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [CustomAlert, setMsg] = useAlert();
 
   const getAllData = async () => {
     setLoading(true);
@@ -19,6 +21,10 @@ const DownloadDataInExcelPage = () => {
     return resp;
   };
   const handlePress = () => {
+    if (year.trim() === "") {
+      setMsg("Por favor Seleccione el Año");
+      return;
+    }
     getAllData();
   };
 
@@ -59,6 +65,7 @@ const DownloadDataInExcelPage = () => {
         </View>
       )}
       {/* {year ? <View style={[{ flex: 8 }]}></View> : null} */}
+      <CustomAlert />
     </Container>
   );
 };

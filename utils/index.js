@@ -30,6 +30,11 @@ export const getEmailUserLogged = async () => {
   return user.email;
 };
 
+export const getNameUserLogged = async () => {
+  const user = await getItem(USERLOGGED);
+  return user.name;
+};
+
 export const getResult = async (data, isSuccess) => {
   const result = { data: data, isSuccess: isSuccess };
   return result;

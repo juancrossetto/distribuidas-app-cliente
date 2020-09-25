@@ -17,10 +17,14 @@ const Budget = ({ item }) => {
         <Text style={styles.label}>Rubro:</Text>
         <Text style={styles.text}>{category}</Text>
       </View>
-      {/* <View style={styles.textContainer}>
-        <Text style={styles.label}>Cuenta Bancaria:</Text>
-        <Text style={styles.text}>{item.bankAccount}</Text>
-      </View> */}
+      <View style={styles.textContainer}>
+        <Text style={styles.label}>Categoría:</Text>
+        <Text style={styles.text}>{item.type}</Text>
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.label}>Meses:</Text>
+        <Text style={styles.text}>{item.months}</Text>
+      </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha:</Text>
         <Text style={styles.text}>{formatDate(item.date)}</Text>

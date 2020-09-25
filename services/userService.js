@@ -1,7 +1,7 @@
 import React from "react";
 import clientAxios from "../config/axios";
 import { getEmailUserLogged, getResult } from "../utils";
-import { saveItem, getItem, USERLOGGED } from "../utils/storage";
+import { saveItem, USERLOGGED } from "../utils/storage";
 
 const getEmail = async () => {
   return await getEmailUserLogged();

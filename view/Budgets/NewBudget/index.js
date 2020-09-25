@@ -16,6 +16,8 @@ import { createBudgetService } from "../../../services/budgetService";
 const NewBudgetPage = () => {
   const [amount, setAmount] = useState(0);
   const [category, setCategory] = useState("");
+  const [type, setType] = useState("");
+  const [months, setMonths] = useState("");
   // const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -40,12 +42,12 @@ const NewBudgetPage = () => {
       setMsg("El monto debe ser superior a 0");
       return;
     }
-    if (category.trim() === "") {
+    if (category.trim() === "" || type.trim() === "" || months.trim() === "") {
       setMsg("Todos los campos son obligatorios");
       return;
     }
     const email = await getEmailUserLogged();
-    const budget = { amount, category, email };
+    const budget = { amount, category, type, months, email };
     // budget.id = shortid.generate();
     budget.date = new Date();
     createBudget(budget);
@@ -79,6 +81,43 @@ const NewBudgetPage = () => {
               {BudgetCategories.map((item, i) => (
                 <Picker.Item label={item.text} value={item.value} key={i} />
               ))}
+            </Picker>
+          </NativeView>
+          <NativeView>
+            <Picker
+              style={{
+                marginTop: 22,
+                height: 50,
+                backgroundColor: "#FFF",
+              }}
+              selectedValue={type}
+              onValueChange={(val) => setType(val)}
+            >
+              <Picker.Item label="-- Seleccione una Categoría --" value="" />
+              <Picker.Item label={"Ingreso"} value={"Ingreso"} />
+              <Picker.Item label={"Egreso"} value={"Egreso"} />
+              <Picker.Item label={"Inversion"} value={"Inversion"} />
+              <Picker.Item label={"Prestamo"} value={"Prestamo"} />
+            </Picker>
+          </NativeView>
+          <NativeView>
+            <Picker
+              style={{
+                height: 50,
+                marginTop: 22,
+                backgroundColor: "#FFF",
+              }}
+              selectedValue={months}
+              onValueChange={(val) => setMonths(val)}
+            >
+              <Picker.Item
+                label="-- Cantidad de Meses del prestamo --"
+                value=""
+              />
+              <Picker.Item label={"6"} value={"6"} />
+              <Picker.Item label={"12"} value={"12"} />
+              <Picker.Item label={"18"} value={"18"} />
+              <Picker.Item label={"24"} value={"24"} />
             </Picker>
           </NativeView>
         </Form>

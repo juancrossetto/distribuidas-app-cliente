@@ -61,3 +61,24 @@ export const updateCreditCardService = async (creditCard) => {
     }
   }
 };
+
+export const payOverdueFeesService = async () => {
+  try {
+    const email = await getEmail();
+    const resp = await clientAxios.post(`/creditCards/payOverdueFees`, {
+      email,
+    });
+
+    if (resp) {
+      return getResult(resp, true);
+    }
+  } catch (error) {
+    if (error.response.data.msg) {
+      return getResult(error.response.data.msg, false);
+    } else if (error.response.data.errores) {
+      return getResult(error.response.data.errores[0].msg, false);
+    } else {
+      return getResult("Error al Pagar Cuotas v encidas", false);
+    }
+  }
+};
