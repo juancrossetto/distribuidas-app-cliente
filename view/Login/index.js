@@ -112,6 +112,7 @@ const LoginPage = () => {
       navigation.navigate("Home");
     } else {
       setMsg(resp.data);
+      setLoading(false);
     }
   };
 
@@ -128,6 +129,7 @@ const LoginPage = () => {
       // autenticar el usuario
       login();
     } catch (error) {
+      setLoading(false);
       setMsg(error.message);
     }
   };

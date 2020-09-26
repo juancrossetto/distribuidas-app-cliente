@@ -78,7 +78,6 @@ const NewIncomePage = () => {
       email,
     };
     createIncome(income);
-    setLoading(false);
   };
   return (
     <Container style={[globalStyles.container]}>
@@ -158,7 +157,11 @@ const NewIncomePage = () => {
             </NativeView>
           )}
         </Form>
-        <AnimatedButton text="Guardar Ingreso" onPress={() => handleSubmit()} />
+        <AnimatedButton
+          disabled={loading}
+          text="Guardar Ingreso"
+          onPress={() => handleSubmit()}
+        />
         {loading && (
           <NativeView>
             <Spinner color="#000" />
