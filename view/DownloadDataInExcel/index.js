@@ -4,7 +4,7 @@ import { Container, H1, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
 import AnimatedButton from "../../components/AnimatedButton";
 import { getAllDataService } from "../../services/userService";
-import { createExcel } from "../../components/Test";
+import { createExcel } from "../../components/Excel";
 import useAlert from "../../hooks/useAlert";
 
 const DownloadDataInExcelPage = () => {

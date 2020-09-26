@@ -7,7 +7,7 @@ import Income from "../../components/Income";
 import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
 import { getIncomesService } from "../../services/incomeService";
-import { createExcel } from "../../components/Test";
+import { createExcel } from "../../components/Excel";
 import AnimatedButton from "../../components/AnimatedButton";
 import { getAllDataService } from "../../services/userService";
 import { createExpenseService } from "../../services/expenseService";

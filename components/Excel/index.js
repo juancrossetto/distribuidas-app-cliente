@@ -1,37 +1,8 @@
 import XLSX from "xlsx";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-// var RNFS = require("react-native-fs");
-
-// export const testt2 = async () => {
-//   var path = RNFS.DocumentDirectoryPath + "/test.txt";
-
-//   // write the file
-//   RNFS.writeFile(path, "Lorem ipsum dolor sit amet", "utf8")
-//     .then((success) => {
-//       console.log("FILE WRITTEN!");
-//     })
-//     .catch((err) => {
-//       console.log(err.message);
-//     });
-// };
 
 export const createExcel = async (data) => {
-  // var data = [
-  //   {
-  //     name: "John",
-  //     city: "Seattle",
-  //   },
-  //   {
-  //     name: "Mike",
-  //     city: "Los Angeles",
-  //   },
-  //   {
-  //     name: "Zach",
-  //     city: "New York",
-  //   },
-  // ];
-
   var wb = XLSX.utils.book_new();
   /*Ingresos */
   var wsIncomes = XLSX.utils.json_to_sheet(data.incomes);
@@ -83,31 +54,31 @@ export const createExcel = async (data) => {
   });
 };
 
-const downloadFile = async (url) => {
-  // let path = url.split("/");
-  // const file_name = path[path.length - 1];
-  FileSystem.downloadAsync(url, FileSystem.documentDirectory + "presupApp.xlsx")
-    .then(({ uri }) => {
-      console.log("Finished downloading to ", uri);
-      MediaLibrary.createAssetAsync(uri).then((asset) => {
-        MediaLibrary.createAlbumAsync("myfolder", asset)
-          .then(() => {
-            showMessage({
-              message: t("general.success"),
-              description: t("download.success"),
-              type: "success",
-            });
-          })
-          .catch((error) => {
-            showMessage({
-              message: t("general.success"),
-              description: t("download.failed"),
-              type: "danger",
-            });
-          });
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
+// const downloadFile = async (url) => {
+//   // let path = url.split("/");
+//   // const file_name = path[path.length - 1];
+//   FileSystem.downloadAsync(url, FileSystem.documentDirectory + "presupApp.xlsx")
+//     .then(({ uri }) => {
+//       console.log("Finished downloading to ", uri);
+//       MediaLibrary.createAssetAsync(uri).then((asset) => {
+//         MediaLibrary.createAlbumAsync("myfolder", asset)
+//           .then(() => {
+//             showMessage({
+//               message: t("general.success"),
+//               description: t("download.success"),
+//               type: "success",
+//             });
+//           })
+//           .catch((error) => {
+//             showMessage({
+//               message: t("general.success"),
+//               description: t("download.failed"),
+//               type: "danger",
+//             });
+//           });
+//       });
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// };
