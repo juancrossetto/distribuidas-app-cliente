@@ -27,7 +27,7 @@ import { getBankAccountsService } from "../../../../services/bankAccountService"
 const NewTimeDepositPage = () => {
   const [amount, setAmount] = useState(0);
   const [days, setDays] = useState(0);
-  const [autmomaticRenovation, setAutmomaticRenovation] = useState(false);
+  const [automaticRenovation, setAutomaticRenovation] = useState(false);
   const [interestRate, setInterestRate] = useState(0);
   const [bankAccount, setBankAccount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -72,6 +72,8 @@ const NewTimeDepositPage = () => {
     }
     const email = await getEmailUserLogged();
     const date = new Date();
+    const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+    const bankAccountDescription = bank.alias.toString();
     const timeDeposit = {
       type: "Plazo Fijo",
       amount,
@@ -79,13 +81,13 @@ const NewTimeDepositPage = () => {
       days,
       interestRate,
       bankAccount,
+      bankAccountDescription,
       dueDate: getFutureDate(days),
       email,
-      autmomaticRenovation,
+      automaticRenovation,
     };
     // investment.id = shortid.generate();
     createTimeDeposit(timeDeposit);
-    setLoading(false);
   };
   return (
     <Container style={[globalStyles.container]}>
@@ -155,9 +157,9 @@ const NewTimeDepositPage = () => {
             <NativeView>
               <ListItem>
                 <CheckBox
-                  checked={autmomaticRenovation}
+                  checked={automaticRenovation}
                   color="#3700B3"
-                  onPress={() => setAutmomaticRenovation(!autmomaticRenovation)}
+                  onPress={() => setAutomaticRenovation(!automaticRenovation)}
                 />
                 <Body>
                   <Text>Renovación Automática</Text>
@@ -176,6 +178,7 @@ const NewTimeDepositPage = () => {
           </NativeView>
         )}
         <AnimatedButton
+          disabled={loading}
           text="Finalizar Inversión"
           onPress={() => handleSubmit()}
         />

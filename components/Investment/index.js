@@ -13,7 +13,7 @@ const Investment = ({ item }) => {
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.label}>Cuenta Bancaria:</Text>
-        <Text style={styles.text}>{item.bankAccount}</Text>
+        <Text style={styles.text}>{item.bankAccountDescription}</Text>
       </View>
       {item.type === "Plazo Fijo" ? (
         <>
@@ -46,7 +46,7 @@ const Investment = ({ item }) => {
             <Text style={styles.label}>Vencimiento:</Text>
             <Text style={styles.text}>
               {formatDate(item.dueDate)}
-              {item.autmomaticRenovation && " Con Renovación Automatica"}
+              {item.automaticRenovation && " Con Renovación Automatica"}
             </Text>
           </View>
         </>
