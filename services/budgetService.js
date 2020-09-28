@@ -54,3 +54,20 @@ export const createBudgetService = async (budget) => {
     }
   }
 };
+
+export const getBudgetDeflection = async (month, year) => {
+  try {
+    const email = await getEmail();
+    const resp = await clientAxios.post(`/budgets/getvariation`, {
+      email,
+      month: parseInt(month),
+      year: parseInt(year),
+    });
+    return getResult(resp.data.response, true);
+  } catch (error) {
+    return getResult(
+      `Hubo un error al obtener la desviación de Presupuestos`,
+      false
+    );
+  }
+};

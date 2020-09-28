@@ -59,11 +59,13 @@ export const updateBankAccountBalanceService = async (
   type
 ) => {
   try {
+    console.log(amount);
     const resp = await clientAxios.put(`/bankaccounts/changeBalance/`, {
       id: idBankAccount,
       amount,
       type,
     });
+    console.log(resp);
     if (resp) {
       return getResult(`Saldo en cuenta actualizado correctamente`, true);
     }

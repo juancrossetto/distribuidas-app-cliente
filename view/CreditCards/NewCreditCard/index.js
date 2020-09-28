@@ -143,47 +143,6 @@ const NewCreditCardPage = () => {
               ))}
             </Picker>
           </NativeView>
-          {/* <NativeView style={{ marginTop: 22, flexDirection: "row" }}>
-            <NativeView style={{ flex: 1 }}>
-              <Picker
-                style={{
-                  height: 50,
-                  backgroundColor: "#FFF",
-                  width: "90%",
-                }}
-                selectedValue={expiryMonth}
-                onValueChange={(val) => setExpiryMonth(val)}
-              >
-                <Picker.Item label="-- Mes de Vencimiento --" value="" />
-                {Months.map((item, i) => (
-                  <Picker.Item label={item.text} value={item.value} key={i} />
-                ))}
-              </Picker>
-            </NativeView>
-            <NativeView style={{ flex: 1 }}>
-              <Picker
-                style={{
-                  height: 50,
-                  backgroundColor: "#FFF",
-                }}
-                selectedValue={expiryYear}
-                onValueChange={(val) => setExpiryYear(val)}
-              >
-                <Picker.Item label="-- Año Vencimiento --" value="0" />
-                <Picker.Item label="2020" value="20" />
-                <Picker.Item label="2021" value="21" />
-                <Picker.Item label="2022" value="22" />
-                <Picker.Item label="2023" value="23" />
-                <Picker.Item label="2024" value="24" />
-                <Picker.Item label="2025" value="25" />
-                <Picker.Item label="2026" value="26" />
-                <Picker.Item label="2027" value="27" />
-                <Picker.Item label="2028" value="28" />
-                <Picker.Item label="2029" value="29" />
-                <Picker.Item label="2030" value="30" />
-              </Picker>
-            </NativeView>
-          </NativeView> */}
           <NativeView style={{ marginTop: 22 }}>
             <Item inlineLabel last style={globalStyles.input}>
               <AntDesign name="creditcard" size={20} color="blue" />

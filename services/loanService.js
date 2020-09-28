@@ -31,9 +31,10 @@ export const createLoanService = async (loan) => {
       //llama API actualizar saldo cuenta bancaria
       const type =
         loan.type === "TOM" ? "Prestamo Tomado" : "Prestamo Realizado";
+      const calculatedAmount = loan.type === "TOM" ? amount : amount * -1;
       const changeBalance = await updateBankAccountBalanceService(
         bankAccount,
-        amount,
+        calculatedAmount,
         type
       );
       if (!changeBalance.isSuccess) {

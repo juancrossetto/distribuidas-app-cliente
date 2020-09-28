@@ -1,73 +1,93 @@
 import React, { useState } from "react";
-import { View, Text, Picker } from "react-native";
-import { Container, H1 } from "native-base";
+import { View, Text, Picker, SafeAreaView, ScrollView } from "react-native";
+import { Container, H1, Spinner, Form } from "native-base";
 import globalStyles from "../../../styles/global";
 import { Months, PaymentMethods } from "../../../utils/enums";
 import DeflectionChart from "../../../components/Charts/DeflectionChart";
+import { getBudgetDeflection } from "../../../services/budgetService";
+import AnimatedButton from "../../../components/AnimatedButton";
+import useAlert from "../../../hooks/useAlert";
 
 const DeflectionsPage = () => {
-  // useEffect(() => {
-  //   //Call API get presupuestos y egresos por mes
-  //   if(month === "")
-  // }, [month])
-  const [month, setMonth] = useState(null);
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const [CustomAlert, setMsg] = useAlert();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
 
-  const handleChange = (e) => {
-    console.log(e);
+  const handleSearch = async () => {
+    if (month === "" || year === "") {
+      setMsg("Por favor complete todos los filtros");
+      return;
+    }
+
+    setLoading(true);
+    const resp = await getBudgetDeflection(month, year);
+    setData(resp.data);
+    setLoading(false);
   };
   return (
     <Container style={[globalStyles.container]}>
-      <View style={{ marginHorizontal: 5, flex: 2, marginTop: 30 }}>
-        <H1 style={globalStyles.title}>Desvío de Presupuestos</H1>
-        <View>
-          <Picker
-            style={{
-              height: 50,
-              backgroundColor: "#FFF",
-              marginHorizontal: 10,
-            }}
-            selectedValue={month}
-            onValueChange={(e) => setMonth(e)}
-          >
-            <Picker.Item label="-- Seleccione un Mes --" value="" />
-            {Months.map((item, i) => (
-              <Picker.Item label={item.text} value={item.text} key={i} />
-            ))}
-          </Picker>
-        </View>
-      </View>
-      {month ? (
-        <View style={[{ flex: 8 }]}>
-          <DeflectionChart
-            budgetedData={[14, 1, 100, 95, 94]}
-            realData={[24, 28, 93, 77, 42]}
-          />
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-around" }}
-          >
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ color: "#fff" }}>Presupuestado</Text>
-              <View
-                style={{
-                  width: 15,
-                  height: 10,
-                  backgroundColor: "#fff",
-                }}
-              ></View>
+      <SafeAreaView style={{ flex: 5 }}>
+        <ScrollView>
+          <View style={[globalStyles.content]}>
+            <View style={{ marginTop: 20 }}>
+              <H1 style={globalStyles.title}>Desvío de Presupuestos</H1>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={{ color: "#fff" }}>Real</Text>
-              <View
-                style={{
-                  width: 15,
-                  height: 10,
-                  backgroundColor: "rgb(134, 65, 244)",
-                }}
-              ></View>
+
+            <Form>
+              <View>
+                <Picker
+                  style={{
+                    height: 40,
+                    backgroundColor: "#FFF",
+                    marginHorizontal: 10,
+                  }}
+                  selectedValue={month}
+                  onValueChange={(e) => setMonth(e)}
+                >
+                  <Picker.Item label="-- Seleccione un Mes --" value="" />
+                  {Months.map((item, i) => (
+                    <Picker.Item label={item.text} value={item.value} key={i} />
+                  ))}
+                </Picker>
+              </View>
+              <View>
+                <Picker
+                  style={{
+                    marginTop: 12,
+                    height: 40,
+                    backgroundColor: "#FFF",
+                    marginHorizontal: 10,
+                  }}
+                  selectedValue={year}
+                  onValueChange={(e) => setYear(e)}
+                >
+                  <Picker.Item label="-- Seleccione un Año --" value="" />
+                  <Picker.Item label="2019" value="2019" />
+                  <Picker.Item label="2020" value="2020" />
+                  <Picker.Item label="2021" value="2021" />
+                </Picker>
+              </View>
+            </Form>
+
+            <View>
+              <AnimatedButton
+                disabled={loading}
+                text="Buscar Desvíos"
+                onPress={() => handleSearch()}
+              />
             </View>
+            {loading && (
+              <View>
+                <Spinner color="#000" />
+              </View>
+            )}
+            {data && <DeflectionChart data={data} />}
+            <CustomAlert />
           </View>
-        </View>
-      ) : null}
+        </ScrollView>
+      </SafeAreaView>
     </Container>
   );
 };
