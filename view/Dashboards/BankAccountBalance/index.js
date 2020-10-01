@@ -14,7 +14,7 @@ import { PaymentMethods } from "../../../utils/enums";
 import BankAccountBalanceChart from "../../../components/Charts/BankAccountBalanceChart";
 import { useIsFocused } from "@react-navigation/native";
 import {
-  getBankAccountMovementsService,
+  getBankAccountMovementsByDatesService,
   getBankAccountsService,
 } from "../../../services/bankAccountService";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -22,6 +22,8 @@ import AnimatedButton from "../../../components/AnimatedButton";
 import useAlert from "../../../hooks/useAlert";
 import { formatDate } from "../../../utils";
 import { DataTable } from "react-native-paper";
+import { genericSelectAsync } from "../../../db";
+import { BANKACCOUNTS } from "../../../utils/storage";
 
 const BankAccountBalancePage = () => {
   const [bankAccountSelected, setBankAccountSelected] = useState("");
@@ -50,7 +52,8 @@ const BankAccountBalancePage = () => {
   }, [isFocused]);
 
   const getBankAccounts = async () => {
-    setBankAccounts(await getBankAccountsService());
+    // setBankAccounts(await getBankAccountsService());
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
     setLoading(false);
   };
 
@@ -78,7 +81,7 @@ const BankAccountBalancePage = () => {
     }
 
     setLoading(true);
-    const resp = await getBankAccountMovementsService(
+    const resp = await getBankAccountMovementsByDatesService(
       bankAccountSelected,
       fromDate,
       toDate

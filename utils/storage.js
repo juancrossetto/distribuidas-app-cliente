@@ -68,17 +68,18 @@ export const getAllStorage = async () => {
 };
 
 // Constantes para Async Storage
-export const USERLOGGED = "@usserLogged";
-export const INCOMES = "@incomes";
-export const EXPENSES = "@expenses";
-export const INVESTMENTS = "@investments";
-export const CREDITCARDS = "@creditCards";
-export const LOANS = "@loans";
-export const BUDGETS = "@budgets";
-export const BANKACCOUNTS = "@bankAccounts";
-export const DEBICARDS = "@debitCards";
+export const USERLOGGED = "usserlogged";
+export const INCOMES = "incomes";
+export const EXPENSES = "expenses";
+export const INVESTMENTS = "investments";
+export const CREDITCARDS = "creditcards";
+export const LOANS = "loans";
+export const BUDGETS = "budgets";
+export const BANKACCOUNTS = "bankaccounts";
+export const DEBICARDS = "debitcards";
 
-export const CREDITCARDMOVEMENTS = "@creditCardMovements";
-export const BANKACCOUNTSMOVEMENTS = "@bankAccountMovements";
+export const CREDITCARDMOVEMENTS = "creditcardmovements";
+export const BANKACCOUNTSMOVEMENTS = "bankaccountmovements";
+export const LOANMOVEMENTS = "loanmovements";
 
 export const MONTHLYEXPENSES = "@monthlyexpenses";

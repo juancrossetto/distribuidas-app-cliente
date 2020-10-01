@@ -11,6 +11,25 @@ export const getCurrentDate = () => {
   return `${day}/${month}/${year}`;
 };
 
+export const addMonthCurrentDate = (months) => {
+  return moment().add(months, "M").format("DD-MM-YYYY");
+};
+
+export const addMonthCurrentDateWithoutFormat = (months) => {
+  return moment().add(months, "months").format();
+};
+
+export const formatMillisecondsToDateString = (date) => {
+  return moment(date, "x").format("DD-MM-YYYY");
+};
+
+export const formatDateStringToMilliseconds = (
+  dateString,
+  format = "MM/DD/YY"
+) => {
+  return moment(dateString, format).toDate().getTime();
+};
+
 export const formatDate = (dateString) => {
   var date = new Date(dateString);
   let day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
@@ -24,6 +43,9 @@ export const getFutureDate = function (days) {
   return moment().add(days, "days");
 };
 
+export const getCurrentDateISO8601 = () => {
+  return moment.utc(new Date(), "YYYY-MM-DD HH:mm:ss.SSS");
+};
 export const noop = () => {};
 
 export const getEmailUserLogged = async () => {

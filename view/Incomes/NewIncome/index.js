@@ -7,9 +7,19 @@ import { IncomeCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getEmailUserLogged } from "../../../utils";
-import { createIncomeService } from "../../../services/incomeService";
+import {
+  getCurrentDate,
+  getEmailUserLogged,
+  getCurrentDateISO8601,
+} from "../../../utils";
+import {
+  createIncomeInMemory,
+  createIncomeService,
+} from "../../../services/incomeService";
 import { getBankAccountsService } from "../../../services/bankAccountService";
+import { genericSelectAsync, insertIncomeInMemoryAsync } from "../../../db";
+import { BANKACCOUNTS } from "../../../utils/storage";
+// import shortid from "shortid";
 
 const NewIncomePage = () => {
   const [amount, setAmount] = useState(0);
@@ -24,7 +34,8 @@ const NewIncomePage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    getBankAccounts();
+    // getBankAccounts();
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
 
     return () => {};
   }, [isFocused]);
@@ -33,10 +44,10 @@ const NewIncomePage = () => {
     setBankAccounts(await getBankAccountsService());
   };
 
-  const createIncome = async (income) => {
+  const createIncome = async (income, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createIncomeService(income);
-    console.log(resp);
+    // const resp = await createIncomeService(income);
+    const resp = await createIncomeInMemory(income, bankAccountBalance);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("IncomesPage");
@@ -61,11 +72,16 @@ const NewIncomePage = () => {
       return;
     }
 
-    const date = new Date();
+    const date = getCurrentDateISO8601(); //new Date();
+
     const email = await getEmailUserLogged();
     let bankAccountDescription = "";
+    let bankAccountBalance = 0;
     if (paymentMethod === "BAN") {
-      const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+      const bank = bankAccounts.filter(
+        (b) => b.id === parseInt(bankAccount)
+      )[0];
+      bankAccountBalance = bank.balance;
       bankAccountDescription = bank.alias.toString();
     }
     const income = {
@@ -76,8 +92,9 @@ const NewIncomePage = () => {
       bankAccountDescription,
       date,
       email,
+      // id: shortid.generate(),
     };
-    createIncome(income);
+    createIncome(income, bankAccountBalance);
   };
   return (
     <Container style={[globalStyles.container]}>

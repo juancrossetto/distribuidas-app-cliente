@@ -8,8 +8,11 @@ import { BudgetCategories } from "../../../utils/enums";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getEmailUserLogged } from "../../../utils";
-import { createBudgetService } from "../../../services/budgetService";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../utils";
+import {
+  createBudgetInMemory,
+  createBudgetService,
+} from "../../../services/budgetService";
 
 const NewBudgetPage = () => {
   const [amount, setAmount] = useState(0);
@@ -21,7 +24,8 @@ const NewBudgetPage = () => {
 
   const createBudget = async (budget) => {
     setLoading(true);
-    const resp = await createBudgetService(budget);
+    // const resp = await createBudgetService(budget);
+    const resp = await createBudgetInMemory(budget);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("BudgetsPage");
@@ -45,7 +49,7 @@ const NewBudgetPage = () => {
     const email = await getEmailUserLogged();
     const budget = { amount, category, type, email };
     // budget.id = shortid.generate();
-    budget.date = new Date();
+    budget.date = getCurrentDateISO8601(); //new Date();
     createBudget(budget);
     setLoading(false);
   };

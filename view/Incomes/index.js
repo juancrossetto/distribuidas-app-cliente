@@ -11,7 +11,11 @@ import { createExcel } from "../../components/Excel";
 import AnimatedButton from "../../components/AnimatedButton";
 import { getAllDataService } from "../../services/userService";
 import { createExpenseService } from "../../services/expenseService";
+import { genericSelectAsync } from "../../db";
+import { INCOMES } from "../../utils/storage";
 // import PushNotification from "../../components/PushNotification";
+// import * as SQLite from "expo-sqlite";
+// const db = SQLite.openDatabase("mybudget.db");
 
 const IncomesPage = (props) => {
   const isFocused = useIsFocused();
@@ -20,19 +24,20 @@ const IncomesPage = (props) => {
 
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  // const [send, setSend] = useState(false);
 
-  const getIncomes = async () => {
-    setLoading(true);
-    setIncomesList(await getIncomesService());
-    // console.log("ingresos", incomesList);
-    setLoading(false);
-  };
+  // const getIncomes = async () => {
+  //   setLoading(true);
+  //   setIncomesList(await getIncomesService());
+
+  //   setLoading(false);
+  // };
 
   useEffect(() => {
     if (isFocused) {
-      console.log("focus ingresos");
-      getIncomes();
+      setLoading(true);
+      genericSelectAsync(setIncomesList, INCOMES);
+      setLoading(false);
+      // getIncomes();
     }
     return () => {};
   }, [isFocused]);
@@ -51,7 +56,7 @@ const IncomesPage = (props) => {
               style={{ flex: 1 }}
               data={incomesList}
               renderItem={({ item }) => <Income item={item} />}
-              keyExtractor={(inc) => inc.id}
+              keyExtractor={(inc, index) => inc.id.toString()}
             />
           </SafeAreaView>
         ) : (

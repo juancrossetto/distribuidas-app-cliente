@@ -8,12 +8,13 @@ import HomePage from "./view/Home";
 import LoginPage from "./view/Login";
 import ChangeDatesCreditCardPage from "./view/CreditCards/ChangeDates";
 import CreditCardsPage from "./view/CreditCards";
+import { clearAll } from "./utils/storage";
 
 const Stack = createStackNavigator();
 
 const App = () => {
   useEffect(() => {
-    // clearAll();
+    clearAll();
   }, []);
   // saveItem(EXPENSES, JSON.stringify(egresos));
 

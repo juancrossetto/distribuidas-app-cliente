@@ -1,5 +1,9 @@
 import React from "react";
 import clientAxios from "../config/axios";
+import {
+  insertInvestmentInMemoryAsync,
+  updateBankAccountBalanceAsync,
+} from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
 import { addItemToList, getItem, INVESTMENTS } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
@@ -21,26 +25,54 @@ export const getInvestmentsService = async () => {
   }
 };
 
+export const createInvestmentInMemory = async (
+  investment,
+  bankAccountBalance
+) => {
+  try {
+    const resp = await insertInvestmentInMemoryAsync(investment);
+    console.log(resp, investment.type);
+    if (resp.isSuccess) {
+      if (investment.type === "Plazo Fijo") {
+        const response = updateBankAccountBalanceAsync(
+          investment.bankAccount,
+          investment.amount * -1,
+          "Plazo Fijo",
+          investment.email,
+          bankAccountBalance
+        );
+        if (response && !response.isSuccess && response.data) {
+          return getResult(response.data, false);
+        }
+      }
+      return getResult("Inversión cargada en memoria", true);
+    }
+  } catch (error) {
+    return getResult(
+      "Ocurrio un error al cargar la Inversion en memoria",
+      false
+    );
+  }
+};
+
 export const createInvestmentService = async (investment) => {
   try {
     const resp = await clientAxios.post(`/investments/`, investment);
     if (resp && resp.data && resp.data.investment) {
-      if (investment.type === "Plazo Fijo") {
-        //llama API actualizar saldo cuenta bancaria
-        console.log("probando");
-        const changeBalance = await updateBankAccountBalanceService(
-          investment.bankAccount,
-          investment.amount * -1,
-          "Plazo Fijo"
-        );
-        console.log(investment.bankAccount, investment.amount * -1);
-        if (!changeBalance.isSuccess) {
-          return getResult(
-            `Hubo un error al actualizar el saldo: ${changeBalance.msg}`,
-            true
-          );
-        }
-      }
+      // if (investment.type === "Plazo Fijo") {
+      //   //llama API actualizar saldo cuenta bancaria
+      //   const changeBalance = await updateBankAccountBalanceService(
+      //     investment.bankAccount,
+      //     investment.amount * -1,
+      //     "Plazo Fijo"
+      //   );
+      //   if (!changeBalance.isSuccess) {
+      //     return getResult(
+      //       `Hubo un error al actualizar el saldo: ${changeBalance.msg}`,
+      //       true
+      //     );
+      //   }
+      // }
       return getResult(`Inversión cargada correctamente`, true);
     }
   } catch (error) {

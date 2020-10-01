@@ -7,6 +7,8 @@ import useAlert from "../../../hooks/useAlert";
 import Loan from "../../../components/Loan";
 import { Ionicons } from "@expo/vector-icons";
 import { getLoansService } from "../../../services/loanService";
+import { genericSelectAsync } from "../../../db";
+import { LOANS } from "../../../utils/storage";
 
 const LoansDetailPage = ({ type }) => {
   const isFocused = useIsFocused();
@@ -17,13 +19,19 @@ const LoansDetailPage = ({ type }) => {
   const navigation = useNavigation();
   const getLoans = async () => {
     setLoading(true);
-    const loans = await getLoansService();
-    setLoansList(loans?.filter((l) => l.type === type));
+    // const loans = await getLoansService();
+    // setLoansList(loans?.filter((l) => l.type === type));
+    await genericSelectAsync(setLoansList, LOANS, ` WHERE type = '${type}'`);
+    // setLoansList(loansList?.filter((l) => l.type === type));
     setLoading(false);
   };
 
   useEffect(() => {
     if (isFocused) {
+      // setLoading(true);
+      // genericSelectAsync(setLoansList, LOANS);
+
+      // setLoading(false);
       getLoans();
     }
     return () => {};
@@ -49,7 +57,7 @@ const LoansDetailPage = ({ type }) => {
                 style={{ flex: 1 }}
                 data={loansList}
                 renderItem={({ item }) => <Loan item={item} />}
-                keyExtractor={(exp) => exp.id}
+                keyExtractor={(exp) => exp.id?.toString()}
               />
             ) : (
               <H1 style={globalStyles.subtitle}>

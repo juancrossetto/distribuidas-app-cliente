@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { formatDate } from "../../utils";
+import { formatDate, formatMillisecondsToDateString } from "../../utils";
 import { IncomeCategories } from "../../utils/enums";
 import styles from "../Expense/styles";
+var moment = require("moment");
 
 const Income = ({ item }) => {
   return (
@@ -37,7 +38,12 @@ const Income = ({ item }) => {
 
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha:</Text>
-        <Text style={styles.text}>{formatDate(item.date)}</Text>
+        <Text style={styles.text}>
+          {formatMillisecondsToDateString(item.date)}
+        </Text>
+        {/* <Text style={styles.text}>
+          {new Date(item.date).toLocaleDateString("en-UE")}
+        </Text> */}
       </View>
     </View>
   );

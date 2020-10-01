@@ -1,5 +1,6 @@
 import React from "react";
 import clientAxios from "../config/axios";
+import { insertBudgetInMemoryAsync } from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
 import { addItemToList, getItem, BUDGETS } from "../utils/storage";
 
@@ -20,17 +21,26 @@ export const getBudgetsService = async () => {
   }
 };
 
+export const createBudgetInMemory = async (budget) => {
+  try {
+    const resp = await insertBudgetInMemoryAsync(budget);
+    if (resp.isSuccess) {
+      return getResult("Presupuesto cargado en memoria", true);
+    }
+  } catch (error) {
+    return getResult(
+      "Ocurrio un error al cargar el Presupuesto en memoria",
+      false
+    );
+  }
+};
+
 export const createBudgetService = async (budget) => {
   try {
     const resp = await clientAxios.post(`/budgets/`, budget);
 
     if (resp && resp.data && resp.data.budget) {
-      const changeBalance = true;
-      if (changeBalance) {
-        return getResult(`Presupuesto cargado correctamente`, true);
-      } else {
-        return getResult(`Hubo un error al actualizar el saldo`, true);
-      }
+      return getResult(`Presupuesto cargado correctamente`, true);
     }
   } catch (error) {
     console.log(error);
@@ -49,7 +59,7 @@ export const createBudgetService = async (budget) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      await addItemToList(BUDGETS, budget);
+      // await addItemToList(BUDGETS, budget);
       return getResult(`Presupuesto guardado en Memoria`, true);
     }
   }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { formatDate } from "../../utils";
+import { formatDate, formatMillisecondsToDateString } from "../../utils";
 import { BudgetCategories } from "../../utils/enums";
 import styles from "../Expense/styles";
 
@@ -27,7 +27,9 @@ const Budget = ({ item }) => {
       </View> */}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha:</Text>
-        <Text style={styles.text}>{formatDate(item.date)}</Text>
+        <Text style={styles.text}>
+          {formatMillisecondsToDateString(item.date)}
+        </Text>
       </View>
     </View>
   );

@@ -5,7 +5,12 @@ import globalStyles from "../../../styles/global";
 import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities, Months } from "../../../utils/enums";
-import { getCurrentDate, getEmailUserLogged } from "../../../utils";
+import {
+  formatDateStringToMilliseconds,
+  getCurrentDate,
+  getCurrentDateISO8601,
+  getEmailUserLogged,
+} from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,7 +18,11 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { CREDITCARDS, addItemToList } from "../../../utils/storage";
 import { CardView } from "react-native-credit-card-input";
 import clientAxios from "../../../config/axios";
-import { createCreditCardService } from "../../../services/creditCardService";
+import {
+  createCreditCardInMemory,
+  createCreditCardService,
+} from "../../../services/creditCardService";
+var moment = require("moment");
 
 const NewCreditCardPage = () => {
   const [number, setNumber] = useState(0);
@@ -75,15 +84,15 @@ const NewCreditCardPage = () => {
       return;
     }
 
-    const date = new Date();
+    const date = getCurrentDateISO8601(); // new Date();
     const email = await getEmailUserLogged();
     const creditCard = {
       number,
       entity,
       name,
       expiry,
-      closeDateSummary,
-      dueDateSummary,
+      closeDateSummary: formatDateStringToMilliseconds(closeDateSummary),
+      dueDateSummary: formatDateStringToMilliseconds(dueDateSummary),
       date,
       email,
     };
@@ -94,7 +103,8 @@ const NewCreditCardPage = () => {
 
   const createCreditCard = async (creditCard) => {
     setLoading(true);
-    const resp = await createCreditCardService(creditCard);
+    // const resp = await createCreditCardService(creditCard);
+    const resp = await createCreditCardInMemory(creditCard);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("CreditCardsPage");

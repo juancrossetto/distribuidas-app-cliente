@@ -5,13 +5,18 @@ import globalStyles from "../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 // import shortid from "shortid";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { getEmailUserLogged } from "../../../utils";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { LoanTypes } from "../../../utils/enums";
 import { getBankAccountsService } from "../../../services/bankAccountService";
-import { createLoanService } from "../../../services/loanService";
+import {
+  createLoanInMemory,
+  createLoanService,
+} from "../../../services/loanService";
+import { genericSelectAsync } from "../../../db";
+import { BANKACCOUNTS } from "../../../utils/storage";
 
 const NewLoanPage = ({ route }) => {
   const type = route.params.type;
@@ -28,8 +33,8 @@ const NewLoanPage = ({ route }) => {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    getBankAccounts();
-
+    // getBankAccounts();
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
     return () => {};
   }, [isFocused]);
 
@@ -37,9 +42,10 @@ const NewLoanPage = ({ route }) => {
     setBankAccounts(await getBankAccountsService());
   };
 
-  const createLoan = async (loan) => {
+  const createLoan = async (loan, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createLoanService(loan);
+    // const resp = await createLoanService(loan);
+    const resp = await createLoanInMemory(loan, bankAccountBalance);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("LoansPage");
@@ -68,9 +74,13 @@ const NewLoanPage = ({ route }) => {
 
     const email = await getEmailUserLogged();
     let bankAccountDescription = "";
+    let bankAccountBalance = 0;
     if (paymentMethod === "BAN") {
-      const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+      const bank = bankAccounts.filter(
+        (b) => b.id === parseInt(bankAccount)
+      )[0];
       bankAccountDescription = bank.alias.toString();
+      bankAccountBalance = bank.balance;
     }
     const loan = {
       amount,
@@ -79,11 +89,11 @@ const NewLoanPage = ({ route }) => {
       bankAccount,
       bankAccountDescription,
       fees,
-      date: new Date(),
+      date: getCurrentDateISO8601(), //new Date(),
       email,
     };
     // loan.id = shortid.generate();
-    createLoan(loan);
+    createLoan(loan, bankAccountBalance);
   };
   return (
     <Container style={[globalStyles.container]}>

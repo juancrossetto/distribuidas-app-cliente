@@ -2,26 +2,27 @@ import React from "react";
 import { View, Button, Alert } from "react-native";
 import { CardView } from "react-native-credit-card-input";
 import { useNavigation } from "@react-navigation/native";
-import { formatDate } from "../../utils";
+import { formatMillisecondsToDateString } from "../../utils";
 import { getPaymentTotalAmountService } from "../../services/expenseService";
+import { genericSelectAsync, getTotalAmountCreditCardAsync } from "../../db";
+import { CREDITCARDMOVEMENTS, CREDITCARDS } from "../../utils/storage";
 
 const CreditCardCustom = ({ item }) => {
   const navigation = useNavigation();
 
   const handleDetail = async () => {
-    const resp = await getPaymentTotalAmountService("TRC", item.number);
+    // const resp = await getPaymentTotalAmountService("TRC", item.number);
 
-    let totalAmount = 0;
-    // if (resp.isSuccess && resp.data.totalAmount > 0);
-    // {
-    //   console.log("resp", resp.data);
-    //   totalAmount = resp.data.totalAmount;
-    // }
+    const [totalAmount, setTotalAmount] = useState(0);
+    await getTotalAmountCreditCardAsync(setTotalAmount);
+
     Alert.alert(
       `Detalle tarjeta ${item.number} `,
-      `Entidad Bancaria: ${item.entity}\nFecha de Cierre Resúmen: ${formatDate(
+      `Entidad Bancaria: ${
+        item.entity
+      }\nFecha de Cierre Resúmen: ${formatMillisecondsToDateString(
         item.closeDateSummary
-      )}\nFecha de Vencimiento Resúmen: ${formatDate(
+      )}\nFecha de Vencimiento Resúmen: ${formatMillisecondsToDateString(
         item.dueDateSummary
       )} \nMonto gastado(Mes en Curso): ${totalAmount} `,
       [

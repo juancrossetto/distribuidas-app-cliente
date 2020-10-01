@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { Container, H1, Input, Form, Item } from "native-base";
+import { Container, H1, Input, Form, Item, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
 import { useNavigation } from "@react-navigation/native";
 import useAlert from "../../hooks/useAlert";
@@ -18,6 +18,7 @@ const CreateAccountPage = () => {
   const navigation = useNavigation();
 
   const createAccount = async () => {
+    setLoading(true);
     const resp = await createAccountService(nombre, email, password);
 
     if (resp.isSuccess) {
@@ -26,6 +27,7 @@ const CreateAccountPage = () => {
     } else {
       setMsg(resp.data);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async () => {
@@ -81,6 +83,11 @@ const CreateAccountPage = () => {
         />
 
         <CustomAlert />
+        {loading && (
+          <View>
+            <Spinner color="#000" />
+          </View>
+        )}
       </View>
     </Container>
   );

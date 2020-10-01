@@ -10,6 +10,8 @@ import { CardView } from "react-native-credit-card-input";
 // import { CREDITCARDS, saveItem, removeItem } from "../../../utils/storage";
 // import clientAxios from "../../../config/axios";
 import { updateCreditCardService } from "../../../services/creditCardService";
+import { updateCreditCardDatesAsync } from "../../../db";
+import { formatDateStringToMilliseconds } from "../../../utils";
 
 const ChangeDatesCreditCardPage = ({ route }) => {
   const { card, fromLogin } = route.params;
@@ -57,7 +59,12 @@ const ChangeDatesCreditCardPage = ({ route }) => {
   const updateDates = async (creditCard) => {
     // LLamar API  UpdateDatesCreditCard;
     setLoading(true);
-    const resp = await updateCreditCardService(creditCard);
+    // const resp = await updateCreditCardService(creditCard);
+    const resp = await updateCreditCardDatesAsync(
+      creditCard.id,
+      formatDateStringToMilliseconds(creditCard.dueDateSummary),
+      formatDateStringToMilliseconds(creditCard.closeDateSummary)
+    );
     if (resp.isSuccess) {
       setMsg(resp.data);
       if (fromLogin) {

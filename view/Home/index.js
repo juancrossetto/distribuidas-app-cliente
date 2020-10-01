@@ -481,9 +481,9 @@ function DashboardTabsStack() {
         name="DownloadDataInExcelPage"
         component={DownloadDataInExcelPage}
         options={{
-          tabBarLabel: "Excel",
+          tabBarLabel: "Otros",
           tabBarIcon: () => (
-            <FontAwesome5 name="chart-bar" size={24} color={"#fff"} />
+            <FontAwesome5 name="surprise" size={24} color="#fff" />
           ),
         }}
       />

@@ -17,12 +17,21 @@ import globalStyles from "../../../../styles/global";
 // import {Picker} from '@react-native-community/picker';
 // import shortid from "shortid";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
-import { getFutureDate, getEmailUserLogged } from "../../../../utils";
+import {
+  getFutureDate,
+  getEmailUserLogged,
+  getCurrentDateISO8601,
+} from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AnimatedButton from "../../../../components/AnimatedButton";
-import { createInvestmentService } from "../../../../services/investmentService";
+import {
+  createInvestmentInMemory,
+  createInvestmentService,
+} from "../../../../services/investmentService";
 import { getBankAccountsService } from "../../../../services/bankAccountService";
+import { genericSelectAsync } from "../../../../db";
+import { BANKACCOUNTS } from "../../../../utils/storage";
 
 const NewTimeDepositPage = () => {
   const [amount, setAmount] = useState(0);
@@ -38,7 +47,8 @@ const NewTimeDepositPage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    getBankAccounts();
+    // getBankAccounts();
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
     return () => {};
   }, [isFocused]);
 
@@ -46,9 +56,13 @@ const NewTimeDepositPage = () => {
     setBankAccounts(await getBankAccountsService());
   };
 
-  const createTimeDeposit = async (timeDeposit) => {
+  const createTimeDeposit = async (timeDeposit, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createInvestmentService(timeDeposit);
+    // const resp = await createInvestmentService(timeDeposit);
+    const resp = await createInvestmentInMemory(
+      timeDeposit,
+      bankAccountBalance
+    );
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("InvestmentsPage");
@@ -61,6 +75,7 @@ const NewTimeDepositPage = () => {
   };
 
   const handleSubmit = async () => {
+    const bank = bankAccounts.filter((b) => b.id === parseInt(bankAccount))[0];
     if (
       amount <= 0 ||
       days <= 0 ||
@@ -70,9 +85,15 @@ const NewTimeDepositPage = () => {
       setMsg("Todos los campos son obligatorios");
       return;
     }
+
+    if (amount > bank.balance) {
+      setMsg(
+        "No puede invertir un monto mayor al que posee la cuenta seleccionada"
+      );
+      return;
+    }
     const email = await getEmailUserLogged();
-    const date = new Date();
-    const bank = bankAccounts.filter((b) => b.id === bankAccount)[0];
+    const date = getCurrentDateISO8601(); //new Date();
     const bankAccountDescription = bank.alias.toString();
     const timeDeposit = {
       type: "Plazo Fijo",
@@ -85,9 +106,12 @@ const NewTimeDepositPage = () => {
       dueDate: getFutureDate(days),
       email,
       automaticRenovation,
+      deposited: false,
+      specie: "",
+      specieQuantity: 0,
     };
     // investment.id = shortid.generate();
-    createTimeDeposit(timeDeposit);
+    createTimeDeposit(timeDeposit, bank.balance);
   };
   return (
     <Container style={[globalStyles.container]}>

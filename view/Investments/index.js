@@ -8,6 +8,8 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import useAlert from "../../hooks/useAlert";
 import { getInvestmentsService } from "../../services/investmentService";
+import { genericSelectAsync } from "../../db";
+import { INVESTMENTS } from "../../utils/storage";
 
 const InvestmentsPage = (props) => {
   const isFocused = useIsFocused();
@@ -34,7 +36,10 @@ const InvestmentsPage = (props) => {
   };
 
   useEffect(() => {
-    getInvestments();
+    setLoading(true);
+    genericSelectAsync(setInvestmentsList, INVESTMENTS);
+    setLoading(false);
+    // getInvestments();
     return () => {};
   }, [props, isFocused]);
 

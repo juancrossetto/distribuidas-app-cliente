@@ -14,11 +14,16 @@ import globalStyles from "../../../../styles/global";
 import shortid from "shortid";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Actions } from "../../../../utils/enums";
-import { getEmailUserLogged } from "../../../../utils";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../../utils";
 import useAlert from "../../../../hooks/useAlert";
 import AnimatedButton from "../../../../components/AnimatedButton";
 import { getBankAccountsService } from "../../../../services/bankAccountService";
-import { createInvestmentService } from "../../../../services/investmentService";
+import {
+  createInvestmentInMemory,
+  createInvestmentService,
+} from "../../../../services/investmentService";
+import { genericSelectAsync } from "../../../../db";
+import { BANKACCOUNTS } from "../../../../utils/storage";
 
 const NewActionPage = () => {
   const [specie, setSpecie] = useState("");
@@ -34,7 +39,9 @@ const NewActionPage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    getBankAccounts();
+    // getBankAccounts();
+
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
     if (specie) {
       const actionSelected = Actions.filter((t) => t.value === specie)[0]
         .actionValue;
@@ -47,9 +54,10 @@ const NewActionPage = () => {
     setBankAccounts(await getBankAccountsService());
   };
 
-  const createAction = async (action) => {
+  const createAction = async (action, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createInvestmentService(action);
+    // const resp = await createInvestmentService(action);
+    const resp = await createInvestmentInMemory(action, bankAccountBalance);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("InvestmentsPage");
@@ -72,19 +80,27 @@ const NewActionPage = () => {
       return;
     }
     const email = await getEmailUserLogged();
-    const date = new Date();
+    const date = getCurrentDateISO8601(); //new Date();
+    const bank = bankAccounts.filter((b) => b.id === parseInt(bankAccount))[0];
+    const bankAccountDescription = bank.alias.toString();
     const investment = {
+      amount: 0,
       type: "Acción",
       specie,
       unitValue,
+      days: 0,
+      deposited: false,
+      interestRate: 0,
       // rate,
       specieQuantity,
       bankAccount,
+      bankAccountDescription,
       date,
+      dueDate: date,
       email,
     };
     // investment.id = shortid.generate();
-    createAction(investment);
+    createAction(investment, bank.balance);
     setLoading(true);
   };
 

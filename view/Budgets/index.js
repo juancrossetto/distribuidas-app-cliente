@@ -7,6 +7,8 @@ import useAlert from "../../hooks/useAlert";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { getBudgetsService } from "../../services/budgetService";
+import { genericSelectAsync } from "../../db";
+import { BUDGETS } from "../../utils/storage";
 
 const BudgetsPage = (props) => {
   const [CustomAlert, setMsg] = useAlert();
@@ -24,7 +26,10 @@ const BudgetsPage = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      getBudgets();
+      setLoading(true);
+      genericSelectAsync(setBudgetsList, BUDGETS);
+      setLoading(false);
+      // getBudgets();
     }
     return () => {};
   }, [isFocused]);

@@ -7,6 +7,8 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import BankAccount from "../../components/BankAccount";
 import { Ionicons } from "@expo/vector-icons";
 import { getBankAccountsService } from "../../services/bankAccountService";
+import { genericSelectAsync } from "../../db";
+import { BANKACCOUNTS } from "../../utils/storage";
 
 const BankAccountsPage = (props) => {
   const isFocused = useIsFocused();
@@ -23,8 +25,10 @@ const BankAccountsPage = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log("focus cuentas bancarias");
-      getBankAccounts();
+      // getBankAccounts();
+      setLoading(true);
+      genericSelectAsync(setBankAccountsList, BANKACCOUNTS);
+      setLoading(false);
       return () => {};
     }
   }, [isFocused]);

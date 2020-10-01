@@ -7,6 +7,8 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import CreditCardCustom from "../../components/CreditCard";
 import { Ionicons } from "@expo/vector-icons";
 import { getCreditCardsService } from "../../services/creditCardService";
+import { genericSelectAsync } from "../../db";
+import { CREDITCARDS } from "../../utils/storage";
 
 const CreditCardsPage = (props) => {
   const isFocused = useIsFocused();
@@ -23,7 +25,10 @@ const CreditCardsPage = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      getCreditCards();
+      setLoading(true);
+      genericSelectAsync(setCardsList, CREDITCARDS);
+      setLoading(false);
+      // getCreditCards();
     }
     return () => {};
   }, [isFocused]);

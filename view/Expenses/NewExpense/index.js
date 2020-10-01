@@ -25,11 +25,16 @@ import {
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getEmailUserLogged } from "../../../utils";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../utils";
 import ImageUploader from "../../../components/ImageUploader";
-import { createExpenseService } from "../../../services/expenseService";
+import {
+  createExpenseInMemory,
+  createExpenseService,
+} from "../../../services/expenseService";
 import { getBankAccountsService } from "../../../services/bankAccountService";
 import { getCreditCardsService } from "../../../services/creditCardService";
+import { genericSelectAsync } from "../../../db";
+import { BANKACCOUNTS, CREDITCARDS } from "../../../utils/storage";
 
 const NewExpensePage = () => {
   const isFocused = useIsFocused();
@@ -42,7 +47,7 @@ const NewExpensePage = () => {
   const [category, setCategory] = useState("");
   const [area, setArea] = useState("");
   const [withFees, setWithFees] = useState(false);
-  const [fees, setFees] = useState(0);
+  const [fees, setFees] = useState(1);
 
   const [bankAccounts, setBankAccounts] = useState([]);
   const [creditCards, setCreditCards] = useState([]);
@@ -60,8 +65,10 @@ const NewExpensePage = () => {
   }, [isFocused]);
 
   const initializeData = async () => {
-    await getBankAccounts();
-    await getCreditCards();
+    // await getBankAccounts();
+    // await getCreditCards();
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
+    genericSelectAsync(setCreditCards, CREDITCARDS);
     setLoading(false);
   };
   const getBankAccounts = async () => {
@@ -72,9 +79,10 @@ const NewExpensePage = () => {
     setCreditCards(await getCreditCardsService());
   };
 
-  const createExpense = async (expense) => {
+  const createExpense = async (expense, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createExpenseService(expense);
+    // const resp = await createExpenseService(expense);
+    const resp = await createExpenseInMemory(expense, bankAccountBalance);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("ExpensesPage");
@@ -124,10 +132,12 @@ const NewExpensePage = () => {
       return;
     }
     setLoading(true);
-    const date = new Date();
+    const date = getCurrentDateISO8601(); //new Date();
     let bankAccountDescription = "";
+    let bankAccountBalance = 0;
     if (paymentType === "BAN") {
-      const bank = bankAccounts.filter((b) => b.id === paymentId)[0];
+      const bank = bankAccounts.filter((b) => b.id === parseInt(paymentId))[0];
+      bankAccountBalance = bank.balance;
       bankAccountDescription = bank.alias.toString();
     }
     const expense = {
@@ -145,7 +155,7 @@ const NewExpensePage = () => {
       paymentId,
     };
     // expense.id = shortid.generate();
-    createExpense(expense);
+    createExpense(expense, bankAccountBalance);
     setLoading(false);
   };
 

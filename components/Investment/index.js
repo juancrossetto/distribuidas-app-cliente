@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { formatDate } from "../../utils";
+import { formatDate, formatMillisecondsToDateString } from "../../utils";
 import { Titles, Actions } from "../../utils/enums";
 import styles from "../Expense/styles";
 
@@ -45,8 +45,9 @@ const Investment = ({ item }) => {
           <View style={styles.textContainer}>
             <Text style={styles.label}>Vencimiento:</Text>
             <Text style={styles.text}>
-              {formatDate(item.dueDate)}
-              {item.automaticRenovation && " Con Renovación Automatica"}
+              {formatMillisecondsToDateString(item.dueDate)}
+              {item.automaticRenovation === "true" &&
+                " Con Renovación Automatica"}
             </Text>
           </View>
         </>
@@ -82,7 +83,9 @@ const Investment = ({ item }) => {
       ) : null}
       <View style={styles.textContainer}>
         <Text style={styles.label}>Fecha de Inversión:</Text>
-        <Text style={styles.text}>{formatDate(item.date)}</Text>
+        <Text style={styles.text}>
+          {formatMillisecondsToDateString(item.date)}
+        </Text>
       </View>
     </View>
   );

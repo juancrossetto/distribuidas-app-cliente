@@ -17,8 +17,13 @@ import { Titles } from "../../../../utils/enums";
 import useAlert from "../../../../hooks/useAlert";
 import AnimatedButton from "../../../../components/AnimatedButton";
 import { getBankAccountsService } from "../../../../services/bankAccountService";
-import { createInvestmentService } from "../../../../services/investmentService";
-import { getEmailUserLogged } from "../../../../utils";
+import {
+  createInvestmentInMemory,
+  createInvestmentService,
+} from "../../../../services/investmentService";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../../utils";
+import { genericSelectAsync } from "../../../../db";
+import { BANKACCOUNTS } from "../../../../utils/storage";
 
 const NewTitlePage = () => {
   const [specie, setSpecie] = useState("");
@@ -34,7 +39,9 @@ const NewTitlePage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
 
   useEffect(() => {
-    getBankAccounts();
+    // getBankAccounts();
+
+    genericSelectAsync(setBankAccounts, BANKACCOUNTS);
     if (specie) {
       const rateTitle = Titles.filter((t) => t.value === specie)[0].rate;
       setRate(rateTitle);
@@ -46,9 +53,10 @@ const NewTitlePage = () => {
     setBankAccounts(await getBankAccountsService());
   };
 
-  const createTitle = async (title) => {
+  const createTitle = async (title, bankAccountBalance) => {
     setLoading(true);
-    const resp = await createInvestmentService(title);
+    // const resp = await createInvestmentService(title);
+    const resp = await createInvestmentInMemory(title, bankAccountBalance);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("InvestmentsPage");
@@ -70,20 +78,26 @@ const NewTitlePage = () => {
       setMsg("Todos los campos son obligatorios");
       return;
     }
-    const date = new Date();
+    const date = getCurrentDateISO8601(); //new Date();
+    const bank = bankAccounts.filter((b) => b.id === parseInt(bankAccount))[0];
+    const bankAccountDescription = bank.alias.toString();
     const email = await getEmailUserLogged();
     const investment = {
+      amount: 0,
       type: "Títulos Valores",
       specie,
-      rate,
-      // rate,
+      interestRate: rate,
+      days: 0,
+      deposited: false,
       date,
+      dueDate: date,
       specieQuantity,
       bankAccount,
+      bankAccountDescription,
       email,
     };
     // investment.id = shortid.generate();
-    createTitle(investment);
+    createTitle(investment, bank.balance);
     setLoading(false);
   };
 

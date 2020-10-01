@@ -5,11 +5,14 @@ import globalStyles from "../../../styles/global";
 // import shortid from "shortid";
 import { useNavigation } from "@react-navigation/native";
 import { BankEntities } from "../../../utils/enums";
-import { getEmailUserLogged } from "../../../utils";
+import { getCurrentDateISO8601, getEmailUserLogged } from "../../../utils";
 import useAlert from "../../../hooks/useAlert";
 import AnimatedButton from "../../../components/AnimatedButton";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
-import { createBankAccountService } from "../../../services/bankAccountService";
+import {
+  createBankAccountInMemory,
+  createBankAccountService,
+} from "../../../services/bankAccountService";
 
 const NewBankAccountPage = () => {
   const [cbu, setCBU] = useState(0);
@@ -24,7 +27,8 @@ const NewBankAccountPage = () => {
 
   const createBankAccount = async (bankAccount) => {
     setLoading(true);
-    const resp = await createBankAccountService(bankAccount);
+    // const resp = await createBankAccountService(bankAccount);
+    const resp = await createBankAccountInMemory(bankAccount);
     if (resp.isSuccess) {
       setMsg(resp.data);
       navigation.navigate("BankAccountsPage");
@@ -65,7 +69,7 @@ const NewBankAccountPage = () => {
       debitCard,
       alias,
       balance,
-      date: new Date(), //getCurrentDate(),
+      date: getCurrentDateISO8601(), //new Date(), //getCurrentDate(),
       email,
     };
     // bankAccount.id = shortid.generate();

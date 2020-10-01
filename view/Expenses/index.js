@@ -10,6 +10,7 @@ import { saveItem, getItem, EXPENSES } from "../../utils/storage";
 import clientAxios from "../../config/axios";
 import { getEmailUserLogged } from "../../utils";
 import { getExpensesService } from "../../services/expenseService";
+import { genericSelectAsync } from "../../db";
 
 const ExpensesPage = (props) => {
   const isFocused = useIsFocused();
@@ -27,8 +28,10 @@ const ExpensesPage = (props) => {
 
   useEffect(() => {
     if (isFocused) {
-      console.log("focus egresos");
-      getExpenses();
+      setLoading(true);
+      genericSelectAsync(setExpensesList, EXPENSES);
+      setLoading(false);
+      // getExpenses();
     }
 
     return () => {};

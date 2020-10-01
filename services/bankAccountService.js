@@ -1,5 +1,6 @@
 import React from "react";
 import clientAxios from "../config/axios";
+import { insertBankAccountInMemoryAsync } from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
 import { addItemToList, getItem, BANKACCOUNTS } from "../utils/storage";
 
@@ -13,11 +14,26 @@ export const getBankAccountsService = async () => {
     const resp = await clientAxios.get(`/bankAccounts/${email}`);
     if (resp.data.bankAccounts) {
       return resp.data.bankAccounts;
-    } else {
-      return await getItem(BANKACCOUNTS);
+    }
+    // else {
+    //   return await getItem(BANKACCOUNTS);
+    // }
+  } catch (error) {
+    // return await getItem(BANKACCOUNTS);
+  }
+};
+
+export const createBankAccountInMemory = async (bankAccount) => {
+  try {
+    const resp = await insertBankAccountInMemoryAsync(bankAccount);
+    if (resp.isSuccess) {
+      return getResult("Cuenta de banco cargada en memoria", true);
     }
   } catch (error) {
-    return await getItem(BANKACCOUNTS);
+    return getResult(
+      "Ocurrio un error al cargar la Cuenta de banco en memoria",
+      false
+    );
   }
 };
 
@@ -47,8 +63,47 @@ export const createBankAccountService = async (bankAccount) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      await addItemToList(BANKACCOUNTS, bankAccount);
+      // await addItemToList(BANKACCOUNTS, bankAccount);
       return getResult(`Cuenta de banco guardada en Memoria`, true);
+    }
+  }
+};
+
+export const createBankAccountMovementService = async (bankAccountMovement) => {
+  try {
+    const resp = await clientAxios.post(
+      `/bankAccounts/movement`,
+      bankAccountMovement
+    );
+
+    if (resp) {
+      return getResult(
+        `Movimiento de Cuenta de banco cargada correctamente`,
+        true
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.msg
+    ) {
+      return getResult(error.response.data.msg, false);
+    } else if (
+      error &&
+      error.response &&
+      error.response.data &&
+      error.response.data.errores
+    ) {
+      return getResult(error.response.data.errores[0].msg, false);
+    } else {
+      // await addItemToList(BANKACCOUNTS, bankAccount);
+      return getResult(
+        `Movimiento de Cuenta de banco guardada en Memoria`,
+        true
+      );
     }
   }
 };
@@ -82,7 +137,7 @@ export const updateBankAccountBalanceService = async (
   }
 };
 
-export const getBankAccountMovementsService = async (
+export const getBankAccountMovementsByDatesService = async (
   bankAccount,
   fromDate,
   toDate
@@ -95,8 +150,23 @@ export const getBankAccountMovementsService = async (
       fromDate,
       toDate,
     };
-    console.log(request);
     const resp = await clientAxios.post(`/bankAccounts/getMovements`, request);
+
+    if (resp.data.movements) {
+      return getResult(resp.data.movements, true);
+    } else {
+      return getResult(`Error al obtener movimientos`, false);
+    }
+  } catch (error) {
+    return getResult(`Error al obtener movimientos`, false);
+  }
+};
+
+export const getBankAccountMovementsService = async () => {
+  try {
+    const email = await getEmail();
+
+    const resp = await clientAxios.get(`/bankAccounts/getMovements/${email}`);
 
     if (resp.data.movements) {
       return getResult(resp.data.movements, true);
