@@ -19,6 +19,7 @@ y Prestamos).
 ## Despliegue
 Para poder trabajar sobre la App realice lo siguientes pasos:
 ### Bajar Aplicacion [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=es_AR) desde la Play Store en un dispositivo móvil.
+### Tener Instalado Node (npm) y Git.
 
 ### Clonar repositorio
 - Clonar este repositorio a tu maquina local, abriendo una consola y ejecutando: 
@@ -29,6 +30,11 @@ Para poder trabajar sobre la App realice lo siguientes pasos:
 ```bash
 npm install
 ```
+- En caso de no tener instalado expo en la PC, ejecutar el siguiente comando:
+```bash
+npm install --global expo-cli
+```
+
 - Luego una vez instaladas las dependencias de node, ejecutar el siguiente comando:
 ```bash
 expo start
