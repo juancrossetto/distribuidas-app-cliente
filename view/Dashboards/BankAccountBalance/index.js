@@ -36,7 +36,7 @@ const BankAccountBalancePage = () => {
   const [bankAccounts, setBankAccounts] = useState([]);
   const [CustomAlert, setMsg] = useAlert();
   const [loading, setLoading] = useState(true);
-  const [movements, setMovements] = useState([]);
+  const [movements, setMovements] = useState("");
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [message, setMessage] = useState("");
@@ -77,12 +77,14 @@ const BankAccountBalancePage = () => {
   };
 
   useEffect(() => {
-    if (!movements || movements.length === 0) {
-      const msg = "No se encontraron movimientos para la fecha indicada";
-      setMsg(msg);
-      setMessage(msg);
-    } else {
-      setMessage("");
+    if (movements) {
+      if (movements.length === 0) {
+        const msg = "No se encontraron movimientos para la fecha indicada";
+        setMsg(msg);
+        setMessage(msg);
+      } else {
+        setMessage("");
+      }
     }
   }, [movements]);
 

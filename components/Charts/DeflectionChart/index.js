@@ -152,7 +152,7 @@ const DeflectionChart = ({
             </View>
           ) : (
             <H1 style={globalStyles.subtitle}>
-              No hay cargado presupuesto para Inversones y Prestamos en este
+              No hay cargado presupuesto para Inversiones y Prestamos en este
               período
             </H1>
           )}

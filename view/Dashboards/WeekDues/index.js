@@ -45,7 +45,6 @@ const WeekDuesPage = () => {
     await getTarjetasCreditoVencidasSemanaAsync(setCreditCardsDues, email);
     await getCuotasPrestamoVencidasSemanaAsync(setLoansDues, email);
 
-    setCreditCardsDues();
     setLoading(false);
   };
 

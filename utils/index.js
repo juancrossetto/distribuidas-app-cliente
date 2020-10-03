@@ -28,11 +28,11 @@ export const getFirstDayOfWeek = () => {
 };
 
 export const getLastDayOfWeek = () => {
-  return moment().endOf("week").format("YYYY-MM-DD");
+  return moment().endOf("isoWeek").format("YYYY-MM-DD");
 };
 
 export const getFirstDayOfMonth = () => {
-  return moment().startOf("month").format("YYYY-MM-DD");
+  return moment().startOf("isoWeek").format("YYYY-MM-DD");
 };
 
 export const getLastDayOfMonth = () => {

@@ -25,3 +25,4 @@
 [1003/112658.215:ERROR:registration_protocol_win.cc(131)] TransactNamedPipe: Ha terminado la canalización. (0x6D)
 [1003/113815.129:ERROR:exit_code_watcher_win.cc(87)] Failed to wait for process exit or stop event
 [1003/113815.196:ERROR:registration_protocol_win.cc(131)] TransactNamedPipe: Ha terminado la canalización. (0x6D)
+[1003/155643.499:ERROR:registration_protocol_win.cc(131)] TransactNamedPipe: Ha terminado la canalización. (0x6D)

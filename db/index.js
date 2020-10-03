@@ -568,7 +568,7 @@ const getInversionesVencidasSemanaAsync = async (setFunc, email) => {
     },
     (t, error) => {
       console.log(
-        `Error de DB obteniendo Inversiones a vencer/vencidas}`,
+        `Error de DB obteniendo Inversiones a vencer/vencidas`,
         error,
         t
       );
