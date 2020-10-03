@@ -5,23 +5,29 @@ import { H1 } from "native-base";
 import globalStyles from "../../../styles/global";
 
 const getBudgetAmountByType = (budgets, type) => {
-  const budgetFiltered = budgets.filter((b) => b._id === type);
+  const budgetFiltered = budgets?.filter((b) => b.type === type);
   return budgetFiltered && budgetFiltered.length > 0
-    ? budgetFiltered[0].TotalAmount
+    ? budgetFiltered[0].amount
     : 0;
 };
 
 const getLoanAmountByType = (loans, type) => {
-  const loanFiltered = loans.filter((b) => b._id === type);
+  const loanFiltered = loans?.filter((b) => b.type === type);
   return loanFiltered && loanFiltered.length > 0 ? loanFiltered[0].amount : 0;
 };
 
-const DeflectionChart = ({ data }) => {
-  const { incomes, expenses, investments, budgets, loans } = data;
-
-  const incomesAmount = incomes.length > 0 ? incomes[0].amount : 0;
-  const expensesAmount = expenses.length > 0 ? expenses[0].amount : 0;
-  const investmentAmount = investments.length > 0 ? investments[0].amount : 0;
+const DeflectionChart = ({
+  incomes,
+  expenses,
+  investments,
+  budgets,
+  loans,
+}) => {
+  const incomesAmount = incomes && incomes.length > 0 ? incomes[0].amount : 0;
+  const expensesAmount =
+    expenses && expenses.length > 0 ? expenses[0].amount : 0;
+  const investmentAmount =
+    investments && investments.length > 0 ? investments[0].amount : 0;
   const loansTakenAmount = getLoanAmountByType(loans, "TOM");
   const loansMadeAmount = getLoanAmountByType(loans, "REA");
 
@@ -30,20 +36,6 @@ const DeflectionChart = ({ data }) => {
   const investmentBudgeted = getBudgetAmountByType(budgets, "Inversion");
   const loanTakenBudgeted = getBudgetAmountByType(budgets, "Prestamo Tomado");
   const loanMadeBudgeted = getBudgetAmountByType(budgets, "Prestamo Realizado");
-
-  // console.log(
-  //   incomeBudgeted,
-  //   incomesAmount,
-  //   expenseBudgeted,
-  //   expensesAmount,
-  //   investmentBudgeted,
-  //   investmentAmount,
-  //   "-----------------",
-  //   loanTakenBudgeted,
-  //   loansTakenAmount,
-  //   loanMadeBudgeted,
-  //   loansMadeAmount
-  // );
 
   return (
     <ScrollView>

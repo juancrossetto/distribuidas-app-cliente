@@ -5,7 +5,7 @@ import {
   updateBankAccountBalanceAsync,
 } from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
-import { addItemToList, getItem, INVESTMENTS } from "../utils/storage";
+import { getItem, INVESTMENTS } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -17,11 +17,9 @@ export const getInvestmentsService = async () => {
     const resp = await clientAxios.get(`/investments/${email}`);
     if (resp.data.investments) {
       return resp.data.investments;
-    } else {
-      return await getItem(INVESTMENTS);
     }
   } catch (error) {
-    return await getItem(INVESTMENTS);
+    console.log("Error obteniendo Inversiones", error);
   }
 };
 
@@ -39,7 +37,7 @@ export const createInvestmentInMemory = async (
           investment.amount * -1,
           "Plazo Fijo",
           investment.email,
-          bankAccountBalance
+          parseInt(bankAccountBalance) + parseInt(investment.amount) * -1
         );
         if (response && !response.isSuccess && response.data) {
           return getResult(response.data, false);
@@ -92,7 +90,6 @@ export const createInvestmentService = async (investment) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      await addItemToList(INVESTMENTS, investment);
       return getResult(`Inversión guardada en Memoria`, true);
     }
   }

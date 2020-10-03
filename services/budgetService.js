@@ -13,11 +13,9 @@ export const getBudgetsService = async () => {
     const resp = await clientAxios.get(`/budgets/${email}`);
     if (resp.data.budgets) {
       return resp.data.budgets;
-    } else {
-      return await getItem(BUDGETS);
     }
   } catch (error) {
-    return await getItem(BUDGETS);
+    console.log("Error obteniendo presupuesto", error);
   }
 };
 
@@ -59,7 +57,6 @@ export const createBudgetService = async (budget) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(BUDGETS, budget);
       return getResult(`Presupuesto guardado en Memoria`, true);
     }
   }

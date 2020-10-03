@@ -6,8 +6,13 @@ import {
   selectExpenseIdAsync,
   updateBankAccountBalanceAsync,
 } from "../db";
-import { getEmailUserLogged, getResult, addMonthCurrentDate } from "../utils";
-import { addItemToList, getItem, LOANS } from "../utils/storage";
+import {
+  getEmailUserLogged,
+  getResult,
+  addMonthCurrentDate,
+  formatDateStringToMilliseconds,
+} from "../utils";
+import { getItem, LOANS } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -19,11 +24,9 @@ export const getLoansService = async () => {
     const resp = await clientAxios.get(`/loans/${email}`);
     if (resp.data.loans) {
       return resp.data.loans;
-    } else {
-      return await getItem(LOANS);
     }
   } catch (error) {
-    return await getItem(LOANS);
+    console.log("Error obteniendo prestamos", error);
   }
 };
 
@@ -37,11 +40,15 @@ export const createLoanInMemory = async (loan, bankAccountBalance) => {
           LOANS,
           "ORDER BY id DESC LIMIT 1;"
         );
-        console.log("loanId", loanId);
 
         // Crear un movimiento por cada cuota
         const feeAmount = loan.amount / loan.fees;
         for (let fee = 1; fee <= loan.fees; fee++) {
+          let dateFee = addMonthCurrentDate(fee);
+          let dateFeeFormated = formatDateStringToMilliseconds(
+            dateFee,
+            "DD-MM-YYYY"
+          );
           insertLoanMovementInMemoryAsync(
             loan.bankAccount,
             fee,
@@ -49,7 +56,7 @@ export const createLoanInMemory = async (loan, bankAccountBalance) => {
             loanId,
             "false",
             loan.email,
-            addMonthCurrentDate(fee)
+            dateFeeFormated
           );
         }
       }
@@ -64,7 +71,7 @@ export const createLoanInMemory = async (loan, bankAccountBalance) => {
           calculatedAmount,
           type,
           loan.email,
-          bankAccountBalance
+          parseInt(bankAccountBalance) + parseInt(calculatedAmount)
         );
         if (response && !response.isSuccess && response.data) {
           return getResult(response.data, false);
@@ -84,8 +91,10 @@ export const createLoanInMemory = async (loan, bankAccountBalance) => {
 export const createLoanService = async (loan) => {
   try {
     const resp = await clientAxios.post(`/loans/`, loan);
-
-    const { bankAccount, amount, paymentMethod } = resp.data.loan;
+    if (resp) {
+      return getResult(`Prestamo cargado correctamente`, true);
+    }
+    // const { bankAccount, amount, paymentMethod } = resp.data.loan;
 
     // if (paymentMethod === "BAN") {
     //   //llama API actualizar saldo cuenta bancaria
@@ -122,7 +131,6 @@ export const createLoanService = async (loan) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(LOANS, loan);
       return getResult(`Prestamo guardado en Memoria`, true);
     }
   }
@@ -154,5 +162,19 @@ export const createLoanMovementService = async (loanMovement) => {
     } else {
       return getResult(`Movimiento de Prestamo guardado en Memoria`, true);
     }
+  }
+};
+
+export const getLoanMovementsService = async () => {
+  try {
+    const email = await getEmail();
+
+    const resp = await clientAxios.get(`/loans/getMovements/${email}`);
+
+    if (resp.data.movements) {
+      return resp.data.movements;
+    }
+  } catch (error) {
+    return getResult(`Error al obtener movimientos:${error}`, false);
   }
 };

@@ -7,12 +7,12 @@ export const IncomeCategories = [
 ];
 
 export const PaymentMethods = [
-  { value: "EFE", text: "Efectivo" },
-  { value: "TRD", text: "Tarjeta de Débito" },
-  { value: "TRC", text: "Tarjeta de Crédito" },
-  { value: "BAN", text: "Débito Automático en Cuenta" },
-  { value: "TRA", text: "Transferencia" },
-  { value: "MER", text: "Mercado Pago" },
+  { value: "EFE", text: "Efectivo", color: "#51d1f6" },
+  { value: "TRD", text: "Tarjeta de Débito", color: "#82b5f0" },
+  { value: "TRC", text: "Tarjeta de Crédito", color: "#9fd5d1" },
+  { value: "BAN", text: "Débito Automático en Cuenta", color: "#958ee4" },
+  { value: "TRA", text: "Transferencia", color: "#d49ed4" },
+  { value: "MER", text: "Mercado Pago", color: "#f18681" },
 ];
 
 export const LoanTypes = [

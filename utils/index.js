@@ -23,6 +23,22 @@ export const formatMillisecondsToDateString = (date) => {
   return moment(date, "x").format("DD-MM-YYYY");
 };
 
+export const getFirstDayOfWeek = () => {
+  return moment().startOf("week").format("YYYY-MM-DD");
+};
+
+export const getLastDayOfWeek = () => {
+  return moment().endOf("week").format("YYYY-MM-DD");
+};
+
+export const getFirstDayOfMonth = () => {
+  return moment().startOf("month").format("YYYY-MM-DD");
+};
+
+export const getLastDayOfMonth = () => {
+  return moment().endOf("month").format("YYYY-MM-DD");
+};
+
 export const formatDateStringToMilliseconds = (
   dateString,
   format = "MM/DD/YY"
@@ -50,7 +66,11 @@ export const noop = () => {};
 
 export const getEmailUserLogged = async () => {
   const user = await getItem(USERLOGGED);
-  return user.email;
+  if (!user) {
+    return "";
+  } else {
+    return user.email;
+  }
 };
 
 export const getNameUserLogged = async () => {

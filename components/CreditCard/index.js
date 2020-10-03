@@ -1,30 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Button, Alert } from "react-native";
 import { CardView } from "react-native-credit-card-input";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { formatMillisecondsToDateString } from "../../utils";
 import { getPaymentTotalAmountService } from "../../services/expenseService";
 import { genericSelectAsync, getTotalAmountCreditCardAsync } from "../../db";
 import { CREDITCARDMOVEMENTS, CREDITCARDS } from "../../utils/storage";
 
 const CreditCardCustom = ({ item }) => {
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      getTotalAmountCreditCardAsync(setCard, item.email, item.number);
+    }
+    return () => {};
+  }, [isFocused]);
+
   const navigation = useNavigation();
+  const [card, setCard] = useState([]);
 
   const handleDetail = async () => {
-    // const resp = await getPaymentTotalAmountService("TRC", item.number);
-
-    const [totalAmount, setTotalAmount] = useState(0);
-    await getTotalAmountCreditCardAsync(setTotalAmount);
-
     Alert.alert(
-      `Detalle tarjeta ${item.number} `,
+      `Detalle tarjeta ${item.number}`,
       `Entidad Bancaria: ${
         item.entity
       }\nFecha de Cierre Resúmen: ${formatMillisecondsToDateString(
         item.closeDateSummary
       )}\nFecha de Vencimiento Resúmen: ${formatMillisecondsToDateString(
         item.dueDateSummary
-      )} \nMonto gastado(Mes en Curso): ${totalAmount} `,
+      )} \nMonto gastado(Mes en Curso): ${
+        card && card.length > 0 ? card[0].totalAmount : 0
+      } `,
       [
         {
           text: "Confirmar",

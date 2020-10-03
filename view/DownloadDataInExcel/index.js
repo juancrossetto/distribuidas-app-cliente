@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Picker } from "react-native";
 import { Container, H1, Spinner } from "native-base";
 import globalStyles from "../../styles/global";
@@ -42,19 +42,57 @@ import {
 } from "../../services/loanService";
 import { createBudgetService } from "../../services/budgetService";
 import { createInvestmentService } from "../../services/investmentService";
+import { useIsFocused } from "@react-navigation/native";
 var moment = require("moment"); // require
 
 const DownloadDataInExcelPage = () => {
   const [year, setYear] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
+  const [loadingTitle, setLoadingTitle] = useState("");
   const [CustomAlert, setMsg] = useAlert();
+  const isFocused = useIsFocused();
 
+  useEffect(() => {
+    if (isFocused) {
+      setLoading(true);
+      getAllDataInMemory();
+      setLoading(false);
+    }
+    return () => {};
+  }, [isFocused]);
+
+  const getAllDataInMemory = async () => {
+    await genericSelectAsync(setIncomes, INCOMES);
+    await genericSelectAsync(setExpenses, EXPENSES);
+    await genericSelectAsync(setInvestments, INVESTMENTS);
+    await genericSelectAsync(setCreditCards, CREDITCARDS);
+    await genericSelectAsync(setCreditCardMovements, CREDITCARDMOVEMENTS);
+    await genericSelectAsync(setLoans, LOANS);
+    await genericSelectAsync(setLoanMovements, LOANMOVEMENTS);
+    await genericSelectAsync(setBudgets, BUDGETS);
+    await genericSelectAsync(setBankAccounts, BANKACCOUNTS);
+    await genericSelectAsync(setBankAccountMovements, BANKACCOUNTSMOVEMENTS);
+  };
   const getAllData = async () => {
     setLoading(true);
-    const resp = await getAllDataService();
+    // const resp = await getAllDataService();
+
+    // setLoading(false);
+    await createExcel(
+      incomes,
+      expenses,
+      investments,
+      creditCards,
+      creditCardMovements,
+      loans,
+      loanMovements,
+      budgets,
+      bankAccountMovements,
+      bankAccounts
+    );
     setLoading(false);
-    createExcel(resp.data);
-    return resp;
+    // return resp;
   };
   const handlePress = () => {
     if (year.trim() === "") {
@@ -77,43 +115,61 @@ const DownloadDataInExcelPage = () => {
 
   const bulkInsertIncomes = async () => {
     let errores = 0;
+    let success = 0;
+    // await ;
+
     await genericSelectAsync(setIncomes, INCOMES);
+    console.log("Ingresos a volcar:", incomes.length);
     for (const income of incomes) {
       const resp = await createIncomeService(income);
       if (resp && !resp.isSuccess && resp.data) {
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
       return getResult("Ocurrieron errores insertando los ingresos", false);
     } else {
+      console.log(`${success} Ingresos volcados en BD correctamente`);
       return getResult("Ingresos volcados en BD correctamente", true);
     }
   };
 
   const bulkInsertExpenses = async () => {
     let errores = 0;
-    await genericSelectAsync(setExpenses, EXPENSES);
+    let success = 0;
+    // await genericSelectAsync(setExpenses, EXPENSES);
+    console.log("Egresos a volcar:", expenses.length);
     for (const expense of expenses) {
       const resp = await createExpenseService(expense);
       if (resp && !resp.isSuccess && resp.data) {
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
       return getResult("Ocurrieron errores insertando los egresos", false);
     } else {
-      return getResult("Egresos volcados en BD correctamente", true);
+      const msgSuccess = `${success} Egresos volcados en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const bulkInsertBankAccounts = async () => {
     let errores = 0;
-    await genericSelectAsync(setBankAccounts, BANKACCOUNTS);
+    let success = 0;
+    // await genericSelectAsync(setBankAccounts, BANKACCOUNTS);
+    console.log("Cuentas Bancarias a volcar:", bankAccounts.length);
     for (const account of bankAccounts) {
       const resp = await createBankAccountService(account);
       if (resp && !resp.isSuccess && resp.data) {
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
@@ -122,13 +178,18 @@ const DownloadDataInExcelPage = () => {
         false
       );
     } else {
-      return getResult("Cuentas Bancarias volcadas en BD correctamente", true);
+      const msgSuccess = `${success} Cuentas Bancarias volcadas en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertCreditCards = async () => {
     let errores = 0;
-    await genericSelectAsync(setCreditCards, CREDITCARDS);
+    let success = 0;
+    // await genericSelectAsync(setCreditCards, CREDITCARDS);
+    console.log("Tarjetas de Crédito a volcar", creditCards.length);
     for (let cc of creditCards) {
       let dueDate = formatMillisecondsToDateString(cc.dueDateSummary);
       let closeDate = formatMillisecondsToDateString(cc.dueDateSummary);
@@ -138,8 +199,9 @@ const DownloadDataInExcelPage = () => {
       );
       const resp = await createCreditCardService(cc);
       if (resp && !resp.isSuccess && resp.data) {
-        console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
@@ -148,73 +210,98 @@ const DownloadDataInExcelPage = () => {
         false
       );
     } else {
-      return getResult(
-        "Tarjetas de Credito volcadas en BD correctamente",
-        true
-      );
+      const msgSuccess = `${success} Tarjetas de Credito volcadas en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertLoans = async () => {
     let errores = 0;
-    await genericSelectAsync(setLoans, LOANS);
+    let success = 0;
+    // await genericSelectAsync(setLoans, LOANS);
+    console.log("Prestamos a volcar", loans.length);
     for (const loan of loans) {
       const resp = await createLoanService(loan);
       if (resp && !resp.isSuccess && resp.data) {
-        console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
       return getResult("Ocurrieron errores insertando los Prestamos", false);
     } else {
-      return getResult("Prestamos volcadas en BD correctamente", true);
+      const msgSuccess = `${success} Prestamos volcados en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertBudgets = async () => {
     let errores = 0;
-    await genericSelectAsync(setBudgets, BUDGETS);
+    let success = 0;
+    // await genericSelectAsync(setBudgets, BUDGETS);
+    console.log("Prespuestos a volcar", budgets.length);
     for (const budget of budgets) {
       const resp = await createBudgetService(budget);
       if (resp && !resp.isSuccess && resp.data) {
-        console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
       return getResult("Ocurrieron errores insertando los Presupuestos", false);
     } else {
-      return getResult("Presupuestos volcadas en BD correctamente", true);
+      const msgSuccess = `${success} Presupuestos volcados en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertInvestments = async () => {
     let errores = 0;
-    await genericSelectAsync(setInvestments, INVESTMENTS);
+    let success = 0;
+    // await genericSelectAsync(setInvestments, INVESTMENTS);
+    console.log("Inversiones a volcar:", investments.length);
     for (const inv of investments) {
       const resp = await createInvestmentService(inv);
       if (resp && !resp.isSuccess && resp.data) {
         console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
       return getResult("Ocurrieron errores insertando las Inversiones", false);
     } else {
-      return getResult("Inversiones volcadas en BD correctamente", true);
+      const msgSuccess = `${success} Inversiones volcadas en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertBankAccountMovements = async () => {
     let errores = 0;
-    await genericSelectAsync(setBankAccountMovements, BANKACCOUNTSMOVEMENTS);
-    // console.log("bankAccountMovements", bankAccountMovements.length);
+    let success = 0;
+    // await genericSelectAsync(setBankAccountMovements, BANKACCOUNTSMOVEMENTS);
+    console.log(
+      "Movimientos de cuenta bancaria a volcar:",
+      bankAccountMovements.length
+    );
     for (const move of bankAccountMovements) {
       const resp = await createBankAccountMovementService(move);
       if (resp && !resp.isSuccess && resp.data) {
         console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
@@ -223,22 +310,25 @@ const DownloadDataInExcelPage = () => {
         false
       );
     } else {
-      return getResult(
-        "movimientos de cuenta bancaria volcadas en BD correctamente",
-        true
-      );
+      const msgSuccess = `${success} Movimientos de cuenta bancaria volcados en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertCreditCardMovements = async () => {
     let errores = 0;
-    await genericSelectAsync(setCreditCardMovements, CREDITCARDMOVEMENTS);
-    // console.log("creditCardMovements", creditCardMovements.length);
+    let success = 0;
+    // await genericSelectAsync(setCreditCardMovements, CREDITCARDMOVEMENTS);
+    console.log("creditCardMovements", creditCardMovements.length);
     for (const ccMove of creditCardMovements) {
       const resp = await createCreditCardMovementService(ccMove);
       if (resp && !resp.isSuccess && resp.data) {
         console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
@@ -247,22 +337,24 @@ const DownloadDataInExcelPage = () => {
         false
       );
     } else {
-      return getResult(
-        "movimientos de tarjeta de credito volcadas en BD correctamente",
-        true
-      );
+      const msgSuccess = `${success} Movimientos de Tarjeta de Crédito volcados en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      return getResult(msgSuccess, true);
     }
   };
 
   const BulkInsertLoanMovements = async () => {
     let errores = 0;
-    await genericSelectAsync(setLoanMovements, LOANMOVEMENTS);
+    let success = 0;
+    // await genericSelectAsync(setLoanMovements, LOANMOVEMENTS);
     console.log("loanMovements", loanMovements.length);
     for (const loanMove of loanMovements) {
       const resp = await createLoanMovementService(loanMove);
       if (resp && !resp.isSuccess && resp.data) {
-        console.log(resp.data);
         errores = errores + 1;
+      } else {
+        success = success + 1;
       }
     }
     if (errores > 0) {
@@ -271,100 +363,161 @@ const DownloadDataInExcelPage = () => {
         false
       );
     } else {
-      return getResult(
-        "movimientos de tarjeta de credito volcadas en BD correctamente",
-        true
-      );
+      const msgSuccess = `${success} Cuotas de Prestamo volcadas en BD correctamente`;
+      setLoadingTitle(msgSuccess);
+      console.log(msgSuccess);
+      setTimeout(() => {
+        setMsg("Backup Finalizado con éxito");
+
+        setLoadingText("");
+        setLoading(false);
+      }, 500);
+
+      return getResult(msgSuccess, true);
     }
   };
 
-  const handleBackup = async () => {
+  const createBackUp = async () => {
     try {
+      let response = "";
       const networkAvailable = await isNetworkAvailable();
       if (!networkAvailable) {
-        setMsg("No posee conexión a internet, intentelo más tarde");
-        return;
+        response = "No posee conexión a internet, intentelo más tarde";
+        return response;
       }
-      setLoading(true);
+
+      // await genericSelectAsync(setIncomes, INCOMES);
+      // await genericSelectAsync(setExpenses, EXPENSES);
+      // await genericSelectAsync(setInvestments, INVESTMENTS);
+      // await genericSelectAsync(setCreditCards, CREDITCARDS);
+      // await genericSelectAsync(setCreditCardMovements, CREDITCARDMOVEMENTS);
+      // await genericSelectAsync(setLoans, LOANS);
+      // await genericSelectAsync(setLoanMovements, LOANMOVEMENTS);
+      // await genericSelectAsync(setBudgets, BUDGETS);
+      // await genericSelectAsync(setBankAccountMovements, BANKACCOUNTSMOVEMENTS);
+
+      var start = Date.now();
       let errors = false;
-      const resultIncomes = await bulkInsertIncomes();
+      const resultIncomes = bulkInsertIncomes();
       if (!resultIncomes.isSuccess && resultIncomes.data) {
         errors = true;
-        setMsg(resultIncomes.data);
+        response = response + resultIncomes.data;
       }
 
-      const resultExpenses = await bulkInsertExpenses();
+      const resultExpenses = bulkInsertExpenses();
       if (!resultExpenses.isSuccess && resultExpenses.data) {
         errors = true;
-        setMsg(resultExpenses.data);
+        response = response + resultExpenses.data;
       }
 
-      const resultBankAccounts = await bulkInsertBankAccounts();
+      const resultBankAccounts = bulkInsertBankAccounts();
       if (!resultBankAccounts.isSuccess && resultBankAccounts.data) {
         errors = true;
-        setMsg(resultBankAccounts.data);
+        response = response + resultBankAccounts.data;
       }
 
-      const resultCC = await BulkInsertCreditCards();
+      const resultCC = BulkInsertCreditCards();
       if (!resultCC.isSuccess && resultCC.data) {
         errors = true;
-        setMsg(resultCC.data);
+        response = response + resultCC.data;
       }
 
-      const resultLoans = await BulkInsertLoans();
+      const resultLoans = BulkInsertLoans();
       if (!resultLoans.isSuccess && resultLoans.data) {
         errors = true;
-        setMsg(resultLoans.data);
+        response = response + resultLoans.data;
       }
 
-      const resultBudgets = await BulkInsertBudgets();
+      const resultBudgets = BulkInsertBudgets();
       if (!resultBudgets.isSuccess && resultBudgets.data) {
         errors = true;
-        setMsg(resultBudgets.data);
+        response = response + resultBudgets.data;
       }
 
-      const resultInvestments = await BulkInsertInvestments();
+      const resultInvestments = BulkInsertInvestments();
       if (!resultInvestments.isSuccess && resultInvestments.data) {
         errors = true;
-        setMsg(resultInvestments.data);
+        response = response + resultInvestments.data;
       }
 
-      const resultBankAccountMovements = await BulkInsertBankAccountMovements();
+      const resultBankAccountMovements = BulkInsertBankAccountMovements();
       if (
         !resultBankAccountMovements.isSuccess &&
         resultBankAccountMovements.data
       ) {
         errors = true;
-        setMsg(resultBankAccountMovements.data);
+        response = response + resultBankAccountMovements.data;
       }
 
-      const resultCreditCardMovements = await BulkInsertCreditCardMovements();
+      const resultCreditCardMovements = BulkInsertCreditCardMovements();
       if (
         !resultCreditCardMovements.isSuccess &&
         resultCreditCardMovements.data
       ) {
         errors = true;
-        setMsg(resultCreditCardMovements.data);
+        response = response + resultCreditCardMovements.data;
       }
 
-      const resultLoanMovements = await BulkInsertLoanMovements();
+      const resultLoanMovements = BulkInsertLoanMovements();
       if (!resultLoanMovements.isSuccess && resultLoanMovements.data) {
         errors = true;
-        setMsg(resultLoanMovements.data);
+        response = response + resultLoanMovements.data;
       }
-
-      if (!errors) {
-        setMsg("BackUp finalizado con exito");
+      var end = Date.now();
+      if (!errors && response === "") {
+        const processTime = end - start;
+        // if (
+        //   (!incomes || incomes.length === 0) &&
+        //   (!expenses || expenses.length === 0) &&
+        //   (!creditCards || creditCards.length === 0) &&
+        //   (!creditCardMovements || creditCardMovements.length === 0) &&
+        //   (!bankAccounts || bankAccounts.length === 0) &&
+        //   (!bankAccountMovements || bankAccountMovements.length === 0) &&
+        //   (!loans || loans.length === 0) &&
+        //   (!loanMovements || loanMovements.length === 0) &&
+        //   (!budgets || budgets.length === 0) &&
+        //   (!investments || investments.length === 0)
+        // ) {
+        //   console.log(
+        //     "------ No se encontro información para respaldar ------"
+        //   );
+        //   return getResult(
+        //     "------ No se encontro información para respaldar ------",
+        //     true
+        //   );
+        // }
+        console.log(`Tiempo de duración de backup: ${processTime} ms`);
+        // return getResult("Proceso Finalizado OK", true);
+        // return getResult("BackUp finalizado con exito", true);
+      } else {
+        return getResult(response, false);
       }
-      setLoading(false);
     } catch (error) {
-      console.log(error);
-      setLoading(false);
-      setMsg(
-        "Ocurrieron errores realizando el backup, verifique su conexion",
-        error
+      return getResult(
+        `Ocurrieron errores realizando el backup: ${error}`,
+        false
       );
     }
+  };
+  const handleBackup = async () => {
+    setLoading(true);
+    setLoadingText("Generando Backup");
+    const resp = await createBackUp();
+    // if (!resp.isSuccess) {
+    //   setMsg(resp.data);
+    // } else {
+    //   setMsg(resp.data);
+    //   setLoadingText("");
+    //   setLoading(false);
+    // }
+    // setTimeout(() => {
+
+    // }, 30000);
+  };
+
+  const handleSelectYear = async (e) => {
+    await getAllDataInMemory();
+    setYear(e);
   };
 
   return (
@@ -381,12 +534,12 @@ const DownloadDataInExcelPage = () => {
               marginHorizontal: 10,
             }}
             selectedValue={year}
-            onValueChange={(e) => setYear(e)}
+            onValueChange={(e) => handleSelectYear(e)}
           >
             <Picker.Item label="-- Seleccione un Año --" value="" />
             <Picker.Item label={"2020"} value={"2020"} />
-            <Picker.Item label={"2021"} value={"2021"} />
-            <Picker.Item label={"2022"} value={"2022"} />
+            {/* <Picker.Item label={"2021"} value={"2021"} />
+            <Picker.Item label={"2022"} value={"2022"} /> */}
           </Picker>
         </View>
         <View style={{ marginTop: 20 }}>
@@ -413,15 +566,21 @@ const DownloadDataInExcelPage = () => {
               onPress={() => handleBackup()}
             />
           </View>
+          {loading && (
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Spinner color="#000" />
+              <Text>{loadingTitle}</Text>
+              <Text>{loadingText}</Text>
+            </View>
+          )}
         </View>
       </View>
 
-      {loading && (
-        <View>
-          <Spinner color="#000" />
-        </View>
-      )}
-      {/* {year ? <View style={[{ flex: 8 }]}></View> : null} */}
       <CustomAlert />
     </Container>
   );

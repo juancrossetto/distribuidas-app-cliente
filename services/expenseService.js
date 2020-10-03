@@ -6,14 +6,13 @@ import {
   updateBankAccountBalanceAsync,
   insertCreditCardMovementInMemoryAsync,
 } from "../db";
-import { addMonthCurrentDate, getEmailUserLogged, getResult } from "../utils";
 import {
-  EXPENSES,
-  MONTHLYEXPENSES,
-  getItem,
-  saveItem,
-  addItemToList,
-} from "../utils/storage";
+  addMonthCurrentDate,
+  formatDateStringToMilliseconds,
+  getEmailUserLogged,
+  getResult,
+} from "../utils";
+import { EXPENSES } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -43,11 +42,15 @@ export const createExpenseInMemory = async (expense, bankAccountBalance) => {
           EXPENSES,
           "ORDER BY id DESC LIMIT 1;"
         );
-        // console.log("expenseId", expenseId);
 
         // Crear un movimiento por cada cuota
         const feeAmount = expense.amount / expense.fees;
         for (let fee = 1; fee <= expense.fees; fee++) {
+          let dateFee = addMonthCurrentDate(fee);
+          let dateFeeFormated = formatDateStringToMilliseconds(
+            dateFee,
+            "DD-MM-YYYY"
+          );
           insertCreditCardMovementInMemoryAsync(
             expense.paymentId,
             fee,
@@ -55,7 +58,7 @@ export const createExpenseInMemory = async (expense, bankAccountBalance) => {
             expenseId,
             "false",
             expense.email,
-            addMonthCurrentDate(fee)
+            dateFeeFormated
           );
         }
       }
@@ -66,7 +69,7 @@ export const createExpenseInMemory = async (expense, bankAccountBalance) => {
           expense.amount * -1,
           "Egreso",
           expense.email,
-          bankAccountBalance
+          parseInt(bankAccountBalance) + parseInt(expense.amount) * -1
         );
         if (response && !response.isSuccess && response.data) {
           return getResult(response.data, false);
@@ -120,7 +123,6 @@ export const createExpenseService = async (expense) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(EXPENSES, expense);
       return getResult(`Egreso guardado en Memoria`, true);
     }
   }
@@ -133,11 +135,11 @@ export const getMonthlyExpensesService = async () => {
       email,
     });
     if (resp.data.expenses) {
-      await saveItem(MONTHLYEXPENSES, resp.data.expenses);
+      // await saveItem(MONTHLYEXPENSES, resp.data.expenses);
       return resp.data.expenses;
     }
   } catch (error) {
-    return await getItem(MONTHLYEXPENSES);
+    console.log("Error obteniendo egresos mensuales", error);
   }
 };
 

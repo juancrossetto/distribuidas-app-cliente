@@ -2,7 +2,7 @@ import React from "react";
 import clientAxios from "../config/axios";
 import { insertCreditCardInMemoryAsync } from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
-import { addItemToList, getItem, CREDITCARDS } from "../utils/storage";
+import { getItem, CREDITCARDS } from "../utils/storage";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -14,11 +14,9 @@ export const getCreditCardsService = async () => {
     const resp = await clientAxios.get(`/creditCards/${email}`);
     if (resp.data.creditCards) {
       return resp.data.creditCards;
-    } else {
-      return await getItem(CREDITCARDS);
     }
   } catch (error) {
-    return await getItem(CREDITCARDS);
+    console.log("Error obteniendo tarjetas de credito", error);
   }
 };
 
@@ -62,7 +60,6 @@ export const createCreditCardService = async (creditCard) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      await addItemToList(CREDITCARDS, creditCard);
       return getResult(`Tarjeta de Crédito guardada en Memoria`, true);
     }
   }
@@ -75,9 +72,7 @@ export const getCreditCardMovementsService = async () => {
     const resp = await clientAxios.get(`/creditCards/getMovements/${email}`);
     // console.log("mov tarjeta credito", resp.data.movements);
     if (resp.data && resp.data.movements) {
-      return getResult(resp.data.movements, true);
-    } else {
-      return getResult(`Error al obtener movimientos`, false);
+      return resp.data.movements;
     }
   } catch (error) {
     return getResult(`Error al obtener movimientos`, false);
@@ -136,7 +131,6 @@ export const updateCreditCardService = async (creditCard) => {
     } else if (error.response.data.errores) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      await addItemToList(CREDITCARDS, creditCard);
       return getResult(`Tarjeta de Crédito actualizada en Memoria`, true);
     }
   }

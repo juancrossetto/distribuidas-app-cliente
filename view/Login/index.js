@@ -36,6 +36,9 @@ import {
   insertIncomeInMemoryAsync,
   insertInvestmentInMemoryAsync,
   insertLoanInMemoryAsync,
+  insertLoanMovementInMemoryAsync,
+  insertCreditCardMovementInMemoryAsync,
+  genericSelectAsync,
 } from "../../db";
 import { getIncomesService } from "../../services/incomeService";
 import { getExpensesService } from "../../services/expenseService";
@@ -43,14 +46,14 @@ import {
   getBankAccountMovementsService,
   getBankAccountsService,
 } from "../../services/bankAccountService";
-import { getLoansService } from "../../services/loanService";
+import {
+  getLoansService,
+  getLoanMovementsService,
+} from "../../services/loanService";
 import { getBudgetsService } from "../../services/budgetService";
 import { getInvestmentsService } from "../../services/investmentService";
-// import * as SQLite from "expo-sqlite";
-// import {
-//   createTablesAsync,
-// } from "../../db";
-// const db = SQLite.openDatabase("mybudget.db");
+import { formatMillisecondsToDateString } from "../../utils";
+var moment = require("moment"); // require
 
 const LoginPage = () => {
   // State del formulario
@@ -58,17 +61,22 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [CustomAlert, setMsg] = useAlert();
   const [loading, setLoading] = useState(false);
+  const [creditCards, setCreditCards] = useState([]);
 
   const isFocused = useIsFocused();
   const navigation = useNavigation();
 
   useEffect(() => {
-    isUserCatched();
+    if (isFocused) {
+      isUserCatched();
+    }
+    return () => {};
   }, [isFocused]);
 
   const isUserCatched = async () => {
     const user = await getItem(USERLOGGED);
     if (user) {
+      await redirectCreditCards();
       navigation.navigate("Home");
     }
   };
@@ -82,7 +90,8 @@ const LoginPage = () => {
         income.date = milliseconds.getTime();
         await insertIncomeInMemoryAsync(income);
       }
-      console.log("1");
+      console.log(`${incomes.length} Ingresos  Cargados OK`);
+
       const expenses = await getExpensesService();
       // console.log("expenses del svr", expenses);
       for (const exp of expenses) {
@@ -90,8 +99,8 @@ const LoginPage = () => {
         exp.date = milliseconds.getTime();
         await insertExpenseInMemoryAsync(exp);
       }
+      console.log(`${expenses.length} Egresos  Cargados OK`);
 
-      console.log("2");
       const bankAccounts = await getBankAccountsService();
       // console.log("bank accounts del svr", bankAccounts);
       for (const account of bankAccounts) {
@@ -99,8 +108,8 @@ const LoginPage = () => {
         account.date = milliseconds.getTime();
         await insertBankAccountInMemoryAsync(account);
       }
+      console.log(`${bankAccounts.length} Cuentas Bancarias Cargadas OK`);
 
-      console.log("3");
       const creditCards = await getCreditCardsService();
       // console.log("credit cards del svr", creditCards);
       for (const cc of creditCards) {
@@ -110,8 +119,8 @@ const LoginPage = () => {
         cc.closeDateSummary = new Date(cc.closeDateSummary).getTime();
         await insertCreditCardInMemoryAsync(cc);
       }
+      console.log(`${creditCards.length} Tarjetas de Credito Cargados OK`);
 
-      console.log("4");
       const loans = await getLoansService();
       // console.log("loans del svr", loans);
       for (const loan of loans) {
@@ -119,8 +128,8 @@ const LoginPage = () => {
         loan.date = milliseconds.getTime();
         await insertLoanInMemoryAsync(loan);
       }
+      console.log(`${loans.length} Prestamos  Cargados OK`);
 
-      console.log("5");
       const budgets = await getBudgetsService();
       // console.log("budgets del svr", budgets);
       for (const budget of budgets) {
@@ -128,8 +137,8 @@ const LoginPage = () => {
         budget.date = milliseconds.getTime();
         await insertBudgetInMemoryAsync(budget);
       }
+      console.log(`${budgets.length} Presupuestos  Cargados OK`);
 
-      console.log("6");
       const investments = await getInvestmentsService();
       // console.log("investments del svr", investments);
       for (const inv of investments) {
@@ -138,28 +147,67 @@ const LoginPage = () => {
         inv.dueDate = new Date(inv.dueDate).getTime();
         await insertInvestmentInMemoryAsync(inv);
       }
-
-      console.log("7");
+      console.log(`${investments.length} Inversiones Cargadas OK`);
 
       const creditCardMovements = await getCreditCardMovementsService();
-      if (creditCardMovements && creditCardMovements.length > 0) {
-        for (const move of creditCardMovements) {
-          const milliseconds = new Date(move.dueDate);
-          move.dueDate = milliseconds.getTime();
-          await insertBankAccountMovementInMemoryAsync(move);
-        }
+      for (const move of creditCardMovements) {
+        const milliseconds = new Date(move.dueDate);
+        move.dueDate = milliseconds.getTime();
+        await insertCreditCardMovementInMemoryAsync(
+          move.creditCardNumber,
+          move.numberFee,
+          move.amount,
+          move.expense,
+          move.paid,
+          move.email,
+          move.dueDate
+        );
       }
-      console.log("8");
+      console.log(
+        `${creditCardMovements.length} Movimientos de Tarjeta de Credito Cargados OK`
+      );
+
       const bankAccountMovements = await getBankAccountMovementsService();
-      // console.log("bankAccountMovements del svr", bankAccountMovements);
-      if (bankAccountMovements && bankAccountMovements.length > 0) {
+      if (bankAccountMovements && bankAccountMovements) {
         for (const move of bankAccountMovements) {
           const milliseconds = new Date(move.date);
           move.date = milliseconds.getTime();
-          await insertBankAccountMovementInMemoryAsync(move);
+          await insertBankAccountMovementInMemoryAsync(
+            move.email,
+            move.amount,
+            move.bankAccount,
+            move.bankAccountBalance,
+            move.type,
+            move.date
+          );
         }
       }
-      console.log("9");
+      console.log(
+        `${bankAccountMovements.length} Movimientos de Cuenta Bancaria Cargados OK`
+      );
+
+      const loanMovements = await getLoanMovementsService();
+      // console.log("loanMovements del svr", loanMovements.data);
+      // console.log(
+      //   "loanMovements del svr",
+      //   loanMovements.length,
+      //   loanMovements
+      // );
+      for (const move of loanMovements) {
+        const milliseconds = new Date(move.dueDate);
+        move.dueDate = milliseconds.getTime();
+        await insertLoanMovementInMemoryAsync(
+          move.bankAccount,
+          move.numberFee,
+          move.amount,
+          move.loan,
+          move.paid,
+          move.email,
+          move.dueDate
+        );
+      }
+      console.log(`${loanMovements.length} Cuotas de Prestamo Cargadas OK`);
+      console.log("Finalizo el vuelco de información del servidor con Exito!!");
     } catch (error) {
       console.log(
         "Ocurrio un error con la Obtención de Info desde el servidor",
@@ -177,7 +225,7 @@ const LoginPage = () => {
     await saveTokenPushNotification();
 
     //Obtener toda la informacion
-    await getAllData();
+    // await getAllData();
 
     // REVISAR SI HA QUE ACTUALIZAR FECHA DE CIERRE Y VENCIMIENTO TARJETA CREDITO.
     await redirectCreditCards();
@@ -187,28 +235,58 @@ const LoginPage = () => {
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     const resp = await savePNTokenService(token);
   };
+  useEffect(() => {
+    if (creditCards && creditCards.length > 0) {
+      creditCards.forEach((creditCard) => {
+        const date = formatMillisecondsToDateString(creditCard.dueDateSummary);
+
+        if (moment(date, "DD/MM/YYYY").toDate() < new Date()) {
+          Alert.alert(
+            "Fechas desactualizadas",
+            `Resumen Tarjeta de credito ${creditCard.number} con Fechas desactualizadas`,
+            [
+              {
+                text: "Ir a Actualizar fechas",
+                onPress: () =>
+                  navigation.navigate("ChangeDatesCreditCardPage", {
+                    card: creditCard,
+                    fromLogin: true,
+                  }),
+              },
+            ],
+            { cancelable: false }
+          );
+          return;
+        }
+      });
+    }
+  }, [creditCards]);
   const redirectCreditCards = async () => {
-    const creditCards = await getCreditCardsService();
-    creditCards.forEach((creditCard) => {
-      if (new Date(creditCard.dueDateSummary) < new Date()) {
-        Alert.alert(
-          "Fechas desactualizadas",
-          `Resumen Tarjeta de credito ${creditCard.number} con Fechas desactualizadas`,
-          [
-            {
-              text: "Ir a Actualizar fechas",
-              onPress: () =>
-                navigation.navigate("ChangeDatesCreditCardPage", {
-                  card: creditCard,
-                  fromLogin: true,
-                }),
-            },
-          ],
-          { cancelable: false }
-        );
-        return;
-      }
-    });
+    console.log("verificando fecha de vencimiento de tarjetas");
+    // const creditCards = await getCreditCardsService();
+    await genericSelectAsync(setCreditCards, CREDITCARDS);
+    // creditCards.forEach((creditCard) => {
+    //   const date = formatMillisecondsToDateString(creditCard.dueDateSummary);
+
+    //   if (moment(date, "DD/MM/YYYY").toDate() < new Date()) {
+    //     Alert.alert(
+    //       "Fechas desactualizadas",
+    //       `Resumen Tarjeta de credito ${creditCard.number} con Fechas desactualizadas`,
+    //       [
+    //         {
+    //           text: "Ir a Actualizar fechas",
+    //           onPress: () =>
+    //             navigation.navigate("ChangeDatesCreditCardPage", {
+    //               card: creditCard,
+    //               fromLogin: true,
+    //             }),
+    //         },
+    //       ],
+    //       { cancelable: false }
+    //     );
+    //     return;
+    //   }
+    // });
   };
 
   const getAllData = async () => {
@@ -229,6 +307,7 @@ const LoginPage = () => {
       // Logica al Loguearse
       await initUserConfiguration();
       setLoading(false);
+      console.log("Iniciando sesión");
       navigation.navigate("Home");
     } else {
       setMsg(resp.data);

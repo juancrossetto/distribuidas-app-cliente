@@ -2,15 +2,24 @@ import React from "react";
 import { PieChart } from "react-native-svg-charts";
 import { Text } from "react-native-svg";
 import { getRandomColor } from "../../../utils";
+import { PaymentMethods } from "../../../utils/enums";
 
 const AmountSpentChart = ({ data }) => {
+  const getColorByType = (type) => {
+    const payment = PaymentMethods.filter((p) => p.value === type);
+    if (payment && payment.length > 0) {
+      return payment[0].color;
+    } else {
+      return "#000000";
+    }
+  };
   const pieData = data
-    .filter((exp) => exp.TotalAmount > 0)
+    .filter((exp) => exp.totalAmount > 0)
     .map((exp, index) => ({
-      value: exp.TotalAmount,
-      paymentMethod: exp._id,
+      value: exp.totalAmount,
+      paymentMethod: exp.paymentType,
       svg: {
-        fill: getRandomColor(),
+        fill: getColorByType(exp.paymentType),
         onPress: () => console.log("press", index),
       },
       key: `pie-${index}`,

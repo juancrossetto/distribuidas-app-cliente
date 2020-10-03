@@ -5,7 +5,7 @@ import {
   updateBankAccountBalanceAsync,
 } from "../db";
 import { getEmailUserLogged, getResult, formatDate } from "../utils";
-import { addItemToList, getItem, INCOMES } from "../utils/storage";
+import { getItem, INCOMES } from "../utils/storage";
 import { updateBankAccountBalanceService } from "./bankAccountService";
 
 const getEmail = async () => {
@@ -37,7 +37,7 @@ export const createIncomeInMemory = async (income, bankAccountBalance) => {
           income.amount,
           "Ingreso",
           income.email,
-          bankAccountBalance
+          parseInt(bankAccountBalance) + parseInt(income.amount)
         );
         if (response && !response.isSuccess && response.data) {
           return getResult(response.data, false);
@@ -69,7 +69,6 @@ export const createIncomeService = async (income) => {
       //   }
       // }
 
-      // await addItemToList(INCOMES, income);
       // insertIncomeInMemoryAsync(income);
       return getResult(`Ingreso cargado correctamente`, true);
     }
@@ -93,7 +92,6 @@ export const createIncomeService = async (income) => {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
       console.log("errorr 4");
-      // await addItemToList(INCOMES, income);
       return getResult(`Ingreso guardado en Memoria`, true);
     }
   }

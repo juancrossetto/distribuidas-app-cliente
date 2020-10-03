@@ -11,6 +11,7 @@ const BankAccountBalanceChart = ({ movements }) => {
     bankAccountBalance.unshift(
       movements[0].bankAccountBalance - movements[0].amount
     );
+
   const axesSvg = { fontSize: 10, fill: "#000" };
   const verticalContentInset = { top: 5, bottom: 5 };
   const xAxisHeight = 10;

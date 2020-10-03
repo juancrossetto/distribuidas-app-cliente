@@ -10,7 +10,6 @@ export const getAllDataService = async () => {
   try {
     const email = await getEmail();
     const resp = await clientAxios.get(`/users/getAllData/${email}`);
-    // console.log("dataaa", resp.data);
     if (resp.data) {
       return getResult(resp.data, true);
     } else {

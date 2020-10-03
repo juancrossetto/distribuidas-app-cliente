@@ -14,9 +14,8 @@ const Stack = createStackNavigator();
 
 const App = () => {
   useEffect(() => {
-    clearAll();
+    // clearAll();
   }, []);
-  // saveItem(EXPENSES, JSON.stringify(egresos));
 
   console.disableYellowBox = true; // Para deshabilitar los warnings
   return (

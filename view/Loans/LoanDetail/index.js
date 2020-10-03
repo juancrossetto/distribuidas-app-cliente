@@ -21,7 +21,7 @@ const LoansDetailPage = ({ type }) => {
     setLoading(true);
     // const loans = await getLoansService();
     // setLoansList(loans?.filter((l) => l.type === type));
-    await genericSelectAsync(setLoansList, LOANS, ` WHERE type = '${type}'`);
+    await genericSelectAsync(setLoansList, LOANS, ` AND type = '${type}'`);
     // setLoansList(loansList?.filter((l) => l.type === type));
     setLoading(false);
   };

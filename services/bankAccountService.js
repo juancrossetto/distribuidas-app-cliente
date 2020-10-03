@@ -2,7 +2,7 @@ import React from "react";
 import clientAxios from "../config/axios";
 import { insertBankAccountInMemoryAsync } from "../db";
 import { getEmailUserLogged, getResult } from "../utils";
-import { addItemToList, getItem, BANKACCOUNTS } from "../utils/storage";
+import { getItem, BANKACCOUNTS } from "../utils/storage";
 
 const getEmail = async () => {
   return await getEmailUserLogged();
@@ -15,11 +15,8 @@ export const getBankAccountsService = async () => {
     if (resp.data.bankAccounts) {
       return resp.data.bankAccounts;
     }
-    // else {
-    //   return await getItem(BANKACCOUNTS);
-    // }
   } catch (error) {
-    // return await getItem(BANKACCOUNTS);
+    console.log("Error obteniendo cuentas", error);
   }
 };
 
@@ -63,7 +60,6 @@ export const createBankAccountService = async (bankAccount) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(BANKACCOUNTS, bankAccount);
       return getResult(`Cuenta de banco guardada en Memoria`, true);
     }
   }
@@ -99,7 +95,6 @@ export const createBankAccountMovementService = async (bankAccountMovement) => {
     ) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(BANKACCOUNTS, bankAccount);
       return getResult(
         `Movimiento de Cuenta de banco guardada en Memoria`,
         true
@@ -114,7 +109,6 @@ export const updateBankAccountBalanceService = async (
   type
 ) => {
   try {
-    console.log(amount);
     const resp = await clientAxios.put(`/bankaccounts/changeBalance/`, {
       id: idBankAccount,
       amount,
@@ -130,7 +124,6 @@ export const updateBankAccountBalanceService = async (
     } else if (error.response.data.errores) {
       return getResult(error.response.data.errores[0].msg, false);
     } else {
-      // await addItemToList(BANKACCOUNTS, bankAccount);
       // return getResult(`Saldo en cuenta actualizado en Memoria`, true);
       return getResult(`PENDIENTE ACTUALIZAR EN MEMORIA SALDO CUENTA`, true);
     }
@@ -169,9 +162,7 @@ export const getBankAccountMovementsService = async () => {
     const resp = await clientAxios.get(`/bankAccounts/getMovements/${email}`);
 
     if (resp.data.movements) {
-      return getResult(resp.data.movements, true);
-    } else {
-      return getResult(`Error al obtener movimientos`, false);
+      return resp.data.movements;
     }
   } catch (error) {
     return getResult(`Error al obtener movimientos`, false);

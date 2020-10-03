@@ -8,7 +8,17 @@ import {
   getCurrentDateISO8601,
   addMonthCurrentDate,
   formatDateStringToMilliseconds,
+  getFirstDayOfWeek,
+  getLastDayOfWeek,
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+  getEmailUserLogged,
 } from "../utils/index";
+var moment = require("moment"); // require
+
+const getEmail = async () => {
+  return await getEmailUserLogged();
+};
 
 const createTablesAsync = async () => {
   return new Promise((resolve, reject) => {
@@ -127,7 +137,7 @@ const insertExpenseInMemoryAsync = async (expense) => {
             '${expense.area}','${expense.voucher}','${expense.email}',${expense.date})`;
         // console.log("query", query);
         tx.executeSql(query, [], (_, { rows: { _array } }) => {
-          console.log("_array", _array);
+          // console.log("_array", _array);
           // setExpenseId(_array.id);
         });
       },
@@ -136,7 +146,6 @@ const insertExpenseInMemoryAsync = async (expense) => {
         resolve(getResult("Error de DB al insertar Egreso", false));
       },
       (t, success) => {
-        console.log(t, success);
         // if (expense.paymentType === "TRC") {
         //   // Crear un movimiento por cada cuota
         //   const feeAmount = expense.amount / expense.fees;
@@ -316,13 +325,13 @@ const insertCreditCardMovementInMemoryAsync = async (
   return new Promise((resolve, _reject) => {
     db.transaction(
       (tx) => {
-        const dueDateMilliseconds = formatDateStringToMilliseconds(
-          dueDate,
-          "DD-MM-YYYY"
-        );
+        // const dueDateMilliseconds = formatDateStringToMilliseconds(
+        //   dueDate,
+        //   "DD-MM-YYYY"
+        // );
         const query = `insert into creditcardmovements (creditCardNumber, numberFee, amount, expense, paid, email, dueDate)       
-             values (${creditCardNumber},${numberFee},${amount},${expense},'${paid}','${email}',${dueDateMilliseconds})`;
-        // console.log("query", query);
+             values (${creditCardNumber},${numberFee},${amount},${expense},'${paid}','${email}',${dueDate})`;
+        // console.log("query mov tarjeta credito", query);
         tx.executeSql(query);
       },
       (t, error) => {
@@ -339,6 +348,7 @@ const insertCreditCardMovementInMemoryAsync = async (
         );
       },
       (t, success) => {
+        // console.log("movimiento tarjeta inserto ok");
         resolve(
           getResult(
             "Movimiento de Tarjeta de Credito creado correctamente en  Memoria",
@@ -362,13 +372,13 @@ const insertLoanMovementInMemoryAsync = async (
   return new Promise((resolve, _reject) => {
     db.transaction(
       (tx) => {
-        const dueDateMilliseconds = formatDateStringToMilliseconds(
-          dueDate,
-          "DD-MM-YYYY"
-        );
+        // const dueDateMilliseconds = formatDateStringToMilliseconds(
+        //   dueDate,
+        //   "DD-MM-YYYY"
+        // );
         const query = `insert into loanmovements (bankAccount, numberFee, amount, loan, paid, email, dueDate)       
-             values ('${bankAccount}',${numberFee},${amount},${loan},'${paid}','${email}',${dueDateMilliseconds})`;
-        console.log("query", query);
+             values ('${bankAccount}',${numberFee},${amount},${loan},'${paid}','${email}',${dueDate})`;
+        // console.log("query", query);
         tx.executeSql(query);
       },
       (t, error) => {
@@ -474,14 +484,15 @@ const updateBankAccountBalanceAsync = async (
   });
 };
 
-const genericSelectAsync = async (setFunc, table, where = "") => {
+const genericSelectAsync = async (setFunc, table, query = "") => {
+  const email = await getEmail();
   await db.transaction(
-    (tx) => {
-      tx.executeSql(
-        `select * from ${table} ${where}`,
+    async (tx) => {
+      await tx.executeSql(
+        `select * from ${table} WHERE email = '${email}' ${query} `,
         [],
-        (_, { rows: { _array } }) => {
-          setFunc(_array);
+        async (_, { rows: { _array } }) => {
+          await setFunc(_array);
         }
       );
     },
@@ -495,10 +506,11 @@ const genericSelectAsync = async (setFunc, table, where = "") => {
 };
 
 const selectExpenseIdAsync = async (table, where = "") => {
+  const email = await getEmail();
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       tx.executeSql(
-        `select * from ${table} ${where}`,
+        `select * from ${table} WHERE email = '${email}' ${where}`,
         [],
         (_, result) => {
           // console.log(`${table} obtenidos desde SQLite`);
@@ -513,11 +525,15 @@ const selectExpenseIdAsync = async (table, where = "") => {
   });
 };
 
-const getTotalAmountCreditCardAsync = async (setFunc) => {
+const getTotalAmountCreditCardAsync = async (setFunc, email, number) => {
   await db.transaction(
     (tx) => {
+      const firstDayMonth = getFirstDayOfMonth();
+      const lastDayMonth = getLastDayOfMonth();
       tx.executeSql(
-        `select creditCardNumber, email, sum(amount) as TotalAmount from creditcardmovements GROUP BY  creditCardNumber, email`,
+        `SELECT creditCardNumber, email, SUM(amount) as totalAmount FROM creditcardmovements 
+        WHERE email = '${email}' and creditCardNumber = ${number} and date(dueDate/1000, 'unixepoch')
+        BETWEEN  ('${firstDayMonth}') and  ('${lastDayMonth}')  GROUP BY creditCardNumber, email`,
         [],
         (_, { rows: { _array } }) => {
           setFunc(_array);
@@ -534,6 +550,201 @@ const getTotalAmountCreditCardAsync = async (setFunc) => {
     (_t, _success) => {
       //   console.log("Ingresos obtenidos desde SQLite");
     }
+  );
+};
+
+const getInversionesVencidasSemanaAsync = async (setFunc, email) => {
+  await db.transaction(
+    (tx) => {
+      const firstDay = getFirstDayOfWeek();
+      const lastDay = getLastDayOfWeek();
+      const query = `select id, type, amount, date(dueDate/1000, 'unixepoch') as dueDate from investments
+      where email = '${email}'  and date(dueDate/1000, 'unixepoch')
+       BETWEEN  ('${firstDay}') and  ('${lastDay}')`;
+      // console.log(query);
+      tx.executeSql(query, [], (_, { rows: { _array } }) => {
+        setFunc(_array);
+      });
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo Inversiones a vencer/vencidas}`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+
+const getTarjetasCreditoVencidasSemanaAsync = async (setFunc, email) => {
+  await db.transaction(
+    (tx) => {
+      const firstDay = getFirstDayOfWeek();
+      const lastDay = getLastDayOfWeek();
+      const query = `select id,numberFee, amount, date(dueDate/1000, 'unixepoch') as dueDate from creditcardmovements
+      where email = '${email}' and date(dueDate/1000, 'unixepoch')
+      BETWEEN  ('${firstDay}') and  ('${lastDay}')`;
+      // console.log(query);
+      tx.executeSql(query, [], (_, { rows: { _array } }) => {
+        setFunc(_array);
+      });
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo Cuotas a vencer/vencidas de Tarjeta de Crédito}`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+
+const getCuotasPrestamoVencidasSemanaAsync = async (setFunc, email) => {
+  await db.transaction(
+    (tx) => {
+      const firstDay = getFirstDayOfWeek();
+      const lastDay = getLastDayOfWeek();
+      const query = `select id,numberFee, amount, date(dueDate/1000, 'unixepoch') as dueDate from loanmovements
+      where email = '${email}' and date(dueDate/1000, 'unixepoch')
+      BETWEEN  ('${firstDay}') and  ('${lastDay}')`;
+      // console.log(query);
+      tx.executeSql(query, [], (_, { rows: { _array } }) => {
+        setFunc(_array);
+      });
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo Cuotas a vencer/vencidas de Prestamo}`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+
+const getAmountSpentAsync = async (setFunc, email) => {
+  await db.transaction(
+    (tx) => {
+      const firstDayMonth = getFirstDayOfMonth();
+      const lastDayMonth = getLastDayOfMonth();
+      tx.executeSql(
+        `SELECT paymentType, email, SUM(amount) as totalAmount FROM expenses  WHERE email = '${email}'
+        and date(date/1000, 'unixepoch')
+        BETWEEN  ('${firstDayMonth}') and  ('${lastDayMonth}') GROUP BY paymentType, email`,
+        [],
+        (_, { rows: { _array } }) => {
+          setFunc(_array);
+        }
+      );
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo el total de la tarjeta de credito}`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+
+const getBankAccountMovementsAsync = async (
+  setFunc,
+  bankAccount,
+  email,
+  dateFrom,
+  dateTo
+) => {
+  await db.transaction(
+    (tx) => {
+      tx.executeSql(
+        `SELECT * FROM bankaccountmovements  WHERE email = '${email}'
+        and bankAccount = '${bankAccount}'
+        and date(date/1000, 'unixepoch')
+        BETWEEN  ('${dateFrom}') and  ('${dateTo}') ORDER BY date ASC`,
+        [],
+        (_, { rows: { _array } }) => {
+          setFunc(_array);
+        }
+      );
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo los movimientos de la cuenta bancaria`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+
+const getMonthSumGenericAsync = async (
+  setFunc,
+  month,
+  year,
+  email,
+  table,
+  query
+) => {
+  await db.transaction(
+    (tx) => {
+      tx.executeSql(
+        `SELECT  strftime('%m', date / 1000, 'unixepoch') as month, strftime('%Y', date / 1000, 'unixepoch') as year, email, sum(amount) as amount 
+        FROM ${table} WHERE email = '${email}'
+        and strftime('%m', date / 1000, 'unixepoch') = '${month}'
+        and strftime('%Y', date / 1000, 'unixepoch')  = '${year}'
+        `,
+        // and strftime('%m', date) = '10' ${query}`,
+        [],
+        (_, { rows: { _array } }) => {
+          setFunc(_array);
+        }
+      );
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo los movimientos de la cuenta bancaria`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
+  );
+};
+const getMonthSumGenericWithTypeAsync = async (
+  setFunc,
+  month,
+  year,
+  email,
+  table,
+  query
+) => {
+  await db.transaction(
+    (tx) => {
+      tx.executeSql(
+        `SELECT strftime('%m', date) as month, type, sum(amount) as amount
+         FROM ${table} WHERE email = '${email}'
+         and strftime('%m', date / 1000, 'unixepoch') = '${month}'
+        and strftime('%Y', date / 1000, 'unixepoch')  = '${year}'
+        GROUP BY type`,
+        [],
+        (_, { rows: { _array } }) => {
+          setFunc(_array);
+        }
+      );
+    },
+    (t, error) => {
+      console.log(
+        `Error de DB obteniendo los movimientos de la cuenta bancaria`,
+        error,
+        t
+      );
+    },
+    (_t, _success) => {}
   );
 };
 
@@ -556,4 +767,11 @@ export {
   updateBankAccountBalanceAsync,
   selectExpenseIdAsync,
   getTotalAmountCreditCardAsync,
+  getInversionesVencidasSemanaAsync,
+  getTarjetasCreditoVencidasSemanaAsync,
+  getCuotasPrestamoVencidasSemanaAsync,
+  getAmountSpentAsync,
+  getBankAccountMovementsAsync,
+  getMonthSumGenericAsync,
+  getMonthSumGenericWithTypeAsync,
 };

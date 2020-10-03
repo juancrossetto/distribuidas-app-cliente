@@ -171,6 +171,8 @@ const NewLoanPage = ({ route }) => {
                   label="-- Seleccione cantidad de Cuotas --"
                   value="0"
                 />
+                <Picker.Item label="1" value="1" />
+                <Picker.Item label="3" value="3" />
                 <Picker.Item label="6" value="6" />
                 <Picker.Item label="12" value="12" />
                 <Picker.Item label="18" value="18" />

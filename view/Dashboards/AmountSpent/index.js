@@ -6,32 +6,40 @@ import AmountSpentChart from "../../../components/Charts/AmountSpentChart";
 import { PaymentMethods } from "../../../utils/enums";
 import { getMonthlyExpensesService } from "../../../services/expenseService";
 import { useIsFocused } from "@react-navigation/native";
-import { getRandomColor } from "../../../utils";
+import { getEmailUserLogged, getRandomColor } from "../../../utils";
+import { getAmountSpentAsync } from "../../../db";
+
 const AmountSpentPage = () => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(true);
   let colors = [];
   const [expenses, setExpenses] = useState([]);
+
+  const getColorByType = (type) => {
+    const payment = PaymentMethods.filter((p) => p.value === type);
+    if (payment && payment.length > 0) {
+      return payment[0].color;
+    } else {
+      return "#000000";
+    }
+  };
+
   useEffect(() => {
-    getMonthlyExpenses();
+    if (isFocused) {
+      getMonthlyExpenses();
+    }
     return () => {};
   }, [isFocused]);
 
   const getMonthlyExpenses = async () => {
     setLoading(true);
-    const expensesResult = await getMonthlyExpensesService();
-    setExpenses(expensesResult);
+    const email = await getEmailUserLogged();
+    // const expensesResult = await getMonthlyExpensesService();
+    await getAmountSpentAsync(setExpenses, email);
+    // setExpenses(expensesResult);
 
     setLoading(false);
   };
-
-  // for (let i = 0; i < 6; i++) {
-  //   expenses.push({
-  //     paymentMethod: PaymentMethods[i].text,
-  //     amount: Math.floor(Math.random() * 5000 + 2000),
-  //     color: randomColor(),
-  //   });
-  // }
 
   return (
     <Container style={[globalStyles.container]}>
@@ -76,13 +84,15 @@ const AmountSpentPage = () => {
                       style={{
                         width: 15,
                         height: 10,
-                        backgroundColor: exp.color,
+                        marginRight: 10,
+                        backgroundColor: getColorByType(exp.paymentType),
                       }}
-                    ></View>
+                    />
                     {exp &&
-                      PaymentMethods?.filter((p) => p.value === exp._id)[0]
-                        .text}
-                    : ${exp.TotalAmount}
+                      PaymentMethods?.filter(
+                        (p) => p.value === exp.paymentType
+                      )[0].text}
+                    : ${exp.totalAmount}
                   </Text>
                 ))}
               </View>

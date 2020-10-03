@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Picker, SafeAreaView, ScrollView } from "react-native";
 import { Container, H1, Spinner, Form } from "native-base";
 import globalStyles from "../../../styles/global";
@@ -7,6 +7,18 @@ import DeflectionChart from "../../../components/Charts/DeflectionChart";
 import { getBudgetDeflection } from "../../../services/budgetService";
 import AnimatedButton from "../../../components/AnimatedButton";
 import useAlert from "../../../hooks/useAlert";
+import {
+  BUDGETS,
+  EXPENSES,
+  INCOMES,
+  INVESTMENTS,
+  LOANS,
+} from "../../../utils/storage";
+import {
+  getMonthSumGenericAsync,
+  getMonthSumGenericWithTypeAsync,
+} from "../../../db";
+import { getEmailUserLogged } from "../../../utils";
 
 const DeflectionsPage = () => {
   const [month, setMonth] = useState("");
@@ -15,6 +27,16 @@ const DeflectionsPage = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
 
+  const [incomes, setIncomes] = useState(null);
+  const [expenses, setExpenses] = useState(null);
+  const [investments, setInvestments] = useState(null);
+  const [loans, setLoans] = useState(null);
+  const [budgets, setBudgets] = useState(null);
+
+  const getEmail = async () => {
+    return await getEmailUserLogged();
+  };
+
   const handleSearch = async () => {
     if (month === "" || year === "") {
       setMsg("Por favor complete todos los filtros");
@@ -22,13 +44,32 @@ const DeflectionsPage = () => {
     }
 
     setLoading(true);
-    const resp = await getBudgetDeflection(month, year);
-    setData(resp.data);
+    // const resp = await getBudgetDeflection(month, year);
+
+    const email = await getEmail();
+    await getMonthSumGenericAsync(setIncomes, month, year, email, INCOMES);
+    await getMonthSumGenericAsync(
+      setInvestments,
+      month,
+      year,
+      email,
+      INVESTMENTS
+    );
+    await getMonthSumGenericAsync(setExpenses, month, year, email, EXPENSES);
+    await getMonthSumGenericWithTypeAsync(setLoans, month, year, email, LOANS);
+    await getMonthSumGenericWithTypeAsync(
+      setBudgets,
+      month,
+      year,
+      email,
+      BUDGETS
+    );
+    // setData(resp.data);
     setLoading(false);
   };
   return (
     <Container style={[globalStyles.container]}>
-      <SafeAreaView style={{ flex: 5 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={[globalStyles.content]}>
             <View style={{ marginTop: 20 }}>
@@ -83,7 +124,20 @@ const DeflectionsPage = () => {
                 <Spinner color="#000" />
               </View>
             )}
-            {data && <DeflectionChart data={data} />}
+            {incomes || expenses || investments || loans || budgets ? (
+              <DeflectionChart
+                incomes={incomes}
+                expenses={expenses}
+                investments={investments}
+                budgets={budgets}
+                loans={loans}
+              />
+            ) : (
+              // <H1 style={globalStyles.subtitle}>OK</H1>
+              <H1 style={globalStyles.subtitle}>
+                No se encontro información para el período indicado
+              </H1>
+            )}
             <CustomAlert />
           </View>
         </ScrollView>
