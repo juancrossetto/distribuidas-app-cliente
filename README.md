@@ -18,6 +18,8 @@ y Prestamos).
 
 ## Despliegue
 Para poder trabajar sobre la App realice lo siguientes pasos:
+### Bajar Aplicacion [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=es_AR) desde la Play Store en un dispositivo móvil.
+
 ### Clonar repositorio
 - Clonar este repositorio a tu maquina local, abriendo una consola y ejecutando: 
 `git clone https://github.com/juancrossetto/distribuidas-app-cliente.git`
@@ -31,11 +33,11 @@ npm install
 ```bash
 expo start
 ```
-- El comando anterior desplegara un código QR por consola, el mismo debe ser escaneado por un dispositivo móvil y la aplicación correrá en el mismo.
+- El comando anterior desplegara un código QR por consola, el mismo debe ser escaneado por un dispositivo móvil con la aplicación de Expo (link mas arriba) y la aplicación correrá en el mismo.
 
 
 ## Ver App Publicada
-Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo desde la Store de tu teléfono y escanea el código QR que aparece en este [Link](https://expo.io/@juancrossetto/distribuidasClient/)
+Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo desde la Store de tu teléfono (link mas arriba) y escanea el código QR que aparece en este [Link](https://expo.io/@juancrossetto/distribuidasClient/)
 
 ## Servidor
 El servidor de dicha aplicación, en el cual se realizan los backups, esta hecho en NodeJS hosteado en Heroku, con una Base de Datos en MongoDB en la nube (MongoDB Atlas).
