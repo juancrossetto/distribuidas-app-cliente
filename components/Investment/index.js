@@ -36,10 +36,9 @@ const Investment = ({ item }) => {
               ]}
             >
               $
-              {(
-                item.amount *
-                ((item.interestRate / 100) * (item.days / 365))
-              ).toFixed(3)}
+              {(item.amount * ((item.interestRate / 100) * (item.days / 365)))
+                .toFixed(2)
+                .replace(".", ",")}
             </Text>
           </View>
           <View style={styles.textContainer}>

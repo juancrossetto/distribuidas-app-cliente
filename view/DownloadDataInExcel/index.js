@@ -382,6 +382,10 @@ const DownloadDataInExcelPage = () => {
       let response = "";
       const networkAvailable = await isNetworkAvailable();
       if (!networkAvailable) {
+        setMsg("No posee conexión a internet, intentelo más tarde");
+        setLoadingTitle("");
+        setLoadingText("");
+        setLoading(false);
         response = "No posee conexión a internet, intentelo más tarde";
         return response;
       }
@@ -500,19 +504,24 @@ const DownloadDataInExcelPage = () => {
     }
   };
   const handleBackup = async () => {
-    setLoading(true);
-    setLoadingText("Generando Backup");
-    const resp = await createBackUp();
-    // if (!resp.isSuccess) {
-    //   setMsg(resp.data);
-    // } else {
-    //   setMsg(resp.data);
-    //   setLoadingText("");
-    //   setLoading(false);
-    // }
-    // setTimeout(() => {
-
-    // }, 30000);
+    try {
+      const networkAvailable = await isNetworkAvailable();
+      if (!networkAvailable) {
+        setMsg("No posee conexión a internet, intentelo más tarde");
+        setLoadingTitle("");
+        setLoadingText("");
+        setLoading(false);
+      } else {
+        const resp = await createBackUp();
+        setLoading(true);
+        setLoadingText("Generando Backup");
+      }
+    } catch (error) {
+      setLoading(false);
+      setLoadingText("");
+      setLoadingTitle("");
+      setMsg("Ocurrio un error, por favor revise su conexión");
+    }
   };
 
   const handleSelectYear = async (e) => {

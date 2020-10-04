@@ -457,12 +457,36 @@ const CloseSessionPage = () => {
     );
   };
 
-  const generateBackUp = async () => {
-    setLoading(true);
-    setLoadingText("Generando Backup");
-    await createBackUp();
+  const closeSessionWithoutConnection = async () => {
+    Alert.alert(
+      "Cerrando Sesión sin Conexión",
+      "Usted no tiene conexion, ¿Desea cerrar igualmente la sesión sin guardar la información?",
+      [
+        { text: "Si", onPress: () => clearInfo() },
+        {
+          text: "No",
+          // onPress: () => clearInfo(),
+          style: "cancel",
+        },
+      ],
+      { cancelable: false }
+    );
+  };
 
-    await clearInfo();
+  const generateBackUp = async () => {
+    const networkAvailable = await isNetworkAvailable();
+    if (!networkAvailable) {
+      setMsg("No posee conexión a internet, intentelo más tarde");
+      setLoadingTitle("");
+      setLoadingText("");
+      setLoading(false);
+      closeSessionWithoutConnection();
+    } else {
+      setLoading(true);
+      setLoadingText("Generando Backup");
+      await createBackUp();
+      await clearInfo();
+    }
   };
 
   const getAllDataInMemory = async () => {
