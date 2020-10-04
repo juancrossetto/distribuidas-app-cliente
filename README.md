@@ -1,6 +1,6 @@
 # My Budget App
 
-My Budget App es una App para dispositivos móviles que te permitirá gestionar tus:
+My Budget App es una App para dispositivos móviles desarrollada con React Native y Expo, que te permitirá gestionar tus:
 - Ingresos.
 - Egresos.
 - Cuentas Bancarias.
@@ -17,7 +17,7 @@ y Prestamos).
 
 
 ## Despliegue
-Para poder trabajar sobre la App realice lo siguientes pasos:
+Para poder trabajar sobre la App, siga lo siguientes pasos:
 ### Bajar Aplicacion [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=es_AR) desde la Play Store en un dispositivo móvil.
 ### Tener Instalado Node (npm) y Git.
 
