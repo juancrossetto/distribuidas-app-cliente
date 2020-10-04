@@ -18,7 +18,7 @@ y Prestamos).
 
 ## Despliegue
 Para poder trabajar sobre la App realice lo siguientes pasos:
-### Bajar Aplicacion [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=es_AR){:target="_blank" rel="noopener"} desde la Play Store en un dispositivo móvil.
+### Bajar Aplicacion [Expo](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=es_AR) desde la Play Store en un dispositivo móvil.
 ### Tener Instalado Node (npm) y Git.
 
 ### Clonar repositorio
@@ -43,10 +43,10 @@ expo start
 
 
 ## Ver App Publicada
-Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo desde la Store de tu teléfono (link mas arriba) y escanea el código QR que aparece en este [Link](https://expo.io/@juancrossetto/distribuidasClient/ target="_blank")
+Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo desde la Store de tu teléfono (link mas arriba) y escanea el código QR que aparece en este [Link](https://expo.io/@juancrossetto/distribuidasClient/)
 ## Servidor
 El servidor de dicha aplicación, en el cual se realizan los backups, esta hecho en NodeJS hosteado en Heroku, con una Base de Datos en MongoDB en la nube (MongoDB Atlas).
-Para visualizar el repositorio del mismo ingrese al siguiente Link [Link](https://github.com/juancrossetto/distribuidas-app-servidor){:target="_blank"}
+Para visualizar el repositorio del mismo ingrese al siguiente Link [Link](https://github.com/juancrossetto/distribuidas-app-servidor)
 
 ## Documentación
 El sistema contiene dentro del proyecto una carpeta llamada documentacion en la cual contiene:
@@ -55,10 +55,10 @@ El sistema contiene dentro del proyecto una carpeta llamada documentacion en la 
 - Modelo de Casos de Uso.
 ![Test Image 1](/documentacion/mapa-componentes.png)
 
-La collection de Postman con ejemplos de las API se encuentra en el siguiente [Link](https://www.getpostman.com/collections/4c96deabc1aa77872a5b){:target="_blank"}
+La collection de Postman con ejemplos de las API se encuentra en el siguiente [Link](https://www.getpostman.com/collections/4c96deabc1aa77872a5b)
 ## Licencia
 
-[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org){:target="_blank"}
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
 - Copyright 2020 UADE Grupo 5 ©. 
