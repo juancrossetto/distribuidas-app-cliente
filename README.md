@@ -46,7 +46,7 @@ expo start
 Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo desde la Store de tu teléfono (link mas arriba) y escanea el código QR que aparece en este [Link](https://expo.io/@juancrossetto/distribuidasClient/)
 ## Servidor
 El servidor de dicha aplicación, en el cual se realizan los backups, esta hecho en NodeJS hosteado en Heroku, con una Base de Datos en MongoDB en la nube (MongoDB Atlas).
-Para visualizar el repositorio del mismo ingrese al siguiente Link [Link](https://github.com/juancrossetto/distribuidas-app-servidor)
+Para visualizar el repositorio del mismo ingrese al siguiente [Link](https://github.com/juancrossetto/distribuidas-app-servidor)
 
 ## Documentación
 El sistema contiene dentro del proyecto una carpeta llamada documentacion en la cual contiene:
