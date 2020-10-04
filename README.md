@@ -49,6 +49,14 @@ Para poder visualizar la App sin necesidad de desplegarla, bajate la App de Expo
 El servidor de dicha aplicación, en el cual se realizan los backups, esta hecho en NodeJS hosteado en Heroku, con una Base de Datos en MongoDB en la nube (MongoDB Atlas).
 Para visualizar el repositorio del mismo ingrese al siguiente Link [Link](https://github.com/juancrossetto/distribuidas-app-servidor)
 
+## Documentación
+El sistema contiene dentro del proyecto una carpeta llamada documentacion en la cual contiene:
+- Mapa de Componentes
+- Plan de Pruebas Funcionales
+- Modelo de Casos de Uso.
+![Test Image 1](/documentacion/mapa-componentes.png)
+
+La collection con ejemplos de las API se encuentra en el siguiente Link
 ## Licencia
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
